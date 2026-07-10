@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonicalUrl?: string;
+}
+const { title, description, image, canonicalUrl } = Astro.props;
+const siteTitle = 'playcast — 게임 소개 방송 채널';
+const fullTitle = title === siteTitle ? title : `${title} | playcast`;
+const ogImage =
+  image || new URL('/og-default.png', Astro.site || 'https://playcast.vercel.app').href;
+const canonical = canonicalUrl || Astro.url.href;
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'playcast',
+  url: 'https://playcast.vercel.app',
+  description: '버츄얼 호스트가 게임을 영상처럼 소개하는 채널',
+  inLanguage: 'ko-KR',
+};
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0f0f11" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="playcast" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Pretendard 웹폰트 -->
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  </head>
+  <body>
+    <header class="pc-header">
+      <a href="/" class="pc-logo">
+        <span class="dot">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+        </span>
+        <b>play<span>cast</span></b>
+      </a>
+      <div class="pc-search">
+        <input
+          type="search"
+          id="pc-search-input"
+          placeholder="게임·채널 검색"
+          autocomplete="off"
+          aria-label="검색"
+        />
+      </div>
+      <nav class="pc-nav">
+        <a href="/" class="hide-sm">홈</a>
+        <a href="/about">채널</a>
+      </nav>
+    </header>
+
+    <main class="pc-main">
+      <slot />
+    </main>
+
+    <footer class="pc-footer">
+      <p>
+        © {new Date().getFullYear()} playcast · 버츄얼 호스트 로지의 게임 소개 채널 ·
+        <a href="/rss.xml">RSS</a>
+      </p>
+    </footer>
+
+    <script src="/js/scene-player.js" defer is:inline></script>
+    <slot name="tail" />
+  </body>
+</html>

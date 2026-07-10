@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HostStage from '../components/HostStage.astro';
+import VideoCard from '../components/VideoCard.astro';
+import { watchHref, durationLabel } from '../lib/video';
+
+const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort(
+  (a, b) => +b.data.pubDate - +a.data.pubDate
+);
+const featured = videos[0];
+const rest = videos.slice(1);
+
+const cats = Array.from(new Set(videos.map((v) => v.data.category)));
+const fPlayerId = featured ? 'hero' + featured.id.replace(/[^a-z0-9]/gi, '') : 'hero';
+---
+
+<BaseLayout
+  title="playcast — 게임 소개 방송 채널"
+  description="버츄얼 호스트 로지가 게임을 영상처럼 소개하는 채널. 무료 게임·인디 명작·취향 진단까지, 자막 영상으로 편하게."
+>
+  {
+    featured && (
+      <section class="pc-hero">
+        <div class="watch" style="align-items:start">
+          <div class="watch-main">
+            <HostStage
+              scenes={featured.data.scenes}
+              playerId={fPlayerId}
+              host={featured.data.host}
+            />
+          </div>
+          <aside class="watch-side">
+            <div style="font-size:0.78rem;font-weight:800;color:var(--live);letter-spacing:.06em">
+              ▶ 이번 편
+            </div>
+            <h2 style="font-size:1.25rem;margin:.4rem 0 .6rem;line-height:1.35">
+              {featured.data.title}
+            </h2>
+            <p style="color:var(--text-2);font-size:.9rem;line-height:1.7;margin:0 0 1rem">
+              {featured.data.description}
+            </p>
+            <a
+              href={watchHref(featured.id)}
+              class="ch-subscribe"
+              style="display:inline-block;text-align:center"
+            >
+              시청 페이지로 →
+            </a>
+          </aside>
+        </div>
+      </section>
+    )
+  }
+
+  <div class="section-title"><span class="bar"></span> 최신 영상</div>
+
+  <div class="pc-chips" id="pc-chips">
+    <button class="pc-chip is-active" data-cat="__all">전체</button>
+    {cats.map((c) => <button class="pc-chip" data-cat={c}>{c}</button>)}
+  </div>
+
+  <div class="pc-grid" id="pc-grid">
+    {
+      rest.map((v) => (
+        <div class="grid-item" data-cat={v.data.category} data-title={v.data.title.toLowerCase()}>
+          <VideoCard video={v} />
+        </div>
+      ))
+    }
+  </div>
+
+  <p id="pc-empty" style="display:none;text-align:center;color:var(--text-muted);padding:3rem">
+    검색 결과가 없어요.
+  </p>
+
+  <script is:inline slot="tail">
+    (function () {
+      var chips = document.getElementById('pc-chips');
+      var grid = document.getElementById('pc-grid');
+      var empty = document.getElementById('pc-empty');
+      var search = document.getElementById('pc-search-input');
+      var cat = '__all';
+      var q = '';
+      function apply() {
+        var shown = 0;
+        grid.querySelectorAll('.grid-item').forEach(function (el) {
+          var okCat = cat === '__all' || el.dataset.cat === cat;
+          var okQ = !q || el.dataset.title.indexOf(q) !== -1;
+          var vis = okCat && okQ;
+          el.style.display = vis ? '' : 'none';
+          if (vis) shown++;
+        });
+        empty.style.display = shown ? 'none' : 'block';
+      }
+      if (chips)
+        chips.addEventListener('click', function (e) {
+          var b = e.target.closest('.pc-chip');
+          if (!b) return;
+          chips.querySelectorAll('.pc-chip').forEach(function (c) {
+            c.classList.remove('is-active');
+          });
+          b.classList.add('is-active');
+          cat = b.dataset.cat;
+          apply();
+        });
+      if (search)
+        search.addEventListener('input', function () {
+          q = search.value.trim().toLowerCase();
+          apply();
+        });
+    })();
+  </script>
+</BaseLayout>

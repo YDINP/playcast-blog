@@ -1,0 +1,69 @@
+---
+import HostMascot from './HostMascot.astro';
+import { durationLabel, formatViews, timeAgo, watchHref, posterOf } from '../lib/video';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  video: CollectionEntry<'videos'>;
+  variant?: 'grid' | 'side';
+}
+const { video, variant = 'grid' } = Astro.props;
+const { data } = video;
+const poster = posterOf(data);
+const dur = durationLabel(data.scenes, data.durationLabel);
+const href = watchHref(video.id);
+---
+
+{
+  variant === 'grid' ? (
+    <a href={href} class="vcard">
+      <div class="vcard-thumb">
+        {poster ? (
+          <img src={poster} alt={data.title} loading="lazy" />
+        ) : (
+          <div class="sp-bg is-grad is-on" style="position:absolute;inset:0" />
+        )}
+        <span class="vcard-dur">{dur}</span>
+        <span class="vcard-play">
+          <span>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </span>
+        </span>
+      </div>
+      <div class="vcard-meta">
+        <span class="vcard-ava">
+          <HostMascot variant="avatar" />
+        </span>
+        <div class="vcard-info">
+          <h3>{data.title}</h3>
+          <div class="sub">
+            <div class="ch">로지 · playcast</div>
+            <div>
+              {formatViews(data.views)} · {timeAgo(data.pubDate)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  ) : (
+    <a href={href} class="side-card">
+      <div class="vcard-thumb">
+        {poster ? (
+          <img src={poster} alt={data.title} loading="lazy" />
+        ) : (
+          <div class="sp-bg is-grad is-on" style="position:absolute;inset:0" />
+        )}
+        <span class="vcard-dur">{dur}</span>
+      </div>
+      <div>
+        <h3>{data.title}</h3>
+        <div class="sub">로지 · playcast</div>
+        <div class="sub">
+          {formatViews(data.views)} · {timeAgo(data.pubDate)}
+        </div>
+      </div>
+    </a>
+  )
+}

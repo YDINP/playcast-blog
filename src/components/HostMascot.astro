@@ -1,0 +1,124 @@
+---
+// 채널 마스코트 "로지(Rosie)" — 큐트 버츄얼 게임 호스트.
+// 입모양/표정은 부모(.sp-host)의 클래스로 토글 (scene-player.js가 제어):
+//   .is-talking-open → 벌린 입, .emo-happy/.emo-surprised/.emo-think → 표정
+// state 없이 쓰면(아바타/카드) 기본 = 다문 입 + idle 눈.
+interface Props {
+  variant?: 'stage' | 'avatar';
+  class?: string;
+}
+const { variant = 'stage', class: cls = '' } = Astro.props;
+// avatar는 얼굴만 크롭
+const viewBox = variant === 'avatar' ? '48 26 104 104' : '0 0 200 240';
+---
+
+<svg
+  class:list={['pc-mascot', cls]}
+  viewBox={viewBox}
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="채널 호스트 로지"
+>
+  <defs>
+    <linearGradient id="rz-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6f6bff" />
+      <stop offset="1" stop-color="#57e6c3" />
+    </linearGradient>
+    <linearGradient id="rz-hood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2a44" />
+      <stop offset="1" stop-color="#1a1a2e" />
+    </linearGradient>
+  </defs>
+
+  <!-- 어깨/후드 (stage에서만 보임, avatar는 viewBox 밖) -->
+  <g>
+    <path
+      d="M40 240 Q42 176 100 168 Q158 176 160 240 Z"
+      fill="url(#rz-hood)"
+      stroke="#3a3a5c"
+      stroke-width="2"
+    />
+    <path d="M100 168 L100 214" stroke="#57e6c3" stroke-width="3" stroke-linecap="round" opacity=".5" />
+    <circle cx="88" cy="196" r="3.5" fill="#57e6c3" />
+    <circle cx="112" cy="196" r="3.5" fill="#8b7bff" />
+  </g>
+
+  <!-- 머리카락 뒤 -->
+  <path
+    d="M52 96 Q46 40 100 34 Q154 40 148 96 Q150 130 138 138 L62 138 Q50 130 52 96 Z"
+    fill="url(#rz-hair)"
+  />
+
+  <!-- 목 -->
+  <rect x="90" y="140" width="20" height="24" rx="9" fill="#ffd9c0" />
+
+  <!-- 얼굴 -->
+  <path
+    d="M64 92 Q64 58 100 56 Q136 58 136 92 Q136 128 100 134 Q64 128 64 92 Z"
+    fill="#ffe1cf"
+  />
+
+  <!-- 앞머리 -->
+  <path
+    d="M60 96 Q56 52 100 48 Q144 52 140 96 Q132 74 118 78 Q112 62 100 62 Q88 62 82 78 Q68 74 60 96 Z"
+    fill="url(#rz-hair)"
+  />
+  <path d="M100 48 Q120 54 122 80 L112 78 Q110 60 100 60 Z" fill="#ffffff" opacity=".14" />
+
+  <!-- 볼터치 -->
+  <ellipse class="blush" cx="76" cy="106" rx="8" ry="5" fill="#ff9db1" opacity=".55" />
+  <ellipse class="blush" cx="124" cy="106" rx="8" ry="5" fill="#ff9db1" opacity=".55" />
+
+  <!-- ===== 눈 (표정별) ===== -->
+  <!-- idle -->
+  <g class="eyes eyes-idle">
+    <ellipse cx="83" cy="96" rx="7.5" ry="9" fill="#2b2340" />
+    <ellipse cx="117" cy="96" rx="7.5" ry="9" fill="#2b2340" />
+    <circle cx="85.5" cy="93" r="2.6" fill="#fff" />
+    <circle cx="119.5" cy="93" r="2.6" fill="#fff" />
+    <circle cx="81" cy="99" r="1.4" fill="#57e6c3" />
+    <circle cx="115" cy="99" r="1.4" fill="#57e6c3" />
+  </g>
+  <!-- happy (^ ^) -->
+  <g class="eyes eyes-happy">
+    <path d="M75 98 Q83 89 91 98" fill="none" stroke="#2b2340" stroke-width="4" stroke-linecap="round" />
+    <path d="M109 98 Q117 89 125 98" fill="none" stroke="#2b2340" stroke-width="4" stroke-linecap="round" />
+  </g>
+  <!-- surprised (◎) -->
+  <g class="eyes eyes-surprised">
+    <circle cx="83" cy="96" r="10" fill="#fff" stroke="#2b2340" stroke-width="2.5" />
+    <circle cx="117" cy="96" r="10" fill="#fff" stroke="#2b2340" stroke-width="2.5" />
+    <circle cx="83" cy="97" r="5" fill="#2b2340" />
+    <circle cx="117" cy="97" r="5" fill="#2b2340" />
+  </g>
+  <!-- think (위 곁눈질) -->
+  <g class="eyes eyes-think">
+    <ellipse cx="86" cy="93" rx="7" ry="8.5" fill="#2b2340" />
+    <ellipse cx="120" cy="93" rx="7" ry="8.5" fill="#2b2340" />
+    <circle cx="88" cy="90" r="2.4" fill="#fff" />
+    <circle cx="122" cy="90" r="2.4" fill="#fff" />
+  </g>
+
+  <!-- 눈썹 -->
+  <path class="brow" d="M75 82 Q83 79 91 82" fill="none" stroke="#5a4a7a" stroke-width="2.5" stroke-linecap="round" />
+  <path class="brow" d="M109 82 Q117 79 125 82" fill="none" stroke="#5a4a7a" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- ===== 입 (상태별) ===== -->
+  <!-- 다문 입 (기본) -->
+  <path class="mouth m-closed" d="M92 118 Q100 123 108 118" fill="none" stroke="#c25b6a" stroke-width="3" stroke-linecap="round" />
+  <!-- 벌린 입 (말할 때) -->
+  <g class="mouth m-open">
+    <path d="M90 116 Q100 132 110 116 Q100 122 90 116 Z" fill="#7a2f3d" />
+    <path d="M94 121 Q100 127 106 121 Q100 124 94 121 Z" fill="#ff8fa3" />
+  </g>
+
+  <!-- 헤드셋 (게임 호스트 상징) -->
+  <path d="M54 96 Q52 44 100 42 Q148 44 146 96" fill="none" stroke="#14141f" stroke-width="7" stroke-linecap="round" />
+  <rect x="46" y="90" width="16" height="26" rx="7" fill="#14141f" />
+  <rect x="138" y="90" width="16" height="26" rx="7" fill="#14141f" />
+  <rect x="49" y="95" width="10" height="16" rx="5" fill="#57e6c3" opacity=".85" />
+  <rect x="141" y="95" width="10" height="16" rx="5" fill="#57e6c3" opacity=".85" />
+  <!-- 마이크 붐 -->
+  <path class="mic" d="M138 108 Q128 124 108 126" fill="none" stroke="#14141f" stroke-width="4" stroke-linecap="round" />
+  <circle class="mic" cx="106" cy="126" r="4" fill="#ff3d54" />
+</svg>

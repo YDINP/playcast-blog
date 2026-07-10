@@ -1,0 +1,24 @@
+{
+  "project": "playcast-blog",
+  "created": "2026-07-10",
+  "tasks": [
+    { "id": 1, "title": "스캐폴딩 복사·개조 + npm install", "status": "done",
+      "detail": "gameflow-blog에서 config/fonts/CommentSection 복사, package/astro.config/.gitignore 개조, deps 설치(259 pkgs)" },
+    { "id": 2, "title": "content.config videos 스키마 + 시드 3편", "status": "done",
+      "detail": "scenes[] 스키마(voice? TTS-ready 포함), 시드: 무료게임TOP5·인디명작6선·게임취향5문답" },
+    { "id": 3, "title": "scene-player.js 타임라인 엔진", "status": "done",
+      "detail": "크로스페이드/타이핑자막/입모양토글/진행바-챕터스크럽/컨트롤/IntersectionObserver 자동재생/getSceneElapsed 추상화(TTS-ready)" },
+    { "id": 4, "title": "유튜브형 레이아웃·컴포넌트·테마", "status": "done",
+      "detail": "BaseLayout(유튜브 헤더)·HostStage·HostMascot(SVG 로지)·VideoCard·watch/index/about·global.css(라이브 레드+민트)·OG 라우트" },
+    { "id": 5, "title": "호스트 마스코트", "status": "done",
+      "detail": "인라인 SVG 로지(헤드셋+마이크, 표정 4종·입모양 2종 CSS 토글). AI 래스터는 선택적 후속" },
+    { "id": 6, "title": "빌드·검증·문서·커밋", "status": "in_progress",
+      "detail": "build 무에러, dev(8008) watch 200+스크린샷 검증. PRD/TASKS 문서, git init·commit" }
+  ],
+  "followups": [
+    "씬 image에 실제 스크린샷/AI 배경 채우기(현재 그라디언트)",
+    "생성형 TTS → 씬 voice 채우기(엔진 완비)",
+    "og-default.png 생성, Vercel 배포",
+    "Supabase 댓글 source='playcast' 테이블 확인"
+  ]
+}
