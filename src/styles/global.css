@@ -934,7 +934,7 @@ button {
   animation: rig-blink 5.4s infinite;
 }
 .rig-eye.r {
-  animation-delay: 0.15s;
+  animation-delay: 0s;
 }
 @keyframes rig-blink {
   0%,
@@ -976,8 +976,8 @@ button {
 /* ===== 표정 전환 (씬 emotion → .sp-host.emo-*) ===== */
 /* happy: 웃는 눈 + 눈썹 살짝 위 + 입 넓게 */
 .sp-host.emo-happy .rig-eye {
-  --eSY: 0.5;
-  --eTY: 12%;
+  --eSY: 0.62;
+  --eTY: 9%;
 }
 .sp-host.emo-happy .rig-brow {
   transform: translateY(-8%);
