@@ -925,40 +925,90 @@ button {
     transform: rotate(-1.6deg);
   }
 }
-/* 눈 깜빡임 (항상) */
+/* 눈: 상시 깜빡임 + 표정별 변형(CSS 변수로 공존) */
 .rig-eye {
-  transform-origin: 50% 55%;
+  --eSX: 1;
+  --eSY: 1;
+  --eTY: 0%;
+  transform-origin: 50% 60%;
   animation: rig-blink 5.4s infinite;
 }
 .rig-eye.r {
-  animation-delay: 0.02s;
+  animation-delay: 0.15s;
 }
 @keyframes rig-blink {
   0%,
-  92%,
+  90%,
   100% {
-    transform: scaleY(1);
+    transform: translateY(var(--eTY)) scale(var(--eSX), var(--eSY));
   }
-  95%,
+  94%,
   97% {
-    transform: scaleY(0.08);
+    transform: translateY(var(--eTY)) scale(var(--eSX), 0.08);
   }
 }
-/* 입: 말하는 중에만 개폐(스마일 파츠 scaleY) */
+/* 눈썹: 표정별 위치/각도 */
+.rig-brow {
+  transform-origin: 50% 100%;
+  transition: transform 0.25s ease;
+}
+/* 입: 표정 baseline(--mSY) + 말할 때 개폐 */
 .rig-mouth {
-  transform-origin: 50% 30%;
+  --mSY: 1;
+  transform-origin: 50% 25%;
+  transform: scaleY(var(--mSY));
+  transition: transform 0.2s ease;
 }
 .sp-host.is-talking .rig-mouth {
   animation: rig-talk 0.26s ease-in-out infinite;
+  transition: none;
 }
 @keyframes rig-talk {
   0%,
   100% {
-    transform: scaleY(0.7);
+    transform: scaleY(calc(var(--mSY) * 0.65));
   }
   50% {
-    transform: scaleY(1.35) translateY(4%);
+    transform: scaleY(calc(var(--mSY) * 1.45)) translateY(5%);
   }
+}
+
+/* ===== 표정 전환 (씬 emotion → .sp-host.emo-*) ===== */
+/* happy: 웃는 눈 + 눈썹 살짝 위 + 입 넓게 */
+.sp-host.emo-happy .rig-eye {
+  --eSY: 0.5;
+  --eTY: 12%;
+}
+.sp-host.emo-happy .rig-brow {
+  transform: translateY(-8%);
+}
+.sp-host.emo-happy .rig-mouth {
+  --mSY: 1.18;
+}
+/* surprised: 눈 크게 + 눈썹 확 위 + 입 벌림 */
+.sp-host.emo-surprised .rig-eye {
+  --eSX: 1.12;
+  --eSY: 1.2;
+}
+.sp-host.emo-surprised .rig-brow {
+  transform: translateY(-28%);
+}
+.sp-host.emo-surprised .rig-mouth {
+  --mSY: 1.7;
+}
+/* think: 눈 살짝 감고 위로 + 눈썹 비대칭 + 입 작게 */
+.sp-host.emo-think .rig-eye {
+  --eSY: 0.82;
+  --eTY: -5%;
+}
+.sp-host.emo-think .rig-brow.l {
+  transform: translateY(-16%) rotate(-9deg);
+}
+.sp-host.emo-think .rig-brow.r {
+  transform: translateY(2%) rotate(7deg);
+}
+.sp-host.emo-think .rig-mouth {
+  --mSY: 0.85;
 }
 @media (prefers-reduced-motion: reduce) {
   .rig,
