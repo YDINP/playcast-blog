@@ -375,9 +375,25 @@ button {
     transform: translateY(-2.2%);
   }
 }
-.sp-host svg {
+.sp-host img,
+.pc-mascot-stage {
   width: 100%;
   height: auto;
+  display: block;
+}
+/* 말하는 중: 부드러운 끄덕임(정적 포트레이트라 입모양 대신) */
+.sp-host.is-talking .pc-mascot-stage {
+  animation: sp-talk 0.34s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes sp-talk {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(0.6%) scaleY(0.985);
+  }
 }
 
 /* subtitle bar */
@@ -841,42 +857,14 @@ button {
 }
 
 /* ============================================================
-   MASCOT state (표정/입모양) — 부모 .sp-host 클래스로 토글
+   MASCOT (AI 이미지)
    ============================================================ */
-/* 기본: idle 눈 + 다문 입만 노출 */
-.pc-mascot .eyes-happy,
-.pc-mascot .eyes-surprised,
-.pc-mascot .eyes-think,
-.pc-mascot .m-open {
-  display: none;
-}
-/* 말하기: 입 벌림 */
-.sp-host.is-talking-open .pc-mascot .m-open {
-  display: block;
-}
-.sp-host.is-talking-open .pc-mascot .m-closed {
-  display: none;
-}
-/* 표정: happy */
-.sp-host.emo-happy .pc-mascot .eyes-idle {
-  display: none;
-}
-.sp-host.emo-happy .pc-mascot .eyes-happy {
-  display: block;
-}
-/* 표정: surprised */
-.sp-host.emo-surprised .pc-mascot .eyes-idle {
-  display: none;
-}
-.sp-host.emo-surprised .pc-mascot .eyes-surprised {
-  display: block;
-}
-/* 표정: think */
-.sp-host.emo-think .pc-mascot .eyes-idle {
-  display: none;
-}
-.sp-host.emo-think .pc-mascot .eyes-think {
-  display: block;
+/* 아바타: 원형 컨테이너에 얼굴 위주로 크롭 */
+.pc-mascot-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
 }
 
 /* reduced motion: 정지 + 트랜스크립트로 콘텐츠 온전 */

@@ -144,7 +144,7 @@
     this.host.classList.remove('emo-happy', 'emo-surprised', 'emo-think');
     if (sc.emotion && sc.emotion !== 'idle')
       this.host.classList.add('emo-' + sc.emotion);
-    this.host.classList.remove('is-talking-open');
+    this.host.classList.remove('is-talking');
 
     // 자막 초기화
     if (staticOnly) {
@@ -194,13 +194,8 @@
     var isTyping = elapsed < typingDur && reveal < text.length;
     this.stage.classList.toggle('is-typing', isTyping);
 
-    // 입모양: 타이핑 중 토글
-    if (isTyping) {
-      var open = Math.floor(elapsed / MOUTH_MS) % 2 === 0;
-      this.host.classList.toggle('is-talking-open', open);
-    } else {
-      this.host.classList.remove('is-talking-open');
-    }
+    // 말하는 중: 호스트 끄덕임(정적 포트레이트라 입모양 대신)
+    this.host.classList.toggle('is-talking', isTyping);
 
     // 진행바 + 시간
     var globalMs = this.prefix[this.i] + Math.min(elapsed, sceneDur);
@@ -226,7 +221,7 @@
     this.started = false;
     this.stage.classList.remove('is-typing');
     this.stage.classList.add('is-paused', 'is-ended');
-    this.host.classList.remove('is-talking-open');
+    this.host.classList.remove('is-talking');
     this.fill.style.width = '100%';
     if (this.bigplay) this.bigplay.classList.remove('is-hidden');
     this._setPlayIcon(false);
@@ -257,7 +252,7 @@
     if (this.audio) this.audio.pause();
     cancelAnimationFrame(this.raf);
     this.stage.classList.add('is-paused');
-    this.host.classList.remove('is-talking-open');
+    this.host.classList.remove('is-talking');
     if (this.bigplay) this.bigplay.classList.add('is-hidden');
     this._setPlayIcon(false);
   };
