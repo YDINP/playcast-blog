@@ -1,0 +1,37 @@
+---
+// vtt 파츠를 브라우저에서 레이어로 재조립 = 대략 Live2D 리그.
+// 애니메이션(호흡/머리흔들림/깜빡임/립싱크)은 global.css .rig-* 참조.
+// 좌표계: 컨테이너 100(가로) x 130(세로) units. left/width=가로%, top=세로%.
+const T = (u: number) => ((u / 130) * 100).toFixed(2) + '%';
+// [파일명, left%, topUnits, width%, extraClass]  — 뒤에 올수록 위 레이어
+const parts: [string, number, number, number, string][] = [
+  ['hair-back', 26, 11, 48, ''],
+  ['face', 29, 22, 42, ''],
+  ['bangs', 27, 12, 46, ''],
+  ['mouth', 38.5, 51, 23, 'rig-mouth'],
+  ['eye-l', 37.5, 40, 13, 'rig-eye l'],
+  ['eye-r', 49.5, 40, 13, 'rig-eye r'],
+  ['lock-r', 62, 28, 20, 'rig-lock'],
+  ['lock-l', 18, 28, 20, 'rig-lock'],
+  ['headset', 22.85, 9, 54.3, ''],
+];
+---
+
+<div class="rig">
+  <div class="rig-body">
+    <img src="/host/parts/hoodie.png" alt="" style={`left:3%;top:${T(68)};width:94%`} />
+    <img src="/host/parts/neck.png" alt="" style={`left:29.4%;top:${T(60)};width:41.2%`} />
+  </div>
+  <div class="rig-head">
+    {
+      parts.map(([name, left, top, width, cls]) => (
+        <img
+          src={`/host/parts/${name}.png`}
+          alt=""
+          class={cls}
+          style={`left:${left}%;top:${T(top)};width:${width}%`}
+        />
+      ))
+    }
+  </div>
+</div>

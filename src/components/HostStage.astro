@@ -1,6 +1,6 @@
 ---
 // 씬플레이어 스테이지 DOM 뼈대. scene-player.js가 .sp-data(JSON)를 읽어 구동.
-import HostMascot from './HostMascot.astro';
+import HostRig from './HostRig.astro';
 
 interface Scene {
   image?: string;
@@ -28,9 +28,9 @@ const first = scenes[0] || { text: '' };
   </div>
   <div class="sp-bg sp-bg-b"></div>
 
-  <!-- 호스트 -->
+  <!-- 호스트 (파츠 재조립 리그) -->
   <div class="sp-host">
-    <HostMascot variant="stage" />
+    <HostRig />
   </div>
 
   <!-- 자막 -->

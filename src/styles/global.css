@@ -352,14 +352,14 @@ button {
 /* host overlay */
 .sp-host {
   position: absolute;
-  right: 2.5%;
+  right: 1.5%;
   bottom: 0;
-  width: 26%;
-  max-width: 260px;
-  min-width: 120px;
+  width: 30%;
+  max-width: 300px;
+  min-width: 150px;
+  aspect-ratio: 62 / 82;
   z-index: 3;
   transform-origin: bottom center;
-  animation: sp-bob 3.6s ease-in-out infinite;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
   pointer-events: none;
 }
@@ -375,7 +375,6 @@ button {
     transform: translateY(-2.2%);
   }
 }
-.sp-host img,
 .pc-mascot-stage {
   width: 100%;
   height: auto;
@@ -865,6 +864,109 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center 12%;
+}
+
+/* ============================================================
+   HOST RIG (vtt 파츠 재조립 = 대략 Live2D)
+   ============================================================ */
+.rig {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: rig-breathe 4.2s ease-in-out infinite;
+}
+.rig-body,
+.rig-head {
+  position: absolute;
+  inset: 0;
+}
+.rig-head {
+  transform-origin: 50% 82%;
+  animation: rig-sway 6.5s ease-in-out infinite;
+}
+.rig img {
+  position: absolute;
+  height: auto;
+  will-change: transform;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+/* 호흡: 아주 미세한 상하 + 스케일 */
+@keyframes rig-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-0.5%) scale(1.006);
+  }
+}
+/* 머리 흔들림: 좌우 미세 회전 */
+@keyframes rig-sway {
+  0%,
+  100% {
+    transform: rotate(-1.4deg);
+  }
+  50% {
+    transform: rotate(1.4deg);
+  }
+}
+/* 옆머리: 머리와 다른 위상으로 살짝 흔들 */
+.rig-lock {
+  transform-origin: 50% 0;
+  animation: rig-lock 5.2s ease-in-out infinite;
+}
+@keyframes rig-lock {
+  0%,
+  100% {
+    transform: rotate(1.6deg);
+  }
+  50% {
+    transform: rotate(-1.6deg);
+  }
+}
+/* 눈 깜빡임 (항상) */
+.rig-eye {
+  transform-origin: 50% 55%;
+  animation: rig-blink 5.4s infinite;
+}
+.rig-eye.r {
+  animation-delay: 0.02s;
+}
+@keyframes rig-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95%,
+  97% {
+    transform: scaleY(0.08);
+  }
+}
+/* 입: 말하는 중에만 개폐(스마일 파츠 scaleY) */
+.rig-mouth {
+  transform-origin: 50% 30%;
+}
+.sp-host.is-talking .rig-mouth {
+  animation: rig-talk 0.26s ease-in-out infinite;
+}
+@keyframes rig-talk {
+  0%,
+  100% {
+    transform: scaleY(0.7);
+  }
+  50% {
+    transform: scaleY(1.35) translateY(4%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rig,
+  .rig-head,
+  .rig-lock,
+  .rig-eye {
+    animation: none;
+  }
 }
 
 /* reduced motion: 정지 + 트랜스크립트로 콘텐츠 온전 */
