@@ -3,26 +3,23 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>playcast 호스트 리그 에디터</title>
+<title>VIP 호스트 리그 에디터</title>
 <style>
   :root { --bg:#0f0f11; --panel:#17171b; --border:#2a2a33; --host:#57e6c3; --live:#ff3d54; --text:#eee; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,'Malgun Gothic',sans-serif; display:flex; height:100vh; overflow:hidden; }
-  /* 좌: 스테이지 */
   .stage-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:24px; }
   #stage {
     position:relative; width:250px; aspect-ratio:460/907;
     background:radial-gradient(120% 120% at 80% 10%, rgba(139,123,255,.35), transparent 55%),
                radial-gradient(120% 120% at 10% 90%, rgba(87,230,195,.28), transparent 55%),
                linear-gradient(135deg,#1a1830,#0e0e18);
-    border:1px solid var(--border); border-radius:12px; overflow:visible; box-shadow:0 20px 60px -20px #000;
+    border:1px solid var(--border); border-radius:12px; box-shadow:0 20px 60px -20px #000;
   }
-  #stage.checker { background:
-    conic-gradient(#3a3a44 90deg,#2a2a33 0 180deg,#3a3a44 0 270deg,#2a2a33 0) 0 0/24px 24px; }
+  #stage.checker { background: conic-gradient(#3a3a44 90deg,#2a2a33 0 180deg,#3a3a44 0 270deg,#2a2a33 0) 0 0/24px 24px; }
   #stage.game { background:linear-gradient(180deg,#20304a,#0b1220); }
   #stage img { position:absolute; height:auto; -webkit-user-drag:none; user-select:none; outline:0; }
   #stage img.sel { outline:2px dashed var(--host); outline-offset:1px; }
-  /* 리사이즈 gizmo */
   #gizmo { position:absolute; border:1.5px solid var(--host); pointer-events:none; z-index:9999; box-shadow:0 0 0 1px rgba(0,0,0,.4); }
   #gizmo .gh { position:absolute; width:12px; height:12px; background:#fff; border:1.5px solid var(--host); border-radius:2px; pointer-events:auto; }
   #gizmo .gh[data-h=nw]{left:-7px;top:-7px;cursor:nwse-resize;}
@@ -33,33 +30,35 @@
   #gizmo .gh[data-h=sw]{left:-7px;bottom:-7px;cursor:nesw-resize;}
   #gizmo .gh[data-h=s] {left:50%;bottom:-7px;margin-left:-6px;cursor:ns-resize;}
   #gizmo .gh[data-h=se]{right:-7px;bottom:-7px;cursor:nwse-resize;}
-  .frame { position:absolute; inset:0; border-radius:12px; pointer-events:none;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
-  /* 우: 패널 */
-  .panel { width:340px; background:var(--panel); border-left:1px solid var(--border); display:flex; flex-direction:column; }
+  .frame { position:absolute; inset:0; border-radius:12px; pointer-events:none; box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
+  .panel { width:360px; background:var(--panel); border-left:1px solid var(--border); display:flex; flex-direction:column; }
   .panel h1 { font-size:15px; margin:0; padding:12px 14px; border-bottom:1px solid var(--border); }
   .panel h1 small { color:#8b8b98; font-weight:400; }
   .toolbar { display:flex; gap:6px; flex-wrap:wrap; padding:10px 12px; border-bottom:1px solid var(--border); }
-  .toolbar button, .toolbar select { background:#22222a; color:var(--text); border:1px solid var(--border); border-radius:7px; padding:6px 9px; font-size:12px; cursor:pointer; }
+  .toolbar button { background:#22222a; color:var(--text); border:1px solid var(--border); border-radius:7px; padding:6px 9px; font-size:12px; cursor:pointer; }
   .toolbar button:hover { background:#2c2c36; }
   .toolbar button.primary { background:var(--host); color:#04241d; font-weight:700; border-color:var(--host); }
-  .list { flex:1; overflow:auto; padding:6px; }
+  .list { flex:1; overflow:auto; padding:6px; min-height:80px; }
   .row { display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px; font-size:12px; cursor:pointer; }
   .row:hover { background:#20202a; }
   .row.sel { background:rgba(87,230,195,.14); outline:1px solid rgba(87,230,195,.4); }
   .row .nm { flex:1; font-weight:600; }
-  .row .z { color:#8b8b98; width:18px; text-align:center; }
+  .row .vtag { color:var(--host); font-size:11px; }
   .row button { background:#2a2a33; border:1px solid var(--border); color:#ccc; border-radius:5px; width:22px; height:22px; cursor:pointer; font-size:12px; line-height:1; }
   .row .vis { width:24px; text-align:center; }
   .editor { border-top:1px solid var(--border); padding:10px 12px; display:none; }
   .editor.on { display:block; }
+  .variant { display:flex; align-items:center; gap:8px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed var(--border); }
+  .variant b { color:var(--host); }
+  .variant .vbtn { background:#2a2a33; border:1px solid var(--border); color:#fff; border-radius:6px; width:30px; height:28px; font-size:16px; cursor:pointer; }
+  .variant .vbtn:hover { background:#3a3a46; }
   .editor .fld { display:flex; align-items:center; gap:8px; margin:6px 0; }
-  .editor .fld label { width:54px; color:#9a9aa8; font-size:12px; }
+  .editor .fld label { width:56px; color:#9a9aa8; font-size:12px; }
   .editor .fld input[type=range] { flex:1; }
-  .editor .fld input[type=number] { width:72px; background:#0c0c0e; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:4px 6px; }
+  .editor .fld input[type=number] { width:70px; background:#0c0c0e; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:4px 6px; }
   .out { border-top:1px solid var(--border); padding:10px 12px; }
-  .out textarea { width:100%; height:160px; background:#0c0c0e; color:#b7f5e4; border:1px solid var(--border); border-radius:8px; font:11px/1.5 monospace; padding:8px; resize:vertical; }
-  .hint { color:#8b8b98; font-size:11px; padding:0 12px 10px; }
+  .out textarea { width:100%; height:140px; background:#0c0c0e; color:#b7f5e4; border:1px solid var(--border); border-radius:8px; font:11px/1.5 monospace; padding:8px; resize:vertical; }
+  .hint { color:#8b8b98; font-size:11px; padding:0 12px 10px; line-height:1.6; }
   kbd { background:#2a2a33; border:1px solid var(--border); border-radius:4px; padding:0 5px; font-size:11px; }
 </style>
 </head>
@@ -74,11 +73,11 @@
     </div>
   </div>
   <div class="panel">
-    <h1>🎀 호스트 리그 에디터 <small>— 배치·크기·순서</small></h1>
+    <h1>🎀 VIP 호스트 리그 에디터 <small>— 변형·배치</small></h1>
     <div class="toolbar">
-      <button onclick="setBg('grad')">배경:스테이지</button>
+      <button onclick="setBg('grad')">배경</button>
       <button onclick="setBg('checker')">체커</button>
-      <button onclick="setBg('game')">게임bg</button>
+      <button onclick="setBg('game')">게임</button>
       <button id="undoBtn" onclick="undo()" title="Ctrl+Z">↩ 되돌리기</button>
       <button id="redoBtn" onclick="redoFn()" title="Ctrl+Y">↪ 다시</button>
       <button onclick="reset()">리셋</button>
@@ -86,267 +85,182 @@
       <button onclick="load()">불러오기</button>
       <button class="primary" onclick="copyOut()">좌표 복사</button>
     </div>
-    <div class="hint">파츠 <b>드래그=이동</b> · 선택하면 <b>테두리 핸들로 리사이즈</b>(모서리=가로세로, 변=한쪽만, <kbd>Shift</kbd>+모서리=비율유지) · <kbd>휠</kbd>=비율유지 확대 · <kbd>화살표</kbd>=미세이동 · 목록 <kbd>↑↓</kbd>=레이어(위=뒤) · <kbd>Ctrl+Z</kbd>=되돌리기</div>
+    <div class="hint">파츠 <b>드래그=이동</b> · <b>테두리 핸들=크기</b>(<kbd>Shift</kbd>=비율) · 선택 시 <b>◀▶=변형 교체</b> (<kbd>[</kbd> <kbd>]</kbd>) · 눈/눈썹/볼터치는 <b>한쪽만 편집→반대쪽 자동 미러</b> · 👁=표시 · <kbd>Ctrl+Z</kbd></div>
     <div class="list" id="list"></div>
     <div class="editor" id="editor">
+      <div class="variant" id="variantBox">
+        <button class="vbtn" onclick="cycleVariant(-1)">◀</button>
+        <div style="flex:1;text-align:center">변형 <b id="vNow">1</b> / <span id="vAll">1</span></div>
+        <button class="vbtn" onclick="cycleVariant(1)">▶</button>
+      </div>
       <div class="fld"><label>X (left%)</label><input type="range" id="ex" min="-10" max="100" step="0.1"><input type="number" id="exn" step="0.1"></div>
-      <div class="fld"><label>Y (top%)</label><input type="range" id="ey" min="-10" max="130" step="0.1"><input type="number" id="eyn" step="0.1"></div>
-      <div class="fld"><label>가로 W%</label><input type="range" id="ew" min="2" max="110" step="0.1"><input type="number" id="ewn" step="0.1"></div>
-      <div class="fld"><label>세로 H%</label><input type="range" id="eh" min="2" max="130" step="0.1"><input type="number" id="ehn" step="0.1"></div>
-      <div class="fld"><label></label><button onclick="resetAspect()" style="background:#2a2a33;color:#ccc;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer">↻ 원본 비율로</button></div>
+      <div class="fld"><label>Y (top%)</label><input type="range" id="ey" min="-10" max="100" step="0.1"><input type="number" id="eyn" step="0.1"></div>
+      <div class="fld"><label>가로 W%</label><input type="range" id="ew" min="2" max="60" step="0.1"><input type="number" id="ewn" step="0.1"></div>
+      <div class="fld"><label>세로 H%</label><input type="range" id="eh" min="1" max="40" step="0.1"><input type="number" id="ehn" step="0.1"></div>
+      <div class="fld"><label></label><button onclick="resetAspect()" style="background:#2a2a33;color:#ccc;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer">↻ 원본 비율</button></div>
     </div>
-    <div class="out">
-      <textarea id="out" readonly></textarea>
-    </div>
+    <div class="out"><textarea id="out" readonly></textarea></div>
   </div>
 
 <script>
-// 파츠 기본값: [name, left%, top%, width%, class]  (base=고정 배경, 나머지=얼굴 파츠)
+// 슬롯: {slot, side(l/r/c), dir, count, vi, lp, tu, wp, cls, pair, hidden}. 위=뒤 레이어.
 const DEFAULTS = [
-  ['base',    0,     0,     100,   ''],
-  ['brow_l',  34.35, 19.5, 11.3, 'rig-brow l'],
-  ['brow_r',  54.35, 19.5, 11.3, 'rig-brow r'],
-  ['eye_l',   32.4, 21.4, 15.22, 'rig-eye l'],
-  ['eye_r',   52.4, 21.4, 15.22, 'rig-eye r'],
-  ['nose',    48.26, 26.5, 3.48,  'rig-nose'],
-  ['mouth', 45.32, 30.3, 9.35, 'rig-mouth'],
+  {slot:'base',    side:'c', dir:null,     count:1, vi:0, lp:0,     tu:0,    wp:100,   cls:''},
+  {slot:'brow_l',  side:'l', dir:'brow',   count:6, vi:0, lp:34.35, tu:19.5, wp:11.3,  cls:'rig-brow l',  pair:'brow'},
+  {slot:'brow_r',  side:'r', dir:'brow',   count:6, vi:0, lp:54.35, tu:19.5, wp:11.3,  cls:'rig-brow r',  pair:'brow'},
+  {slot:'eyelid_l',side:'l', dir:'eyelid', count:8, vi:0, lp:32.4,  tu:20.6, wp:15.22, cls:'',            pair:'eyelid', hidden:true},
+  {slot:'eyelid_r',side:'r', dir:'eyelid', count:8, vi:0, lp:52.4,  tu:20.6, wp:15.22, cls:'',            pair:'eyelid', hidden:true},
+  {slot:'eye_l',   side:'l', dir:'eye',    count:8, vi:3, lp:32.4,  tu:21.4, wp:15.22, cls:'rig-eye l',   pair:'eye'},
+  {slot:'eye_r',   side:'r', dir:'eye',    count:8, vi:3, lp:52.4,  tu:21.4, wp:15.22, cls:'rig-eye r',   pair:'eye'},
+  {slot:'blush_l', side:'l', dir:'blush',  count:2, vi:0, lp:28,    tu:26,   wp:12,    cls:'',            pair:'blush'},
+  {slot:'blush_r', side:'r', dir:'blush',  count:2, vi:0, lp:60,    tu:26,   wp:12,    cls:'',            pair:'blush'},
+  {slot:'nose',    side:'c', dir:'nose',   count:1, vi:0, lp:48.26, tu:26.5, wp:3.48,  cls:'rig-nose'},
+  {slot:'mouth',   side:'c', dir:'mouth',  count:8, vi:2, lp:45.32, tu:30.3, wp:9.35,  cls:'rig-mouth'},
 ];
-const UNITS_H = 100;   // top 을 %로 직접 사용 (HostRig와 동일)
-const ASPECT = 460/907; // 스테이지 W/H = base 비율
-const NAT = {};       // 파츠 원본 픽셀크기 {name:{w,h}}
+const ASPECT = 460/907, NAT = {};
 const stage = document.getElementById('stage');
-let parts = [];   // {name, lp, tu, wp, hp, cls, hidden, el}
-let sel = -1;
+let parts = [], sel = -1;
 
-// ── 실행취소/다시실행 히스토리 ──
-let history = [], redo = [];
-let _gk = '', _gt = 0;
-function serialize(){ return parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,hp:p.hp,cls:p.cls,hidden:p.hidden})); }
-function pushHistory(snap){
-  history.push(snap || serialize());
-  if(history.length>80) history.shift();
-  redo.length = 0; _gk=''; updateUndoBtn();
-}
-// 연속 조작(드래그/휠/슬라이더/키)은 같은 제스처면 1스텝으로 합침
-function maybeSnapshot(key){
-  const now = Date.now();
-  if(key !== _gk || now - _gt > 600){ history.push(serialize()); if(history.length>80)history.shift(); redo.length=0; updateUndoBtn(); }
-  _gk = key; _gt = now;
-}
-function undo(){
-  if(!history.length) return;
-  redo.push(serialize());
-  build(history.pop()); _gk=''; updateUndoBtn();
-}
-function redoFn(){
-  if(!redo.length) return;
-  history.push(serialize());
-  build(redo.pop()); _gk=''; updateUndoBtn();
-}
-function updateUndoBtn(){
-  const u=document.getElementById('undoBtn'), r=document.getElementById('redoBtn');
-  if(u){ u.style.opacity = history.length?1:.4; u.textContent = '↩ 되돌리기'+(history.length?` (${history.length})`:''); }
-  if(r){ r.style.opacity = redo.length?1:.4; }
-}
+function srcOf(p){ return p.dir===null ? 'base.png' : `face/${p.dir}/${p.vi}${p.side==='c'?'':'_'+p.side}.png`; }
+function partner(p){ return p.pair ? parts.find(q=>q!==p && q.pair===p.pair) : null; }
 
-function clone(){ return DEFAULTS.map(d => { const n=NAT[d[0]]||{w:1,h:1}; const wp=d[3]; const hp=+(wp*(n.h/n.w)*ASPECT).toFixed(2); return {name:d[0], lp:d[1], tu:d[2], wp, hp, cls:d[4], hidden:false}; }); }
-function srcOf(name){ return name==='base' ? 'base.png' : 'face/'+name+'.png'; }
+// ── 히스토리 ──
+let history=[], redo=[], _gk='', _gt=0;
+function serialize(){ return parts.map(p=>({slot:p.slot,side:p.side,dir:p.dir,count:p.count,vi:p.vi,lp:p.lp,tu:p.tu,wp:p.wp,hp:p.hp,cls:p.cls,pair:p.pair,hidden:!!p.hidden})); }
+function pushHistory(snap){ history.push(snap||serialize()); if(history.length>80)history.shift(); redo.length=0; _gk=''; updateUndoBtn(); }
+function maybeSnapshot(k){ const n=Date.now(); if(k!==_gk||n-_gt>600){history.push(serialize());if(history.length>80)history.shift();redo.length=0;updateUndoBtn();} _gk=k; _gt=n; }
+function undo(){ if(!history.length)return; redo.push(serialize()); build(history.pop()); _gk=''; updateUndoBtn(); }
+function redoFn(){ if(!redo.length)return; history.push(serialize()); build(redo.pop()); _gk=''; updateUndoBtn(); }
+function updateUndoBtn(){ const u=document.getElementById('undoBtn'),r=document.getElementById('redoBtn'); if(u){u.style.opacity=history.length?1:.4;u.textContent='↩ 되돌리기'+(history.length?` (${history.length})`:'');} if(r)r.style.opacity=redo.length?1:.4; }
+
+function clone(){ return DEFAULTS.map(d=>{ const n=NAT[srcOf(d)]||{w:1,h:1}; const hp=+(d.wp*(n.h/n.w)*ASPECT).toFixed(2); return {...d, hp, hidden:!!d.hidden}; }); }
 
 function build(state){
-  // 기존 img 제거
   [...stage.querySelectorAll('img')].forEach(n=>n.remove());
-  parts = state.map(p => {
-    const img = document.createElement('img');
-    img.src = srcOf(p.name);
-    img.draggable = false;
-    stage.appendChild(img);
-    p.el = img;
-    return p;
-  });
-  applyAll(); renderList(); select(-1);
-  attachDrag();
+  parts = state.map(p=>{ const img=document.createElement('img'); img.src=srcOf(p); img.dataset.src=srcOf(p); img.draggable=false; stage.appendChild(img); return {...p, el:img}; });
+  applyAll(); renderList(); select(-1); attachDrag();
 }
-function sw(){ return stage.clientWidth; }
-function sh(){ return stage.clientHeight; }
-function applyOne(p, i){
-  p.el.style.left = p.lp + '%';
-  p.el.style.top = (p.tu/UNITS_H*100) + '%';
-  p.el.style.width = p.wp + '%';
-  p.el.style.height = (p.hp!=null ? p.hp+'%' : 'auto');
-  p.el.style.zIndex = i+1;
-  p.el.style.display = p.hidden ? 'none':'block';
-  p.el.classList.toggle('sel', i===sel);
+function applyOne(p,i){
+  if(p.el.dataset.src!==srcOf(p)){ p.el.src=srcOf(p); p.el.dataset.src=srcOf(p); }
+  p.el.style.left=p.lp+'%'; p.el.style.top=p.tu+'%'; p.el.style.width=p.wp+'%';
+  p.el.style.height=(p.hp!=null?p.hp+'%':'auto'); p.el.style.zIndex=i+1;
+  p.el.style.display=p.hidden?'none':'block'; p.el.classList.toggle('sel',i===sel);
   if(i===sel) positionGizmo();
 }
 function applyAll(){ parts.forEach(applyOne); updateOut(); }
 
 function renderList(){
-  const list = document.getElementById('list');
-  list.innerHTML='';
+  const list=document.getElementById('list'); list.innerHTML='';
   parts.forEach((p,i)=>{
-    const row=document.createElement('div');
-    row.className='row'+(i===sel?' sel':'');
-    row.innerHTML = `<span class="z">${i+1}</span>
-      <span class="vis" title="표시">${p.hidden?'🚫':'👁'}</span>
-      <span class="nm">${p.name}</span>
-      <button title="뒤로">↑</button><button title="앞으로">↓</button>`;
+    const row=document.createElement('div'); row.className='row'+(i===sel?' sel':'');
+    const vtag = p.count>1 ? `<span class="vtag">v${p.vi+1}</span>` : '';
+    row.innerHTML=`<span class="vis" title="표시">${p.hidden?'🚫':'👁'}</span><span class="nm">${p.slot}</span>${vtag}<button title="뒤로">↑</button><button title="앞으로">↓</button>`;
     row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; select(i); };
-    row.querySelector('.vis').onclick=(e)=>{e.stopPropagation(); pushHistory(); p.hidden=!p.hidden; applyAll(); renderList();};
+    row.querySelector('.vis').onclick=(e)=>{e.stopPropagation(); pushHistory(); p.hidden=!p.hidden; const pt=partner(p); if(pt)pt.hidden=p.hidden; applyAll(); renderList();};
     const [up,down]=row.querySelectorAll('button');
-    up.onclick=(e)=>{e.stopPropagation(); move(i,-1);};
-    down.onclick=(e)=>{e.stopPropagation(); move(i,1);};
+    up.onclick=(e)=>{e.stopPropagation(); move(i,-1);}; down.onclick=(e)=>{e.stopPropagation(); move(i,1);};
     list.appendChild(row);
   });
 }
-function move(i,d){
-  const j=i+d; if(j<0||j>=parts.length)return;
-  pushHistory();
-  [parts[i],parts[j]]=[parts[j],parts[i]];
-  sel = (sel===i)?j:(sel===j?i:sel);
-  applyAll(); renderList();
-}
+function move(i,d){ const j=i+d; if(j<0||j>=parts.length)return; pushHistory(); [parts[i],parts[j]]=[parts[j],parts[i]]; sel=(sel===i)?j:(sel===j?i:sel); applyAll(); renderList(); }
+
 function select(i){
-  sel=i; parts.forEach((p,k)=>p.el.classList.toggle('sel',k===i));
-  renderList();
-  const ed=document.getElementById('editor');
-  const gz=document.getElementById('gizmo');
-  if(i<0){ ed.classList.remove('on'); if(gz)gz.style.display='none'; return; }
-  ed.classList.add('on');
-  const p=parts[i];
+  sel=i; parts.forEach((p,k)=>p.el.classList.toggle('sel',k===i)); renderList();
+  const ed=document.getElementById('editor'), gz=document.getElementById('gizmo');
+  if(i<0){ ed.classList.remove('on'); gz.style.display='none'; return; }
+  ed.classList.add('on'); const p=parts[i];
+  document.getElementById('variantBox').style.display = p.count>1?'flex':'none';
+  document.getElementById('vNow').textContent=p.vi+1; document.getElementById('vAll').textContent=p.count;
   setF('ex','exn',p.lp); setF('ey','eyn',p.tu); setF('ew','ewn',p.wp); setF('eh','ehn',p.hp);
   positionGizmo();
 }
 function setF(r,n,v){ document.getElementById(r).value=v; document.getElementById(n).value=v; }
+
+function cycleVariant(d){
+  if(sel<0)return; const p=parts[sel]; if(p.count<=1)return;
+  pushHistory(); p.vi=(p.vi+d+p.count)%p.count;
+  const pt=partner(p); if(pt)pt.vi=p.vi;
+  applyOne(p,sel); if(pt)applyOne(pt,parts.indexOf(pt));
+  document.getElementById('vNow').textContent=p.vi+1; renderList(); updateOut();
+}
+
+// 좌우 대칭: 편집한 쪽 → 파트너를 미러
+function syncPair(p){
+  const pt=partner(p); if(!pt)return;
+  pt.vi=p.vi; pt.tu=p.tu; pt.wp=p.wp; pt.hp=p.hp; pt.hidden=p.hidden;
+  pt.lp=+(100-p.lp-p.wp).toFixed(2);
+  applyOne(pt,parts.indexOf(pt));
+}
+
 ['ex','ey','ew','eh'].forEach(id=>{
-  const r=document.getElementById(id), n=document.getElementById(id+'n');
+  const r=document.getElementById(id),n=document.getElementById(id+'n');
   const key={ex:'lp',ey:'tu',ew:'wp',eh:'hp'}[id];
-  const on=v=>{ if(sel<0)return; maybeSnapshot('sld'+id+sel); parts[sel][key]=parseFloat(v); r.value=v; n.value=v; applyOne(parts[sel],sel); updateOut(); };
+  const on=v=>{ if(sel<0)return; maybeSnapshot('sld'+id+sel); parts[sel][key]=parseFloat(v); r.value=v;n.value=v; applyOne(parts[sel],sel); syncPair(parts[sel]); updateOut(); };
   r.oninput=e=>on(e.target.value); n.oninput=e=>on(e.target.value);
 });
 
-// 드래그 이동
 let drag=null;
 function attachDrag(){
-  stage.onmousedown=(e)=>{
-    const img=e.target.closest('img'); if(!img)return;
-    const i=parts.findIndex(p=>p.el===img); if(i<0)return;
-    select(i);
-    const rect=stage.getBoundingClientRect();
-    drag={i, ox:e.clientX, oy:e.clientY, lp0:parts[i].lp, tu0:parts[i].tu, rw:rect.width, rh:rect.height, pre:serialize(), snapped:false};
-    e.preventDefault();
-  };
-  window.onmousemove=(e)=>{
-    if(!drag)return;
-    if(!drag.snapped){ pushHistory(drag.pre); drag.snapped=true; }
-    const p=parts[drag.i];
-    const dx=(e.clientX-drag.ox)/drag.rw*100;
-    const dy=(e.clientY-drag.oy)/drag.rh*UNITS_H;
-    p.lp=+(drag.lp0+dx).toFixed(2); p.tu=+(drag.tu0+dy).toFixed(2);
-    applyOne(p,drag.i); if(sel===drag.i){setF('ex','exn',p.lp);setF('ey','eyn',p.tu);} updateOut();
-  };
+  stage.onmousedown=(e)=>{ const img=e.target.closest('img'); if(!img)return; const i=parts.findIndex(p=>p.el===img); if(i<0)return; select(i);
+    const rect=stage.getBoundingClientRect(); drag={i,ox:e.clientX,oy:e.clientY,lp0:parts[i].lp,tu0:parts[i].tu,rw:rect.width,rh:rect.height,pre:serialize(),snapped:false}; e.preventDefault(); };
+  window.onmousemove=(e)=>{ if(!drag)return; if(!drag.snapped){pushHistory(drag.pre);drag.snapped=true;} const p=parts[drag.i];
+    p.lp=+(drag.lp0+(e.clientX-drag.ox)/drag.rw*100).toFixed(2); p.tu=+(drag.tu0+(e.clientY-drag.oy)/drag.rh*100).toFixed(2);
+    applyOne(p,drag.i); syncPair(p); if(sel===drag.i){setF('ex','exn',p.lp);setF('ey','eyn',p.tu);} updateOut(); };
   window.onmouseup=()=>drag=null;
-  // 휠 크기
-  stage.onwheel=(e)=>{
-    if(sel<0)return; e.preventDefault();
-    maybeSnapshot('whl'+sel);
-    const p=parts[sel];
-    const f=(e.deltaY<0?1.03:0.97);
-    p.wp=Math.max(2,+(p.wp*f).toFixed(2));
-    p.hp=Math.max(2,+(p.hp*f).toFixed(2)); // 휠=가로세로 동시(비율유지)
-    applyOne(p,sel); setF('ew','ewn',p.wp); setF('eh','ehn',p.hp); updateOut();
-  };
+  stage.onwheel=(e)=>{ if(sel<0)return; e.preventDefault(); maybeSnapshot('whl'+sel); const p=parts[sel]; const f=(e.deltaY<0?1.03:0.97);
+    p.wp=Math.max(1,+(p.wp*f).toFixed(2)); p.hp=Math.max(1,+(p.hp*f).toFixed(2)); applyOne(p,sel); syncPair(p); setF('ew','ewn',p.wp);setF('eh','ehn',p.hp); updateOut(); };
 }
-// ── 리사이즈 gizmo(테두리 핸들) ──
-function positionGizmo(){
-  const gz=document.getElementById('gizmo');
-  if(sel<0){ gz.style.display='none'; return; }
-  const p=parts[sel];
-  gz.style.display='block';
-  gz.style.left=p.lp+'%'; gz.style.top=(p.tu/UNITS_H*100)+'%';
-  gz.style.width=p.wp+'%'; gz.style.height=p.hp+'%';
-}
-function resetAspect(){
-  if(sel<0)return; const p=parts[sel]; const n=NAT[p.name]; if(!n)return;
-  maybeSnapshot('asp'+sel);
-  p.hp=+(p.wp*(n.h/n.w)*ASPECT).toFixed(2);
-  applyOne(p,sel); setF('eh','ehn',p.hp); updateOut();
-}
-let rez=null;
-document.querySelectorAll('#gizmo .gh').forEach(h=>{
-  h.addEventListener('mousedown',(e)=>{
-    if(sel<0)return; e.preventDefault(); e.stopPropagation();
-    const p=parts[sel]; const rect=stage.getBoundingClientRect();
-    const SW=stage.clientWidth, SH=stage.clientHeight;
-    rez={dir:h.dataset.h, p, rect, SW, SH,
-      x:p.lp/100*SW, y:p.tu/UNITS_H*SH, w:p.wp/100*SW, h:p.hp/100*SH,
-      snapped:false, pre:serialize()};
-  });
-});
-window.addEventListener('mousemove',(e)=>{
-  if(!rez)return;
-  if(!rez.snapped){ pushHistory(rez.pre); rez.snapped=true; }
-  const {dir,rect,SW,SH}=rez;
-  let x=rez.x,y=rez.y,w=rez.w,h=rez.h; const right=x+w, bottom=y+h;
-  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
-  if(dir.includes('e')) w=Math.max(8, mx-x);
-  if(dir.includes('s')) h=Math.max(8, my-y);
-  if(dir.includes('w')){ const nx=Math.min(mx, right-8); w=right-nx; x=nx; }
-  if(dir.includes('n')){ const ny=Math.min(my, bottom-8); h=bottom-ny; y=ny; }
-  if(e.shiftKey && dir.length===2){ // 코너 + Shift = 비율유지
-    const ar=rez.w/rez.h;
-    if(Math.abs(w-rez.w) > Math.abs(h-rez.h)){ h=w/ar; if(dir.includes('n')) y=bottom-h; }
-    else { w=h*ar; if(dir.includes('w')) x=right-w; }
-  }
-  const p=rez.p;
-  p.lp=+(x/SW*100).toFixed(2); p.tu=+(y/SH*UNITS_H).toFixed(2);
-  p.wp=+(w/SW*100).toFixed(2); p.hp=+(h/SH*100).toFixed(2);
-  applyOne(p, parts.indexOf(p));
-  setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp);setF('eh','ehn',p.hp);
-  updateOut();
-});
-window.addEventListener('mouseup',()=>{ rez=null; });
 
-// 키보드 미세이동 + 단축키
+// gizmo 리사이즈
+function positionGizmo(){ const gz=document.getElementById('gizmo'); if(sel<0){gz.style.display='none';return;} const p=parts[sel];
+  gz.style.display='block'; gz.style.left=p.lp+'%'; gz.style.top=p.tu+'%'; gz.style.width=p.wp+'%'; gz.style.height=p.hp+'%'; }
+function resetAspect(){ if(sel<0)return; const p=parts[sel]; const n=NAT[srcOf(p)]; if(!n)return; maybeSnapshot('asp'+sel);
+  p.hp=+(p.wp*(n.h/n.w)*ASPECT).toFixed(2); applyOne(p,sel); syncPair(p); setF('eh','ehn',p.hp); updateOut(); }
+let rez=null;
+document.querySelectorAll('#gizmo .gh').forEach(h=>{ h.addEventListener('mousedown',(e)=>{ if(sel<0)return; e.preventDefault(); e.stopPropagation();
+  const p=parts[sel]; const rect=stage.getBoundingClientRect(); const SW=stage.clientWidth,SH=stage.clientHeight;
+  rez={dir:h.dataset.h,rect,SW,SH,x:p.lp/100*SW,y:p.tu/100*SH,w:p.wp/100*SW,h:p.hp/100*SH,pre:serialize(),snapped:false}; }); });
+window.addEventListener('mousemove',(e)=>{ if(!rez)return; if(!rez.snapped){pushHistory(rez.pre);rez.snapped=true;}
+  const {dir,rect,SW,SH}=rez; let x=rez.x,y=rez.y,w=rez.w,h=rez.h; const right=x+w,bottom=y+h;
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  if(dir.includes('e'))w=Math.max(6,mx-x); if(dir.includes('s'))h=Math.max(6,my-y);
+  if(dir.includes('w')){const nx=Math.min(mx,right-6);w=right-nx;x=nx;} if(dir.includes('n')){const ny=Math.min(my,bottom-6);h=bottom-ny;y=ny;}
+  if(e.shiftKey&&dir.length===2){const ar=rez.w/rez.h; if(Math.abs(w-rez.w)>Math.abs(h-rez.h)){h=w/ar;if(dir.includes('n'))y=bottom-h;}else{w=h*ar;if(dir.includes('w'))x=right-w;}}
+  const p=parts[sel]; p.lp=+(x/SW*100).toFixed(2);p.tu=+(y/SH*100).toFixed(2);p.wp=+(w/SW*100).toFixed(2);p.hp=+(h/SH*100).toFixed(2);
+  applyOne(p,sel); syncPair(p); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp);setF('eh','ehn',p.hp); updateOut(); });
+window.addEventListener('mouseup',()=>rez=null);
+
 window.onkeydown=(e)=>{
-  const mod = e.ctrlKey||e.metaKey;
-  if(mod && (e.key==='z'||e.key==='Z')){ e.preventDefault(); e.shiftKey?redoFn():undo(); return; }
-  if(mod && (e.key==='y'||e.key==='Y')){ e.preventDefault(); redoFn(); return; }
+  const mod=e.ctrlKey||e.metaKey;
+  if(mod&&(e.key==='z'||e.key==='Z')){e.preventDefault();e.shiftKey?redoFn():undo();return;}
+  if(mod&&(e.key==='y'||e.key==='Y')){e.preventDefault();redoFn();return;}
   if(sel<0)return; const p=parts[sel]; const s=e.shiftKey?2:0.3;
-  const nudge = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','[',']'].includes(e.key);
-  if(!nudge) return;
+  if(e.key==='['){cycleVariant(-1);e.preventDefault();return;} if(e.key===']'){cycleVariant(1);e.preventDefault();return;}
+  const nud=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key); if(!nud)return;
   maybeSnapshot('key'+sel);
-  if(e.key==='ArrowLeft')p.lp-=s; else if(e.key==='ArrowRight')p.lp+=s;
-  else if(e.key==='ArrowUp')p.tu-=s; else if(e.key==='ArrowDown')p.tu+=s;
-  else if(e.key==='['){const f=e.shiftKey?0.95:0.99; p.wp=Math.max(2,p.wp*f); p.hp=Math.max(2,p.hp*f);}
-  else if(e.key===']'){const f=e.shiftKey?1.05:1.01; p.wp*=f; p.hp*=f;}
-  e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);p.wp=+p.wp.toFixed(2);p.hp=+p.hp.toFixed(2);
-  applyOne(p,sel); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp);setF('eh','ehn',p.hp); updateOut();
+  if(e.key==='ArrowLeft')p.lp-=s;else if(e.key==='ArrowRight')p.lp+=s;else if(e.key==='ArrowUp')p.tu-=s;else if(e.key==='ArrowDown')p.tu+=s;
+  e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);
+  applyOne(p,sel); syncPair(p); setF('ex','exn',p.lp);setF('ey','eyn',p.tu); updateOut();
 };
 
 function updateOut(){
-  // HostRig 형식: [name, left%, top%, width%]  (base=고정 배경, 얼굴 파츠만 출력)
-  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}],`;
-  const face=parts.filter(p=>p.name!=='base');
-  const txt =
-`// base 460x907 위 얼굴 파츠 [name, left%, top%, width%]\n`+face.map(fmt).join('\n');
-  document.getElementById('out').value=txt;
+  const fmt=p=>`  ['${p.slot}', '${srcOf(p)}', ${p.lp}, ${p.tu}, ${p.wp}${p.hidden?"  /*hidden*/":''}],`;
+  const face=parts.filter(p=>p.slot!=='base');
+  document.getElementById('out').value =
+    `// [slot, file, left%, top%, width%]  (base=고정배경)\n`+face.map(fmt).join('\n');
 }
-function copyOut(){ const t=document.getElementById('out'); t.select(); navigator.clipboard.writeText(t.value); alert('좌표를 복사했어요. 채팅에 붙여넣어 주세요.'); }
+function copyOut(){ const t=document.getElementById('out'); t.select(); navigator.clipboard.writeText(t.value); alert('좌표+변형을 복사했어요. 채팅에 붙여넣어 주세요.'); }
 function setBg(m){ stage.className=''; if(m==='checker')stage.classList.add('checker'); if(m==='game')stage.classList.add('game'); }
 function reset(){ pushHistory(); build(clone()); }
-function save(){ localStorage.setItem('rigedit', JSON.stringify(parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})))); alert('저장됨'); }
-function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장된 게 없어요');return;} pushHistory(); build(JSON.parse(s)); }
+function save(){ localStorage.setItem('vipedit', JSON.stringify(serialize())); alert('저장됨'); }
+function load(){ const s=localStorage.getItem('vipedit'); if(!s){alert('저장된 게 없어요');return;} pushHistory(); build(JSON.parse(s)); }
 
-// 파츠 원본 크기 프리로드 후 시작 (세로 기본값 계산에 필요)
+// 원본 크기 프리로드 (모든 변형)
 (async()=>{
-  await Promise.all(DEFAULTS.map(d=>new Promise(res=>{
-    const im=new Image();
-    im.onload=()=>{ NAT[d[0]]={w:im.naturalWidth,h:im.naturalHeight}; res(); };
-    im.onerror=()=>{ NAT[d[0]]={w:1,h:1}; res(); };
-    im.src=srcOf(d[0]);
-  })));
-  build(clone());
-  history.length=0; redo.length=0; updateUndoBtn();
+  const srcs=new Set();
+  DEFAULTS.forEach(d=>{ for(let v=0; v<d.count; v++){ if(d.side==='c')srcs.add(srcOf({...d,vi:v})); else{srcs.add(srcOf({...d,vi:v,side:'l'}));srcs.add(srcOf({...d,vi:v,side:'r'}));} } });
+  await Promise.all([...srcs].map(src=>new Promise(res=>{ const im=new Image(); im.onload=()=>{NAT[src]={w:im.naturalWidth,h:im.naturalHeight};res();}; im.onerror=()=>{NAT[src]={w:1,h:1};res();}; im.src=src; })));
+  build(clone()); history.length=0; redo.length=0; updateUndoBtn();
 })();
 </script>
 </body>
