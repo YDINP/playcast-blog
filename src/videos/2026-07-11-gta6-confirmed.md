@@ -6,8 +6,9 @@ category: "New"
 tags: ["GTA6", "GTA 6", "록스타", "오픈월드", "기대작"]
 host: "rosie"
 views: 24800
-# 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 아래 thumbnail 경로에 넣으세요.
-# thumbnail: "/games/gta6.jpg"
+ads: false  # 공식 게임 이미지 사용 → 인용 근거 강화 위해 광고 미표시
+# 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 public/games/gta6.jpg 로 저장.
+thumbnail: "/games/gta6.jpg"
 imageCredit:
   text: "© Rockstar Games (공식 뉴스와이어)"
   url: "https://www.rockstargames.com/newswire"

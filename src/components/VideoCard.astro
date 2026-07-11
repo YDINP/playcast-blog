@@ -18,11 +18,8 @@ const href = watchHref(video.id);
   variant === 'grid' ? (
     <a href={href} class="vcard">
       <div class="vcard-thumb">
-        {poster ? (
-          <img src={poster} alt={data.title} loading="lazy" />
-        ) : (
-          <div class="sp-bg is-grad is-on" style="position:absolute;inset:0" />
-        )}
+        <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
+        {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
         <span class="vcard-dur">{dur}</span>
         <span class="vcard-play">
           <span>
@@ -50,11 +47,8 @@ const href = watchHref(video.id);
   ) : (
     <a href={href} class="side-card">
       <div class="vcard-thumb">
-        {poster ? (
-          <img src={poster} alt={data.title} loading="lazy" />
-        ) : (
-          <div class="sp-bg is-grad is-on" style="position:absolute;inset:0" />
-        )}
+        <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
+        {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
         <span class="vcard-dur">{dur}</span>
       </div>
       <div>

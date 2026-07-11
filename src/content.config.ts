@@ -23,6 +23,8 @@ const videos = defineCollection({
       .optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드
+    // 광고 표시 여부. 공식 게임 이미지를 쓰는 글은 인용 근거 강화를 위해 false 권장.
+    ads: z.boolean().default(true),
     scenes: z
       .array(
         z.object({
