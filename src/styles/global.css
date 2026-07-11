@@ -352,12 +352,12 @@ button {
 /* host overlay */
 .sp-host {
   position: absolute;
-  right: 1.5%;
+  right: 1%;
   bottom: 0;
-  width: 30%;
+  width: 27%;
   max-width: 300px;
   min-width: 150px;
-  aspect-ratio: 62 / 82;
+  aspect-ratio: 460 / 907;
   z-index: 3;
   transform-origin: bottom center;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
@@ -365,34 +365,6 @@ button {
 }
 .sp-host.is-hidden {
   display: none;
-}
-@keyframes sp-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2.2%);
-  }
-}
-.pc-mascot-stage {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-/* 말하는 중: 부드러운 끄덕임(정적 포트레이트라 입모양 대신) */
-.sp-host.is-talking .pc-mascot-stage {
-  animation: sp-talk 0.34s ease-in-out infinite;
-  transform-origin: bottom center;
-}
-@keyframes sp-talk {
-  0%,
-  100% {
-    transform: translateY(0) scaleY(1);
-  }
-  50% {
-    transform: translateY(0.6%) scaleY(0.985);
-  }
 }
 
 /* subtitle bar */
@@ -867,95 +839,53 @@ button {
 }
 
 /* ============================================================
-   HOST RIG (vtt 파츠 재조립 = 대략 Live2D)
+   HOST RIG (base.png + 얼굴 파츠 = Live2D풍)
    ============================================================ */
 .rig {
   position: absolute;
   inset: 0;
   transform-origin: 50% 100%;
-  animation: rig-breathe 4.2s ease-in-out infinite;
+  animation: rig-breathe 4.6s ease-in-out infinite;
 }
-.rig-body,
-.rig-head {
-  position: absolute;
-  inset: 0;
+.rig-base {
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-user-drag: none;
 }
-.rig-head {
-  transform-origin: 50% 82%;
-  animation: rig-sway 6.5s ease-in-out infinite;
-}
-.rig img {
+.rig-part {
   position: absolute;
   height: auto;
-  will-change: transform;
+  will-change: transform, opacity;
   -webkit-user-drag: none;
-  user-select: none;
 }
-/* 호흡: 아주 미세한 상하 + 스케일 */
+/* 호흡 */
 @keyframes rig-breathe {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-0.5%) scale(1.006);
-  }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-0.4%) scale(1.005); }
 }
-/* 머리 흔들림: 좌우 미세 회전 */
-@keyframes rig-sway {
-  0%,
-  100% {
-    transform: rotate(-1.4deg);
-  }
-  50% {
-    transform: rotate(1.4deg);
-  }
-}
-/* 옆머리: 머리와 다른 위상으로 살짝 흔들 */
-.rig-lock {
-  transform-origin: 50% 0;
-  animation: rig-lock 5.2s ease-in-out infinite;
-}
-@keyframes rig-lock {
-  0%,
-  100% {
-    transform: rotate(1.6deg);
-  }
-  50% {
-    transform: rotate(-1.6deg);
-  }
-}
-/* 눈: 상시 깜빡임 + 표정별 변형(CSS 변수로 공존) */
+/* 눈: 열린눈(깜빡임=opacity 스왑) + 표정(scaleY 변수) */
 .rig-eye {
-  --eSX: 1;
   --eSY: 1;
-  --eTY: 0%;
   transform-origin: 50% 60%;
-  animation: rig-blink 5.4s infinite;
+  transform: scaleY(var(--eSY));
+  animation: rig-eopen 5.2s infinite;
 }
-.rig-eye.r {
-  animation-delay: 0s;
+.rig-eyec {
+  opacity: 0;
+  animation: rig-eclose 5.2s infinite;
 }
-@keyframes rig-blink {
-  0%,
-  90%,
-  100% {
-    transform: translateY(var(--eTY)) scale(var(--eSX), var(--eSY));
-  }
-  94%,
-  97% {
-    transform: translateY(var(--eTY)) scale(var(--eSX), 0.08);
-  }
-}
+@keyframes rig-eopen { 0%,92%,100%{opacity:1} 94%,97%{opacity:0} }
+@keyframes rig-eclose { 0%,92%,100%{opacity:0} 94%,97%{opacity:1} }
 /* 눈썹: 표정별 위치/각도 */
 .rig-brow {
   transform-origin: 50% 100%;
   transition: transform 0.25s ease;
 }
-/* 입: 표정 baseline(--mSY) + 말할 때 개폐 */
+/* 입: 은은한 미소 baseline(--mSY) + 말할 때 개폐 */
 .rig-mouth {
-  --mSY: 1;
-  transform-origin: 50% 25%;
+  --mSY: 0.85;
+  transform-origin: 50% 20%;
   transform: scaleY(var(--mSY));
   transition: transform 0.2s ease;
 }
@@ -964,59 +894,24 @@ button {
   transition: none;
 }
 @keyframes rig-talk {
-  0%,
-  100% {
-    transform: scaleY(calc(var(--mSY) * 0.65));
-  }
-  50% {
-    transform: scaleY(calc(var(--mSY) * 1.45)) translateY(5%);
-  }
+  0%, 100% { transform: scaleY(calc(var(--mSY) * 0.7)); }
+  50% { transform: scaleY(calc(var(--mSY) * 1.5)) translateY(6%); }
 }
 
 /* ===== 표정 전환 (씬 emotion → .sp-host.emo-*) ===== */
-/* happy: 웃는 눈 + 눈썹 살짝 위 + 입 넓게 */
-.sp-host.emo-happy .rig-eye {
-  --eSY: 0.62;
-  --eTY: 9%;
-}
-.sp-host.emo-happy .rig-brow {
-  transform: translateY(-8%);
-}
-.sp-host.emo-happy .rig-mouth {
-  --mSY: 1.18;
-}
-/* surprised: 눈 크게 + 눈썹 확 위 + 입 벌림 */
-.sp-host.emo-surprised .rig-eye {
-  --eSX: 1.12;
-  --eSY: 1.2;
-}
-.sp-host.emo-surprised .rig-brow {
-  transform: translateY(-28%);
-}
-.sp-host.emo-surprised .rig-mouth {
-  --mSY: 1.7;
-}
-/* think: 눈 살짝 감고 위로 + 눈썹 비대칭 + 입 작게 */
-.sp-host.emo-think .rig-eye {
-  --eSY: 0.82;
-  --eTY: -5%;
-}
-.sp-host.emo-think .rig-brow.l {
-  transform: translateY(-16%) rotate(-9deg);
-}
-.sp-host.emo-think .rig-brow.r {
-  transform: translateY(2%) rotate(7deg);
-}
-.sp-host.emo-think .rig-mouth {
-  --mSY: 0.85;
-}
+.sp-host.emo-happy .rig-eye { --eSY: 0.7; }
+.sp-host.emo-happy .rig-brow { transform: translateY(-10%); }
+.sp-host.emo-happy .rig-mouth { --mSY: 1.05; }
+.sp-host.emo-surprised .rig-eye { --eSY: 1.15; }
+.sp-host.emo-surprised .rig-brow { transform: translateY(-22%); }
+.sp-host.emo-surprised .rig-mouth { --mSY: 1.5; }
+.sp-host.emo-think .rig-eye { --eSY: 0.85; }
+.sp-host.emo-think .rig-brow.l { transform: translateY(-14%) rotate(-8deg); }
+.sp-host.emo-think .rig-brow.r { transform: translateY(2%) rotate(6deg); }
+.sp-host.emo-think .rig-mouth { --mSY: 0.6; }
 @media (prefers-reduced-motion: reduce) {
-  .rig,
-  .rig-head,
-  .rig-lock,
-  .rig-eye {
-    animation: none;
-  }
+  .rig, .rig-eye, .rig-eyec { animation: none; }
+  .rig-eyec { opacity: 0; }
 }
 
 /* reduced motion: 정지 + 트랜스크립트로 콘텐츠 온전 */

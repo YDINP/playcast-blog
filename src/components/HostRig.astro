@@ -1,39 +1,24 @@
 ---
-// vtt 파츠를 브라우저에서 레이어로 재조립 = 대략 Live2D 리그.
-// 애니메이션(호흡/머리흔들림/깜빡임/립싱크)은 global.css .rig-* 참조.
-// 좌표계: 컨테이너 100(가로) x 130(세로) units. left/width=가로%, top=세로%.
-const T = (u: number) => ((u / 130) * 100).toFixed(2) + '%';
-// [파일명, left%, topUnits, width%, extraClass]  — 뒤에 올수록 위 레이어
-const parts: [string, number, number, number, string][] = [
-  ['hair-back', 25, 10, 50, ''],
-  ['face', 29, 23, 42, ''],
-  ['bangs', 26, 11, 48, ''],
-  ['brow-l', 37.8, 33.5, 12, 'rig-brow l'],
-  ['brow-r', 50.2, 33.5, 12, 'rig-brow r'],
-  ['eye-l', 38, 37, 12, 'rig-eye l'],
-  ['eye-r', 50, 37, 12, 'rig-eye r'],
-  ['mouth', 40, 50, 20, 'rig-mouth'],
-  ['lock-r', 63, 27, 19, 'rig-lock'],
-  ['lock-l', 18, 27, 19, 'rig-lock'],
-  ['headset', 22.85, 8, 54.3, ''],
-];
+// 호스트 리그: base.png(고정 베이스) 위에 얼굴 파츠(눈/눈썹/입/코)를 얹어
+// 대략 Live2D 느낌. 애니메이션은 global.css .rig-* 참조.
+//   - 깜빡임: 열린눈↔닫힌눈 opacity 스왑
+//   - 립싱크: 말하는 중 입 개폐(.sp-host.is-talking)
+//   - 표정: 씬 emotion → .sp-host.emo-* 가 눈/눈썹/입 변형
+// 좌표: base(460x907) 기준 % (left, top, width). height 자동.
+const s = (l: number, t: number, w: number) => `left:${l}%;top:${t}%;width:${w}%`;
 ---
 
 <div class="rig">
-  <div class="rig-body">
-    <img src="/host/parts/hoodie.png" alt="" style={`left:3%;top:${T(68)};width:94%`} />
-    <img src="/host/parts/neck.png" alt="" style={`left:29.4%;top:${T(60)};width:41.2%`} />
-  </div>
-  <div class="rig-head">
-    {
-      parts.map(([name, left, top, width, cls]) => (
-        <img
-          src={`/host/parts/${name}.png`}
-          alt=""
-          class={cls}
-          style={`left:${left}%;top:${T(top)};width:${width}%`}
-        />
-      ))
-    }
-  </div>
+  <img class="rig-base" src="/host/base.png" alt="채널 호스트 로지" draggable="false" />
+
+  <img class="rig-part rig-brow l" src="/host/face/brow_l.png" alt="" style={s(35.65, 24.01, 11.74)} />
+  <img class="rig-part rig-brow r" src="/host/face/brow_r.png" alt="" style={s(53.04, 24.01, 11.74)} />
+
+  <img class="rig-part rig-eye l" src="/host/face/eye_l.png" alt="" style={s(35.43, 25.71, 12.17)} />
+  <img class="rig-part rig-eye r" src="/host/face/eye_r.png" alt="" style={s(52.83, 25.71, 12.17)} />
+  <img class="rig-part rig-eyec l" src="/host/face/eyec_l.png" alt="" style={s(35.43, 26.67, 12.17)} />
+  <img class="rig-part rig-eyec r" src="/host/face/eyec_r.png" alt="" style={s(52.83, 26.67, 12.17)} />
+
+  <img class="rig-part rig-nose" src="/host/face/nose.png" alt="" style={s(48.59, 30.15, 3.26)} />
+  <img class="rig-part rig-mouth" src="/host/face/mouth_open.png" alt="" style={s(46.96, 32.05, 6.52)} />
 </div>

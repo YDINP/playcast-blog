@@ -22,6 +22,17 @@
   #stage.game { background:linear-gradient(180deg,#20304a,#0b1220); }
   #stage img { position:absolute; height:auto; -webkit-user-drag:none; user-select:none; outline:0; }
   #stage img.sel { outline:2px dashed var(--host); outline-offset:1px; }
+  /* 리사이즈 gizmo */
+  #gizmo { position:absolute; border:1.5px solid var(--host); pointer-events:none; z-index:9999; box-shadow:0 0 0 1px rgba(0,0,0,.4); }
+  #gizmo .gh { position:absolute; width:12px; height:12px; background:#fff; border:1.5px solid var(--host); border-radius:2px; pointer-events:auto; }
+  #gizmo .gh[data-h=nw]{left:-7px;top:-7px;cursor:nwse-resize;}
+  #gizmo .gh[data-h=n] {left:50%;top:-7px;margin-left:-6px;cursor:ns-resize;}
+  #gizmo .gh[data-h=ne]{right:-7px;top:-7px;cursor:nesw-resize;}
+  #gizmo .gh[data-h=w] {left:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
+  #gizmo .gh[data-h=e] {right:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
+  #gizmo .gh[data-h=sw]{left:-7px;bottom:-7px;cursor:nesw-resize;}
+  #gizmo .gh[data-h=s] {left:50%;bottom:-7px;margin-left:-6px;cursor:ns-resize;}
+  #gizmo .gh[data-h=se]{right:-7px;bottom:-7px;cursor:nwse-resize;}
   .frame { position:absolute; inset:0; border-radius:12px; pointer-events:none;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
   /* 우: 패널 */
@@ -54,7 +65,13 @@
 </head>
 <body>
   <div class="stage-wrap">
-    <div id="stage"><div class="frame"></div></div>
+    <div id="stage"><div class="frame"></div>
+      <div id="gizmo" style="display:none">
+        <div class="gh" data-h="nw"></div><div class="gh" data-h="n"></div><div class="gh" data-h="ne"></div>
+        <div class="gh" data-h="w"></div><div class="gh" data-h="e"></div>
+        <div class="gh" data-h="sw"></div><div class="gh" data-h="s"></div><div class="gh" data-h="se"></div>
+      </div>
+    </div>
   </div>
   <div class="panel">
     <h1>🎀 호스트 리그 에디터 <small>— 배치·크기·순서</small></h1>
@@ -69,12 +86,14 @@
       <button onclick="load()">불러오기</button>
       <button class="primary" onclick="copyOut()">좌표 복사</button>
     </div>
-    <div class="hint">파츠를 <b>드래그</b>로 이동 · 선택 후 <kbd>화살표</kbd> 미세이동 · <kbd>휠</kbd> 또는 슬라이더로 크기 · 목록 <kbd>↑↓</kbd>로 레이어 순서(위=뒤, 아래=앞)</div>
+    <div class="hint">파츠 <b>드래그=이동</b> · 선택하면 <b>테두리 핸들로 리사이즈</b>(모서리=가로세로, 변=한쪽만, <kbd>Shift</kbd>+모서리=비율유지) · <kbd>휠</kbd>=비율유지 확대 · <kbd>화살표</kbd>=미세이동 · 목록 <kbd>↑↓</kbd>=레이어(위=뒤) · <kbd>Ctrl+Z</kbd>=되돌리기</div>
     <div class="list" id="list"></div>
     <div class="editor" id="editor">
       <div class="fld"><label>X (left%)</label><input type="range" id="ex" min="-10" max="100" step="0.1"><input type="number" id="exn" step="0.1"></div>
       <div class="fld"><label>Y (units)</label><input type="range" id="ey" min="-10" max="130" step="0.1"><input type="number" id="eyn" step="0.1"></div>
-      <div class="fld"><label>크기 W%</label><input type="range" id="ew" min="3" max="110" step="0.1"><input type="number" id="ewn" step="0.1"></div>
+      <div class="fld"><label>가로 W%</label><input type="range" id="ew" min="2" max="110" step="0.1"><input type="number" id="ewn" step="0.1"></div>
+      <div class="fld"><label>세로 H%</label><input type="range" id="eh" min="2" max="130" step="0.1"><input type="number" id="ehn" step="0.1"></div>
+      <div class="fld"><label></label><button onclick="resetAspect()" style="background:#2a2a33;color:#ccc;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer">↻ 원본 비율로</button></div>
     </div>
     <div class="out">
       <textarea id="out" readonly></textarea>
@@ -99,14 +118,16 @@ const DEFAULTS = [
   ['headset',   22.85,8, 54.3, ''],
 ];
 const UNITS_H = 130; // topUnits 기준 높이
+const ASPECT = 62/82; // 스테이지 W/H (좌:좌표계 세로기준)
+const NAT = {};       // 파츠 원본 픽셀크기 {name:{w,h}}
 const stage = document.getElementById('stage');
-let parts = [];   // {name, lp, tu, wp, cls, hidden, el}
+let parts = [];   // {name, lp, tu, wp, hp, cls, hidden, el}
 let sel = -1;
 
 // ── 실행취소/다시실행 히스토리 ──
 let history = [], redo = [];
 let _gk = '', _gt = 0;
-function serialize(){ return parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})); }
+function serialize(){ return parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,hp:p.hp,cls:p.cls,hidden:p.hidden})); }
 function pushHistory(snap){
   history.push(snap || serialize());
   if(history.length>80) history.shift();
@@ -134,7 +155,7 @@ function updateUndoBtn(){
   if(r){ r.style.opacity = redo.length?1:.4; }
 }
 
-function clone(){ return DEFAULTS.map(d => ({name:d[0], lp:d[1], tu:d[2], wp:d[3], cls:d[4], hidden:false})); }
+function clone(){ return DEFAULTS.map(d => { const n=NAT[d[0]]||{w:1,h:1}; const wp=d[3]; const hp=+(wp*(n.h/n.w)*ASPECT).toFixed(2); return {name:d[0], lp:d[1], tu:d[2], wp, hp, cls:d[4], hidden:false}; }); }
 
 function build(state){
   // 기존 img 제거
@@ -156,9 +177,11 @@ function applyOne(p, i){
   p.el.style.left = p.lp + '%';
   p.el.style.top = (p.tu/UNITS_H*100) + '%';
   p.el.style.width = p.wp + '%';
+  p.el.style.height = (p.hp!=null ? p.hp+'%' : 'auto');
   p.el.style.zIndex = i+1;
   p.el.style.display = p.hidden ? 'none':'block';
   p.el.classList.toggle('sel', i===sel);
+  if(i===sel) positionGizmo();
 }
 function applyAll(){ parts.forEach(applyOne); updateOut(); }
 
@@ -191,15 +214,17 @@ function select(i){
   sel=i; parts.forEach((p,k)=>p.el.classList.toggle('sel',k===i));
   renderList();
   const ed=document.getElementById('editor');
-  if(i<0){ ed.classList.remove('on'); return; }
+  const gz=document.getElementById('gizmo');
+  if(i<0){ ed.classList.remove('on'); if(gz)gz.style.display='none'; return; }
   ed.classList.add('on');
   const p=parts[i];
-  setF('ex','exn',p.lp); setF('ey','eyn',p.tu); setF('ew','ewn',p.wp);
+  setF('ex','exn',p.lp); setF('ey','eyn',p.tu); setF('ew','ewn',p.wp); setF('eh','ehn',p.hp);
+  positionGizmo();
 }
 function setF(r,n,v){ document.getElementById(r).value=v; document.getElementById(n).value=v; }
-['ex','ey','ew'].forEach(id=>{
+['ex','ey','ew','eh'].forEach(id=>{
   const r=document.getElementById(id), n=document.getElementById(id+'n');
-  const key={ex:'lp',ey:'tu',ew:'wp'}[id];
+  const key={ex:'lp',ey:'tu',ew:'wp',eh:'hp'}[id];
   const on=v=>{ if(sel<0)return; maybeSnapshot('sld'+id+sel); parts[sel][key]=parseFloat(v); r.value=v; n.value=v; applyOne(parts[sel],sel); updateOut(); };
   r.oninput=e=>on(e.target.value); n.oninput=e=>on(e.target.value);
 });
@@ -230,10 +255,62 @@ function attachDrag(){
     if(sel<0)return; e.preventDefault();
     maybeSnapshot('whl'+sel);
     const p=parts[sel];
-    p.wp=Math.max(3,+(p.wp*(e.deltaY<0?1.03:0.97)).toFixed(2));
-    applyOne(p,sel); setF('ew','ewn',p.wp); updateOut();
+    const f=(e.deltaY<0?1.03:0.97);
+    p.wp=Math.max(2,+(p.wp*f).toFixed(2));
+    p.hp=Math.max(2,+(p.hp*f).toFixed(2)); // 휠=가로세로 동시(비율유지)
+    applyOne(p,sel); setF('ew','ewn',p.wp); setF('eh','ehn',p.hp); updateOut();
   };
 }
+// ── 리사이즈 gizmo(테두리 핸들) ──
+function positionGizmo(){
+  const gz=document.getElementById('gizmo');
+  if(sel<0){ gz.style.display='none'; return; }
+  const p=parts[sel];
+  gz.style.display='block';
+  gz.style.left=p.lp+'%'; gz.style.top=(p.tu/UNITS_H*100)+'%';
+  gz.style.width=p.wp+'%'; gz.style.height=p.hp+'%';
+}
+function resetAspect(){
+  if(sel<0)return; const p=parts[sel]; const n=NAT[p.name]; if(!n)return;
+  maybeSnapshot('asp'+sel);
+  p.hp=+(p.wp*(n.h/n.w)*ASPECT).toFixed(2);
+  applyOne(p,sel); setF('eh','ehn',p.hp); updateOut();
+}
+let rez=null;
+document.querySelectorAll('#gizmo .gh').forEach(h=>{
+  h.addEventListener('mousedown',(e)=>{
+    if(sel<0)return; e.preventDefault(); e.stopPropagation();
+    const p=parts[sel]; const rect=stage.getBoundingClientRect();
+    const SW=stage.clientWidth, SH=stage.clientHeight;
+    rez={dir:h.dataset.h, p, rect, SW, SH,
+      x:p.lp/100*SW, y:p.tu/UNITS_H*SH, w:p.wp/100*SW, h:p.hp/100*SH,
+      snapped:false, pre:serialize()};
+  });
+});
+window.addEventListener('mousemove',(e)=>{
+  if(!rez)return;
+  if(!rez.snapped){ pushHistory(rez.pre); rez.snapped=true; }
+  const {dir,rect,SW,SH}=rez;
+  let x=rez.x,y=rez.y,w=rez.w,h=rez.h; const right=x+w, bottom=y+h;
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  if(dir.includes('e')) w=Math.max(8, mx-x);
+  if(dir.includes('s')) h=Math.max(8, my-y);
+  if(dir.includes('w')){ const nx=Math.min(mx, right-8); w=right-nx; x=nx; }
+  if(dir.includes('n')){ const ny=Math.min(my, bottom-8); h=bottom-ny; y=ny; }
+  if(e.shiftKey && dir.length===2){ // 코너 + Shift = 비율유지
+    const ar=rez.w/rez.h;
+    if(Math.abs(w-rez.w) > Math.abs(h-rez.h)){ h=w/ar; if(dir.includes('n')) y=bottom-h; }
+    else { w=h*ar; if(dir.includes('w')) x=right-w; }
+  }
+  const p=rez.p;
+  p.lp=+(x/SW*100).toFixed(2); p.tu=+(y/SH*UNITS_H).toFixed(2);
+  p.wp=+(w/SW*100).toFixed(2); p.hp=+(h/SH*100).toFixed(2);
+  applyOne(p, parts.indexOf(p));
+  setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp);setF('eh','ehn',p.hp);
+  updateOut();
+});
+window.addEventListener('mouseup',()=>{ rez=null; });
+
 // 키보드 미세이동 + 단축키
 window.onkeydown=(e)=>{
   const mod = e.ctrlKey||e.metaKey;
@@ -245,14 +322,15 @@ window.onkeydown=(e)=>{
   maybeSnapshot('key'+sel);
   if(e.key==='ArrowLeft')p.lp-=s; else if(e.key==='ArrowRight')p.lp+=s;
   else if(e.key==='ArrowUp')p.tu-=s; else if(e.key==='ArrowDown')p.tu+=s;
-  else if(e.key==='['){p.wp=Math.max(3,p.wp-s);} else if(e.key===']'){p.wp+=s;}
-  e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);p.wp=+p.wp.toFixed(2);
-  applyOne(p,sel); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp); updateOut();
+  else if(e.key==='['){const f=e.shiftKey?0.95:0.99; p.wp=Math.max(2,p.wp*f); p.hp=Math.max(2,p.hp*f);}
+  else if(e.key===']'){const f=e.shiftKey?1.05:1.01; p.wp*=f; p.hp*=f;}
+  e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);p.wp=+p.wp.toFixed(2);p.hp=+p.hp.toFixed(2);
+  applyOne(p,sel); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp);setF('eh','ehn',p.hp); updateOut();
 };
 
 function updateOut(){
-  // HostRig 형식으로 출력 (body=hoodie/neck, head=나머지)
-  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}, '${p.cls}'],`;
+  // HostRig 형식: [name, left%, topUnits, width%, height%, class]  (height%=세로, 컨테이너 높이 기준)
+  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}, ${p.hp}, '${p.cls}'],`;
   const body=parts.filter(p=>p.name==='hoodie'||p.name==='neck');
   const head=parts.filter(p=>p.name!=='hoodie'&&p.name!=='neck');
   const txt =
@@ -266,8 +344,17 @@ function reset(){ pushHistory(); build(clone()); }
 function save(){ localStorage.setItem('rigedit', JSON.stringify(parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})))); alert('저장됨'); }
 function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장된 게 없어요');return;} pushHistory(); build(JSON.parse(s)); }
 
-build(clone());
-history.length=0; redo.length=0; updateUndoBtn();
+// 파츠 원본 크기 프리로드 후 시작 (세로 기본값 계산에 필요)
+(async()=>{
+  await Promise.all(DEFAULTS.map(d=>new Promise(res=>{
+    const im=new Image();
+    im.onload=()=>{ NAT[d[0]]={w:im.naturalWidth,h:im.naturalHeight}; res(); };
+    im.onerror=()=>{ NAT[d[0]]={w:1,h:1}; res(); };
+    im.src='parts/'+d[0]+'.png';
+  })));
+  build(clone());
+  history.length=0; redo.length=0; updateUndoBtn();
+})();
 </script>
 </body>
 </html>
