@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>playcast 호스트 리그 에디터</title>
+<style>
+  :root { --bg:#0f0f11; --panel:#17171b; --border:#2a2a33; --host:#57e6c3; --live:#ff3d54; --text:#eee; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,'Malgun Gothic',sans-serif; display:flex; height:100vh; overflow:hidden; }
+  /* 좌: 스테이지 */
+  .stage-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:24px; }
+  #stage {
+    position:relative; width:380px; aspect-ratio:62/82;
+    background:radial-gradient(120% 120% at 80% 10%, rgba(139,123,255,.35), transparent 55%),
+               radial-gradient(120% 120% at 10% 90%, rgba(87,230,195,.28), transparent 55%),
+               linear-gradient(135deg,#1a1830,#0e0e18);
+    border:1px solid var(--border); border-radius:12px; overflow:visible; box-shadow:0 20px 60px -20px #000;
+  }
+  #stage.checker { background:
+    conic-gradient(#3a3a44 90deg,#2a2a33 0 180deg,#3a3a44 0 270deg,#2a2a33 0) 0 0/24px 24px; }
+  #stage.game { background:linear-gradient(180deg,#20304a,#0b1220); }
+  #stage img { position:absolute; height:auto; -webkit-user-drag:none; user-select:none; outline:0; }
+  #stage img.sel { outline:2px dashed var(--host); outline-offset:1px; }
+  .frame { position:absolute; inset:0; border-radius:12px; pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
+  /* 우: 패널 */
+  .panel { width:340px; background:var(--panel); border-left:1px solid var(--border); display:flex; flex-direction:column; }
+  .panel h1 { font-size:15px; margin:0; padding:12px 14px; border-bottom:1px solid var(--border); }
+  .panel h1 small { color:#8b8b98; font-weight:400; }
+  .toolbar { display:flex; gap:6px; flex-wrap:wrap; padding:10px 12px; border-bottom:1px solid var(--border); }
+  .toolbar button, .toolbar select { background:#22222a; color:var(--text); border:1px solid var(--border); border-radius:7px; padding:6px 9px; font-size:12px; cursor:pointer; }
+  .toolbar button:hover { background:#2c2c36; }
+  .toolbar button.primary { background:var(--host); color:#04241d; font-weight:700; border-color:var(--host); }
+  .list { flex:1; overflow:auto; padding:6px; }
+  .row { display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px; font-size:12px; cursor:pointer; }
+  .row:hover { background:#20202a; }
+  .row.sel { background:rgba(87,230,195,.14); outline:1px solid rgba(87,230,195,.4); }
+  .row .nm { flex:1; font-weight:600; }
+  .row .z { color:#8b8b98; width:18px; text-align:center; }
+  .row button { background:#2a2a33; border:1px solid var(--border); color:#ccc; border-radius:5px; width:22px; height:22px; cursor:pointer; font-size:12px; line-height:1; }
+  .row .vis { width:24px; text-align:center; }
+  .editor { border-top:1px solid var(--border); padding:10px 12px; display:none; }
+  .editor.on { display:block; }
+  .editor .fld { display:flex; align-items:center; gap:8px; margin:6px 0; }
+  .editor .fld label { width:54px; color:#9a9aa8; font-size:12px; }
+  .editor .fld input[type=range] { flex:1; }
+  .editor .fld input[type=number] { width:72px; background:#0c0c0e; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:4px 6px; }
+  .out { border-top:1px solid var(--border); padding:10px 12px; }
+  .out textarea { width:100%; height:160px; background:#0c0c0e; color:#b7f5e4; border:1px solid var(--border); border-radius:8px; font:11px/1.5 monospace; padding:8px; resize:vertical; }
+  .hint { color:#8b8b98; font-size:11px; padding:0 12px 10px; }
+  kbd { background:#2a2a33; border:1px solid var(--border); border-radius:4px; padding:0 5px; font-size:11px; }
+</style>
+</head>
+<body>
+  <div class="stage-wrap">
+    <div id="stage"><div class="frame"></div></div>
+  </div>
+  <div class="panel">
+    <h1>🎀 호스트 리그 에디터 <small>— 배치·크기·순서</small></h1>
+    <div class="toolbar">
+      <button onclick="setBg('grad')">배경:스테이지</button>
+      <button onclick="setBg('checker')">체커</button>
+      <button onclick="setBg('game')">게임bg</button>
+      <button onclick="reset()">리셋</button>
+      <button onclick="save()">저장</button>
+      <button onclick="load()">불러오기</button>
+      <button class="primary" onclick="copyOut()">좌표 복사</button>
+    </div>
+    <div class="hint">파츠를 <b>드래그</b>로 이동 · 선택 후 <kbd>화살표</kbd> 미세이동 · <kbd>휠</kbd> 또는 슬라이더로 크기 · 목록 <kbd>↑↓</kbd>로 레이어 순서(위=뒤, 아래=앞)</div>
+    <div class="list" id="list"></div>
+    <div class="editor" id="editor">
+      <div class="fld"><label>X (left%)</label><input type="range" id="ex" min="-10" max="100" step="0.1"><input type="number" id="exn" step="0.1"></div>
+      <div class="fld"><label>Y (units)</label><input type="range" id="ey" min="-10" max="130" step="0.1"><input type="number" id="eyn" step="0.1"></div>
+      <div class="fld"><label>크기 W%</label><input type="range" id="ew" min="3" max="110" step="0.1"><input type="number" id="ewn" step="0.1"></div>
+    </div>
+    <div class="out">
+      <textarea id="out" readonly></textarea>
+    </div>
+  </div>
+
+<script>
+// 파츠 기본값: [name, left%, topUnits, width%, class]  (위=뒤 레이어)
+const DEFAULTS = [
+  ['hoodie',    3,   68, 94,   ''],
+  ['neck',      29.4,60, 41.2, ''],
+  ['hair-back', 25,  10, 50,   ''],
+  ['face',      29,  23, 42,   ''],
+  ['bangs',     26,  11, 48,   ''],
+  ['brow-l',    37.8,33.5,12,  'rig-brow l'],
+  ['brow-r',    50.2,33.5,12,  'rig-brow r'],
+  ['eye-l',     38,  37, 12,   'rig-eye l'],
+  ['eye-r',     50,  37, 12,   'rig-eye r'],
+  ['mouth',     40,  50, 20,   'rig-mouth'],
+  ['lock-r',    63,  27, 19,   'rig-lock'],
+  ['lock-l',    18,  27, 19,   'rig-lock'],
+  ['headset',   22.85,8, 54.3, ''],
+];
+const UNITS_H = 130; // topUnits 기준 높이
+const stage = document.getElementById('stage');
+let parts = [];   // {name, lp, tu, wp, cls, hidden, el}
+let sel = -1;
+
+function clone(){ return DEFAULTS.map(d => ({name:d[0], lp:d[1], tu:d[2], wp:d[3], cls:d[4], hidden:false})); }
+
+function build(state){
+  // 기존 img 제거
+  [...stage.querySelectorAll('img')].forEach(n=>n.remove());
+  parts = state.map(p => {
+    const img = document.createElement('img');
+    img.src = 'parts/'+p.name+'.png';
+    img.draggable = false;
+    stage.appendChild(img);
+    p.el = img;
+    return p;
+  });
+  applyAll(); renderList(); select(-1);
+  attachDrag();
+}
+function sw(){ return stage.clientWidth; }
+function sh(){ return stage.clientHeight; }
+function applyOne(p, i){
+  p.el.style.left = p.lp + '%';
+  p.el.style.top = (p.tu/UNITS_H*100) + '%';
+  p.el.style.width = p.wp + '%';
+  p.el.style.zIndex = i+1;
+  p.el.style.display = p.hidden ? 'none':'block';
+  p.el.classList.toggle('sel', i===sel);
+}
+function applyAll(){ parts.forEach(applyOne); updateOut(); }
+
+function renderList(){
+  const list = document.getElementById('list');
+  list.innerHTML='';
+  parts.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.className='row'+(i===sel?' sel':'');
+    row.innerHTML = `<span class="z">${i+1}</span>
+      <span class="vis" title="표시">${p.hidden?'🚫':'👁'}</span>
+      <span class="nm">${p.name}</span>
+      <button title="뒤로">↑</button><button title="앞으로">↓</button>`;
+    row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; select(i); };
+    row.querySelector('.vis').onclick=(e)=>{e.stopPropagation(); p.hidden=!p.hidden; applyAll(); renderList();};
+    const [up,down]=row.querySelectorAll('button');
+    up.onclick=(e)=>{e.stopPropagation(); move(i,-1);};
+    down.onclick=(e)=>{e.stopPropagation(); move(i,1);};
+    list.appendChild(row);
+  });
+}
+function move(i,d){
+  const j=i+d; if(j<0||j>=parts.length)return;
+  [parts[i],parts[j]]=[parts[j],parts[i]];
+  sel = (sel===i)?j:(sel===j?i:sel);
+  applyAll(); renderList();
+}
+function select(i){
+  sel=i; parts.forEach((p,k)=>p.el.classList.toggle('sel',k===i));
+  renderList();
+  const ed=document.getElementById('editor');
+  if(i<0){ ed.classList.remove('on'); return; }
+  ed.classList.add('on');
+  const p=parts[i];
+  setF('ex','exn',p.lp); setF('ey','eyn',p.tu); setF('ew','ewn',p.wp);
+}
+function setF(r,n,v){ document.getElementById(r).value=v; document.getElementById(n).value=v; }
+['ex','ey','ew'].forEach(id=>{
+  const r=document.getElementById(id), n=document.getElementById(id+'n');
+  const key={ex:'lp',ey:'tu',ew:'wp'}[id];
+  const on=v=>{ if(sel<0)return; parts[sel][key]=parseFloat(v); r.value=v; n.value=v; applyOne(parts[sel],sel); updateOut(); };
+  r.oninput=e=>on(e.target.value); n.oninput=e=>on(e.target.value);
+});
+
+// 드래그 이동
+let drag=null;
+function attachDrag(){
+  stage.onmousedown=(e)=>{
+    const img=e.target.closest('img'); if(!img)return;
+    const i=parts.findIndex(p=>p.el===img); if(i<0)return;
+    select(i);
+    const rect=stage.getBoundingClientRect();
+    drag={i, ox:e.clientX, oy:e.clientY, lp0:parts[i].lp, tu0:parts[i].tu, rw:rect.width, rh:rect.height};
+    e.preventDefault();
+  };
+  window.onmousemove=(e)=>{
+    if(!drag)return;
+    const p=parts[drag.i];
+    const dx=(e.clientX-drag.ox)/drag.rw*100;
+    const dy=(e.clientY-drag.oy)/drag.rh*UNITS_H;
+    p.lp=+(drag.lp0+dx).toFixed(2); p.tu=+(drag.tu0+dy).toFixed(2);
+    applyOne(p,drag.i); if(sel===drag.i){setF('ex','exn',p.lp);setF('ey','eyn',p.tu);} updateOut();
+  };
+  window.onmouseup=()=>drag=null;
+  // 휠 크기
+  stage.onwheel=(e)=>{
+    if(sel<0)return; e.preventDefault();
+    const p=parts[sel];
+    p.wp=Math.max(3,+(p.wp*(e.deltaY<0?1.03:0.97)).toFixed(2));
+    applyOne(p,sel); setF('ew','ewn',p.wp); updateOut();
+  };
+}
+// 키보드 미세이동
+window.onkeydown=(e)=>{
+  if(sel<0)return; const p=parts[sel]; const s=e.shiftKey?2:0.3;
+  if(e.key==='ArrowLeft')p.lp-=s; else if(e.key==='ArrowRight')p.lp+=s;
+  else if(e.key==='ArrowUp')p.tu-=s; else if(e.key==='ArrowDown')p.tu+=s;
+  else if(e.key==='['){p.wp=Math.max(3,p.wp-s);} else if(e.key===']'){p.wp+=s;}
+  else return;
+  e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);p.wp=+p.wp.toFixed(2);
+  applyOne(p,sel); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp); updateOut();
+};
+
+function updateOut(){
+  // HostRig 형식으로 출력 (body=hoodie/neck, head=나머지)
+  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}, '${p.cls}'],`;
+  const body=parts.filter(p=>p.name==='hoodie'||p.name==='neck');
+  const head=parts.filter(p=>p.name!=='hoodie'&&p.name!=='neck');
+  const txt =
+`// ── rig-body (순서 유지) ──\n`+body.map(fmt).join('\n')+
+`\n// ── rig-head parts (위=뒤 레이어) ──\n`+head.map(fmt).join('\n');
+  document.getElementById('out').value=txt;
+}
+function copyOut(){ const t=document.getElementById('out'); t.select(); navigator.clipboard.writeText(t.value); alert('좌표를 복사했어요. 채팅에 붙여넣어 주세요.'); }
+function setBg(m){ stage.className=''; if(m==='checker')stage.classList.add('checker'); if(m==='game')stage.classList.add('game'); }
+function reset(){ build(clone()); }
+function save(){ localStorage.setItem('rigedit', JSON.stringify(parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})))); alert('저장됨'); }
+function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장된 게 없어요');return;} build(JSON.parse(s)); }
+
+build(clone());
+</script>
+</body>
+</html>
