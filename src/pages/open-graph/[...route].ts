@@ -32,7 +32,7 @@ const _route = await OGImageRoute({
     const dur = page.durationLabel || durLabel(page.scenes);
     return {
       title: page.title,
-      description: `▶ playcast · 로지의 게임 소개 · ${dur}`,
+      description: `▶ VIP · 로지의 게임 소개 · ${dur}`,
       bgGradient: [
         [15, 15, 17],
         [26, 20, 46],

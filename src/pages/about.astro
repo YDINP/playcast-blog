@@ -7,7 +7,7 @@ const videos = await getCollection('videos', ({ data }) => !data.draft);
 
 <BaseLayout
   title="채널 소개"
-  description="playcast는 버츄얼 호스트 로지가 게임을 영상처럼 소개하는 채널입니다."
+  description="VIP(Virtual in Playing)는 버츄얼 호스트 로지가 게임을 영상처럼 소개하는 채널입니다."
 >
   <div style="max-width:760px;margin:0 auto">
     <div style="display:flex;gap:20px;align-items:center;margin:1rem 0 2rem;flex-wrap:wrap">
@@ -22,7 +22,7 @@ const videos = await getCollection('videos', ({ data }) => !data.draft);
           로지 <span style="color:var(--host)">◆</span>
         </h1>
         <div style="color:var(--text-muted)">
-          playcast · 게임 소개 방송 · 영상 {videos.length}편
+          VIP · 게임 소개 방송 · 영상 {videos.length}편
         </div>
       </div>
     </div>

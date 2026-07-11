@@ -8,8 +8,8 @@ interface Props {
   canonicalUrl?: string;
 }
 const { title, description, image, canonicalUrl } = Astro.props;
-const siteTitle = 'playcast — 게임 소개 방송 채널';
-const fullTitle = title === siteTitle ? title : `${title} | playcast`;
+const siteTitle = 'Virtual in Playing (VIP) — 게임 소개 방송 채널';
+const fullTitle = title === siteTitle ? title : `${title} | VIP`;
 const ogImage =
   image || new URL('/og-default.png', Astro.site || 'https://playcast.vercel.app').href;
 const canonical = canonicalUrl || Astro.url.href;
@@ -17,7 +17,7 @@ const canonical = canonicalUrl || Astro.url.href;
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'playcast',
+  name: 'Virtual in Playing',
   url: 'https://playcast.vercel.app',
   description: '버츄얼 호스트가 게임을 영상처럼 소개하는 채널',
   inLanguage: 'ko-KR',
@@ -46,7 +46,7 @@ const websiteSchema = {
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="ko_KR" />
-    <meta property="og:site_name" content="playcast" />
+    <meta property="og:site_name" content="Virtual in Playing (VIP)" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -66,7 +66,7 @@ const websiteSchema = {
         <span class="dot">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
         </span>
-        <b>play<span>cast</span></b>
+        <b>V<span>I</span>P</b>
       </a>
       <div class="pc-search">
         <input
@@ -89,7 +89,7 @@ const websiteSchema = {
 
     <footer class="pc-footer">
       <p>
-        © {new Date().getFullYear()} playcast · 버츄얼 호스트 로지의 게임 소개 채널 ·
+        © {new Date().getFullYear()} VIP · 버츄얼 호스트 로지의 게임 소개 채널 ·
         <a href="/rss.xml">RSS</a>
       </p>
     </footer>
