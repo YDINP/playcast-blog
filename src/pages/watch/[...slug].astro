@@ -47,14 +47,57 @@ const related = all
   .slice(0, 6);
 
 const dur = durationLabel(scenes, data.durationLabel);
-const ogImage = new URL(
-  `/open-graph/${video.id}.png`,
-  Astro.site || 'https://playcast.vercel.app'
-).href;
+const site = Astro.site || new URL('https://playcast.vercel.app');
+const ogImage = new URL(`/open-graph/${video.id}.png`, site).href;
 const poster = posterOf(data);
+const imgAbs = poster ? new URL(poster, site).href : ogImage;
+const pageUrl = new URL(`/watch/${video.id}/`, site).href;
+const totalSec = estimateSeconds(scenes);
+const durationISO = `PT${Math.floor(totalSec / 60)}M${totalSec % 60}S`;
+const published = data.pubDate.toISOString();
+const modified = (data.updatedDate ?? data.pubDate).toISOString();
+
+// 구조화 데이터 (실제 동영상 파일은 없으므로 VideoObject 대신 BlogPosting 사용)
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  image: [imgAbs],
+  datePublished: published,
+  dateModified: modified,
+  timeRequired: durationISO,
+  author: { '@type': 'Person', name: '로지', url: new URL('/about', site).href },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Virtual in Playing (VIP)',
+    logo: { '@type': 'ImageObject', url: new URL('/og-default.png', site).href },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  articleSection: data.category,
+  keywords: data.tags.join(', '),
+  inLanguage: 'ko-KR',
+  articleBody: scenes.map((s) => s.text).join('\n'),
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '홈', item: site.href },
+    { '@type': 'ListItem', position: 2, name: data.title, item: pageUrl },
+  ],
+};
 ---
 
-<BaseLayout title={data.title} description={data.description} image={poster ? new URL(poster, Astro.site).href : ogImage}>
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={imgAbs}
+  ogType="article"
+  keywords={data.tags.join(', ')}
+  article={{ published, modified, section: data.category, tags: data.tags }}
+  schemas={[blogPostingSchema, breadcrumbSchema]}
+>
   <div class="watch">
     <div class="watch-main">
       <HostStage scenes={scenes} playerId={playerId} host={data.host} />
