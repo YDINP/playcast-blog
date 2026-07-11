@@ -1,26 +1,17 @@
 ---
-// 호스트 리그: base.png(고정 베이스) 위에 얼굴 파츠를 원본 크기로 얹음.
-// 위치=vt.jpg 오버레이 그리드로 측정한 값. 애니메이션은 global.css .rig-* 참조.
-//   - 깜빡임: 열린눈↔닫힌눈 opacity 스왑
-//   - 립싱크: 말하는 중 닫힌입→열린입 스왑 + 개폐(.sp-host.is-talking)
-//   - 표정: 씬 emotion → .sp-host.emo-* 가 눈/눈썹 변형
-// 좌표: base(460x907) 기준 % (left, top, width). 크기=파츠 원본 비율.
-const s = (l: number, t: number, w: number) => `left:${l}%;top:${t}%;width:${w}%`;
+// 호스트 리그: vt.png(통짜 얼굴 — 눈/눈썹/코/볼터치/미소 모두 포함) +
+// 말할 때만 나타나는 입 오버레이. 애니메이션은 global.css .rig-* 참조.
+//   - 호흡: 전체 미세 스케일
+//   - 립싱크: 말하는 중(.sp-host.is-talking) 입 오버레이가 vt 입 위에 나타나 개폐
+// 좌표: vt.png(586x752) 기준 % — vt 입 중심(48.5%, 57.5%)에 정렬.
 ---
 
 <div class="rig">
-  <img class="rig-base" src="/host/base.png" alt="채널 호스트 로지" draggable="false" />
-
-  <img class="rig-part rig-brow l" src="/host/face/brow_l.png" alt="" style={s(34.35, 19.5, 11.3)} />
-  <img class="rig-part rig-brow r" src="/host/face/brow_r.png" alt="" style={s(54.35, 19.5, 11.3)} />
-
-  <img class="rig-part rig-eye l" src="/host/face/eye_l.png" alt="" style={s(32.4, 21.4, 15.22)} />
-  <img class="rig-part rig-eye r" src="/host/face/eye_r.png" alt="" style={s(52.4, 21.4, 15.22)} />
-  <img class="rig-part rig-eyec l" src="/host/face/eyec_l.png" alt="" style={s(32.4, 22.5, 15.22)} />
-  <img class="rig-part rig-eyec r" src="/host/face/eyec_r.png" alt="" style={s(52.4, 22.5, 15.22)} />
-
-  <img class="rig-part rig-nose" src="/host/face/nose.png" alt="" style={s(48.26, 26.5, 3.48)} />
-
-  <img class="rig-part rig-mouth" src="/host/face/mouth.png" alt="" style={s(45.32, 30.3, 9.35)} />
-  <img class="rig-part rig-mouth-open" src="/host/face/mouth_open.png" alt="" style={s(45.32, 29.5, 9.35)} />
+  <img class="rig-base" src="/host/vt.png" alt="채널 호스트 로지" draggable="false" />
+  <img
+    class="rig-part rig-mouth-open"
+    src="/host/face/mouth/1.png"
+    alt=""
+    style="left:43.5%;top:56%;width:10%"
+  />
 </div>

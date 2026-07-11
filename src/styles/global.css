@@ -357,7 +357,7 @@ button {
   width: 27%;
   max-width: 300px;
   min-width: 150px;
-  aspect-ratio: 460 / 907;
+  aspect-ratio: 586 / 752;
   z-index: 3;
   transform-origin: bottom center;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
@@ -839,7 +839,7 @@ button {
 }
 
 /* ============================================================
-   HOST RIG (base.png + 얼굴 파츠 = Live2D풍)
+   HOST RIG (vt.png 통짜 얼굴 + 말할 때 입 오버레이)
    ============================================================ */
 .rig {
   position: absolute;
@@ -864,54 +864,24 @@ button {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-0.4%) scale(1.005); }
 }
-/* 눈: 열린눈(깜빡임=opacity 스왑) + 표정(scaleY 변수) */
-.rig-eye {
-  --eSY: 1;
-  transform-origin: 50% 60%;
-  transform: scaleY(var(--eSY));
-  animation: rig-eopen 5.2s infinite;
-}
-.rig-eyec {
-  opacity: 0;
-  animation: rig-eclose 5.2s infinite;
-}
-@keyframes rig-eopen { 0%,92%,100%{opacity:1} 94%,97%{opacity:0} }
-@keyframes rig-eclose { 0%,92%,100%{opacity:0} 94%,97%{opacity:1} }
-/* 눈썹: 표정별 위치/각도 */
-.rig-brow {
-  transform-origin: 50% 100%;
-  transition: transform 0.25s ease;
-}
-/* 입: 기본=닫힌 미소, 말할 때 열린 입으로 스왑 + 개폐 */
-.rig-mouth {
-  transform-origin: 50% 50%;
-  transition: opacity 0.12s;
-}
+/* 입 오버레이: 평소 숨김, 말하는 중에만 나타나 개폐 */
 .rig-mouth-open {
   opacity: 0;
-  transform-origin: 50% 20%;
+  transform-origin: 50% 25%;
+  transition: opacity 0.1s;
 }
-.sp-host.is-talking .rig-mouth { opacity: 0; }
 .sp-host.is-talking .rig-mouth-open {
   opacity: 1;
   animation: rig-talk 0.26s ease-in-out infinite;
 }
 @keyframes rig-talk {
-  0%, 100% { transform: scaleY(0.55); }
-  50% { transform: scaleY(1.2) translateY(6%); }
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1.15) translateY(6%); }
 }
-
-/* ===== 표정 전환 (씬 emotion → .sp-host.emo-*) ===== */
-.sp-host.emo-happy .rig-eye { --eSY: 0.7; }
-.sp-host.emo-happy .rig-brow { transform: translateY(-10%); }
-.sp-host.emo-surprised .rig-eye { --eSY: 1.15; }
-.sp-host.emo-surprised .rig-brow { transform: translateY(-22%); }
-.sp-host.emo-think .rig-eye { --eSY: 0.85; }
-.sp-host.emo-think .rig-brow.l { transform: translateY(-14%) rotate(-8deg); }
-.sp-host.emo-think .rig-brow.r { transform: translateY(2%) rotate(6deg); }
+/* 놀람 씬에서 입 더 크게 */
+.sp-host.emo-surprised.is-talking .rig-mouth-open { --mScale: 1.3; }
 @media (prefers-reduced-motion: reduce) {
-  .rig, .rig-eye, .rig-eyec { animation: none; }
-  .rig-eyec { opacity: 0; }
+  .rig { animation: none; }
 }
 
 /* reduced motion: 정지 + 트랜스크립트로 콘텐츠 온전 */
