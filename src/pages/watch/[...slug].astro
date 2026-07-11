@@ -94,6 +94,20 @@ const poster = posterOf(data);
         <div class="meta">{formatViews(data.views)} · {timeAgo(data.pubDate)}</div>
         <div class="body clamp" id="desc-body">{data.description}</div>
         <button class="desc-toggle" id="desc-toggle" type="button">...더보기</button>
+        {
+          data.imageCredit && (
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-muted)">
+              이미지 출처:{' '}
+              {data.imageCredit.url ? (
+                <a href={data.imageCredit.url} target="_blank" rel="noopener nofollow" style="color:var(--text-2);text-decoration:underline">
+                  {data.imageCredit.text}
+                </a>
+              ) : (
+                <span>{data.imageCredit.text}</span>
+              )}
+            </div>
+          )
+        }
       </div>
 
       <!-- 트랜스크립트 (SEO/접근성: 대사 전문 정적 노출) -->

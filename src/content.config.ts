@@ -14,6 +14,13 @@ const videos = defineCollection({
     tags: z.array(z.string()),
     host: z.string().default('rosie'), // 마스코트 id (public/host/<id> 또는 기본 SVG)
     thumbnail: z.string().optional(), // 채널 홈 카드 썸네일 (미지정 시 첫 씬 image)
+    // 대표 이미지 출처(인용 요건: 출처표기). 공식 프레스킷/스팀 등 사용 시 채움.
+    imageCredit: z
+      .object({
+        text: z.string(), // 예: "© Rockstar Games (프레스킷)"
+        url: z.string().optional(), // 출처 링크
+      })
+      .optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드
     scenes: z

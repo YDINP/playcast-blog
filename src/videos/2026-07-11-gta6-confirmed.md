@@ -6,6 +6,11 @@ category: "New"
 tags: ["GTA6", "GTA 6", "록스타", "오픈월드", "기대작"]
 host: "rosie"
 views: 24800
+# 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 아래 thumbnail 경로에 넣으세요.
+# thumbnail: "/games/gta6.jpg"
+imageCredit:
+  text: "© Rockstar Games (공식 뉴스와이어)"
+  url: "https://www.rockstargames.com/newswire"
 scenes:
   - text: "로지의 신작 코너, 오늘은 그 게임! 네, GTA 6예요. 루머 말고 공식 확정된 것만 정리했어요."
     emotion: "surprised"

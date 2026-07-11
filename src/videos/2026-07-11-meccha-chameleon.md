@@ -6,6 +6,11 @@ category: "New"
 tags: ["메챠카멜레온", "MecchaChameleon", "인디게임", "프롭헌트", "스팀"]
 host: "rosie"
 views: 11200
+# 대표 이미지: 스팀 상점/개발사 프레스킷 이미지를 약관 범위에서 받아 아래 thumbnail 경로에 넣으세요.
+# thumbnail: "/games/meccha-chameleon.jpg"
+imageCredit:
+  text: "© 개발사 / Steam 상점 페이지"
+  url: "https://store.steampowered.com/app/4704690/MECCHA_CHAMELEON/"
 scenes:
   - text: "요즘 스팀에서 갑자기 난리난 게임! '메챠 카멜레온'인데요, 한마디로 색칠하는 숨바꼭질이에요."
     emotion: "surprised"
