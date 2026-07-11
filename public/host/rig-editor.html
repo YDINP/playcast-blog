@@ -11,7 +11,7 @@
   /* 좌: 스테이지 */
   .stage-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:24px; }
   #stage {
-    position:relative; width:380px; aspect-ratio:62/82;
+    position:relative; width:250px; aspect-ratio:460/907;
     background:radial-gradient(120% 120% at 80% 10%, rgba(139,123,255,.35), transparent 55%),
                radial-gradient(120% 120% at 10% 90%, rgba(87,230,195,.28), transparent 55%),
                linear-gradient(135deg,#1a1830,#0e0e18);
@@ -90,7 +90,7 @@
     <div class="list" id="list"></div>
     <div class="editor" id="editor">
       <div class="fld"><label>X (left%)</label><input type="range" id="ex" min="-10" max="100" step="0.1"><input type="number" id="exn" step="0.1"></div>
-      <div class="fld"><label>Y (units)</label><input type="range" id="ey" min="-10" max="130" step="0.1"><input type="number" id="eyn" step="0.1"></div>
+      <div class="fld"><label>Y (top%)</label><input type="range" id="ey" min="-10" max="130" step="0.1"><input type="number" id="eyn" step="0.1"></div>
       <div class="fld"><label>가로 W%</label><input type="range" id="ew" min="2" max="110" step="0.1"><input type="number" id="ewn" step="0.1"></div>
       <div class="fld"><label>세로 H%</label><input type="range" id="eh" min="2" max="130" step="0.1"><input type="number" id="ehn" step="0.1"></div>
       <div class="fld"><label></label><button onclick="resetAspect()" style="background:#2a2a33;color:#ccc;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer">↻ 원본 비율로</button></div>
@@ -101,24 +101,18 @@
   </div>
 
 <script>
-// 파츠 기본값: [name, left%, topUnits, width%, class]  (위=뒤 레이어)
+// 파츠 기본값: [name, left%, top%, width%, class]  (base=고정 배경, 나머지=얼굴 파츠)
 const DEFAULTS = [
-  ['hoodie',    3,   68, 94,   ''],
-  ['neck',      29.4,60, 41.2, ''],
-  ['hair-back', 25,  10, 50,   ''],
-  ['face',      29,  23, 42,   ''],
-  ['bangs',     26,  11, 48,   ''],
-  ['brow-l',    37.8,33.5,12,  'rig-brow l'],
-  ['brow-r',    50.2,33.5,12,  'rig-brow r'],
-  ['eye-l',     38,  37, 12,   'rig-eye l'],
-  ['eye-r',     50,  37, 12,   'rig-eye r'],
-  ['mouth',     40,  50, 20,   'rig-mouth'],
-  ['lock-r',    63,  27, 19,   'rig-lock'],
-  ['lock-l',    18,  27, 19,   'rig-lock'],
-  ['headset',   22.85,8, 54.3, ''],
+  ['base',    0,     0,     100,   ''],
+  ['brow_l',  35.65, 24.01, 11.74, 'rig-brow l'],
+  ['brow_r',  53.04, 24.01, 11.74, 'rig-brow r'],
+  ['eye_l',   35.43, 25.71, 12.17, 'rig-eye l'],
+  ['eye_r',   52.83, 25.71, 12.17, 'rig-eye r'],
+  ['nose',    48.59, 30.15, 3.26,  'rig-nose'],
+  ['mouth_open', 46.96, 32.05, 6.52,  'rig-mouth'],
 ];
-const UNITS_H = 130; // topUnits 기준 높이
-const ASPECT = 62/82; // 스테이지 W/H (좌:좌표계 세로기준)
+const UNITS_H = 100;   // top 을 %로 직접 사용 (HostRig와 동일)
+const ASPECT = 460/907; // 스테이지 W/H = base 비율
 const NAT = {};       // 파츠 원본 픽셀크기 {name:{w,h}}
 const stage = document.getElementById('stage');
 let parts = [];   // {name, lp, tu, wp, hp, cls, hidden, el}
@@ -156,13 +150,14 @@ function updateUndoBtn(){
 }
 
 function clone(){ return DEFAULTS.map(d => { const n=NAT[d[0]]||{w:1,h:1}; const wp=d[3]; const hp=+(wp*(n.h/n.w)*ASPECT).toFixed(2); return {name:d[0], lp:d[1], tu:d[2], wp, hp, cls:d[4], hidden:false}; }); }
+function srcOf(name){ return name==='base' ? 'base.png' : 'face/'+name+'.png'; }
 
 function build(state){
   // 기존 img 제거
   [...stage.querySelectorAll('img')].forEach(n=>n.remove());
   parts = state.map(p => {
     const img = document.createElement('img');
-    img.src = 'parts/'+p.name+'.png';
+    img.src = srcOf(p.name);
     img.draggable = false;
     stage.appendChild(img);
     p.el = img;
@@ -329,13 +324,11 @@ window.onkeydown=(e)=>{
 };
 
 function updateOut(){
-  // HostRig 형식: [name, left%, topUnits, width%, height%, class]  (height%=세로, 컨테이너 높이 기준)
-  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}, ${p.hp}, '${p.cls}'],`;
-  const body=parts.filter(p=>p.name==='hoodie'||p.name==='neck');
-  const head=parts.filter(p=>p.name!=='hoodie'&&p.name!=='neck');
+  // HostRig 형식: [name, left%, top%, width%]  (base=고정 배경, 얼굴 파츠만 출력)
+  const fmt=p=>`  ['${p.name}', ${p.lp}, ${p.tu}, ${p.wp}],`;
+  const face=parts.filter(p=>p.name!=='base');
   const txt =
-`// ── rig-body (순서 유지) ──\n`+body.map(fmt).join('\n')+
-`\n// ── rig-head parts (위=뒤 레이어) ──\n`+head.map(fmt).join('\n');
+`// base 460x907 위 얼굴 파츠 [name, left%, top%, width%]\n`+face.map(fmt).join('\n');
   document.getElementById('out').value=txt;
 }
 function copyOut(){ const t=document.getElementById('out'); t.select(); navigator.clipboard.writeText(t.value); alert('좌표를 복사했어요. 채팅에 붙여넣어 주세요.'); }
@@ -350,7 +343,7 @@ function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장�
     const im=new Image();
     im.onload=()=>{ NAT[d[0]]={w:im.naturalWidth,h:im.naturalHeight}; res(); };
     im.onerror=()=>{ NAT[d[0]]={w:1,h:1}; res(); };
-    im.src='parts/'+d[0]+'.png';
+    im.src=srcOf(d[0]);
   })));
   build(clone());
   history.length=0; redo.length=0; updateUndoBtn();
