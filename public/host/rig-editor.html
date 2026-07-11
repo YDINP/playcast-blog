@@ -62,6 +62,8 @@
       <button onclick="setBg('grad')">배경:스테이지</button>
       <button onclick="setBg('checker')">체커</button>
       <button onclick="setBg('game')">게임bg</button>
+      <button id="undoBtn" onclick="undo()" title="Ctrl+Z">↩ 되돌리기</button>
+      <button id="redoBtn" onclick="redoFn()" title="Ctrl+Y">↪ 다시</button>
       <button onclick="reset()">리셋</button>
       <button onclick="save()">저장</button>
       <button onclick="load()">불러오기</button>
@@ -100,6 +102,37 @@ const UNITS_H = 130; // topUnits 기준 높이
 const stage = document.getElementById('stage');
 let parts = [];   // {name, lp, tu, wp, cls, hidden, el}
 let sel = -1;
+
+// ── 실행취소/다시실행 히스토리 ──
+let history = [], redo = [];
+let _gk = '', _gt = 0;
+function serialize(){ return parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})); }
+function pushHistory(snap){
+  history.push(snap || serialize());
+  if(history.length>80) history.shift();
+  redo.length = 0; _gk=''; updateUndoBtn();
+}
+// 연속 조작(드래그/휠/슬라이더/키)은 같은 제스처면 1스텝으로 합침
+function maybeSnapshot(key){
+  const now = Date.now();
+  if(key !== _gk || now - _gt > 600){ history.push(serialize()); if(history.length>80)history.shift(); redo.length=0; updateUndoBtn(); }
+  _gk = key; _gt = now;
+}
+function undo(){
+  if(!history.length) return;
+  redo.push(serialize());
+  build(history.pop()); _gk=''; updateUndoBtn();
+}
+function redoFn(){
+  if(!redo.length) return;
+  history.push(serialize());
+  build(redo.pop()); _gk=''; updateUndoBtn();
+}
+function updateUndoBtn(){
+  const u=document.getElementById('undoBtn'), r=document.getElementById('redoBtn');
+  if(u){ u.style.opacity = history.length?1:.4; u.textContent = '↩ 되돌리기'+(history.length?` (${history.length})`:''); }
+  if(r){ r.style.opacity = redo.length?1:.4; }
+}
 
 function clone(){ return DEFAULTS.map(d => ({name:d[0], lp:d[1], tu:d[2], wp:d[3], cls:d[4], hidden:false})); }
 
@@ -140,7 +173,7 @@ function renderList(){
       <span class="nm">${p.name}</span>
       <button title="뒤로">↑</button><button title="앞으로">↓</button>`;
     row.onclick=(e)=>{ if(e.target.tagName==='BUTTON')return; select(i); };
-    row.querySelector('.vis').onclick=(e)=>{e.stopPropagation(); p.hidden=!p.hidden; applyAll(); renderList();};
+    row.querySelector('.vis').onclick=(e)=>{e.stopPropagation(); pushHistory(); p.hidden=!p.hidden; applyAll(); renderList();};
     const [up,down]=row.querySelectorAll('button');
     up.onclick=(e)=>{e.stopPropagation(); move(i,-1);};
     down.onclick=(e)=>{e.stopPropagation(); move(i,1);};
@@ -149,6 +182,7 @@ function renderList(){
 }
 function move(i,d){
   const j=i+d; if(j<0||j>=parts.length)return;
+  pushHistory();
   [parts[i],parts[j]]=[parts[j],parts[i]];
   sel = (sel===i)?j:(sel===j?i:sel);
   applyAll(); renderList();
@@ -166,7 +200,7 @@ function setF(r,n,v){ document.getElementById(r).value=v; document.getElementByI
 ['ex','ey','ew'].forEach(id=>{
   const r=document.getElementById(id), n=document.getElementById(id+'n');
   const key={ex:'lp',ey:'tu',ew:'wp'}[id];
-  const on=v=>{ if(sel<0)return; parts[sel][key]=parseFloat(v); r.value=v; n.value=v; applyOne(parts[sel],sel); updateOut(); };
+  const on=v=>{ if(sel<0)return; maybeSnapshot('sld'+id+sel); parts[sel][key]=parseFloat(v); r.value=v; n.value=v; applyOne(parts[sel],sel); updateOut(); };
   r.oninput=e=>on(e.target.value); n.oninput=e=>on(e.target.value);
 });
 
@@ -178,11 +212,12 @@ function attachDrag(){
     const i=parts.findIndex(p=>p.el===img); if(i<0)return;
     select(i);
     const rect=stage.getBoundingClientRect();
-    drag={i, ox:e.clientX, oy:e.clientY, lp0:parts[i].lp, tu0:parts[i].tu, rw:rect.width, rh:rect.height};
+    drag={i, ox:e.clientX, oy:e.clientY, lp0:parts[i].lp, tu0:parts[i].tu, rw:rect.width, rh:rect.height, pre:serialize(), snapped:false};
     e.preventDefault();
   };
   window.onmousemove=(e)=>{
     if(!drag)return;
+    if(!drag.snapped){ pushHistory(drag.pre); drag.snapped=true; }
     const p=parts[drag.i];
     const dx=(e.clientX-drag.ox)/drag.rw*100;
     const dy=(e.clientY-drag.oy)/drag.rh*UNITS_H;
@@ -193,18 +228,24 @@ function attachDrag(){
   // 휠 크기
   stage.onwheel=(e)=>{
     if(sel<0)return; e.preventDefault();
+    maybeSnapshot('whl'+sel);
     const p=parts[sel];
     p.wp=Math.max(3,+(p.wp*(e.deltaY<0?1.03:0.97)).toFixed(2));
     applyOne(p,sel); setF('ew','ewn',p.wp); updateOut();
   };
 }
-// 키보드 미세이동
+// 키보드 미세이동 + 단축키
 window.onkeydown=(e)=>{
+  const mod = e.ctrlKey||e.metaKey;
+  if(mod && (e.key==='z'||e.key==='Z')){ e.preventDefault(); e.shiftKey?redoFn():undo(); return; }
+  if(mod && (e.key==='y'||e.key==='Y')){ e.preventDefault(); redoFn(); return; }
   if(sel<0)return; const p=parts[sel]; const s=e.shiftKey?2:0.3;
+  const nudge = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','[',']'].includes(e.key);
+  if(!nudge) return;
+  maybeSnapshot('key'+sel);
   if(e.key==='ArrowLeft')p.lp-=s; else if(e.key==='ArrowRight')p.lp+=s;
   else if(e.key==='ArrowUp')p.tu-=s; else if(e.key==='ArrowDown')p.tu+=s;
   else if(e.key==='['){p.wp=Math.max(3,p.wp-s);} else if(e.key===']'){p.wp+=s;}
-  else return;
   e.preventDefault(); p.lp=+p.lp.toFixed(2);p.tu=+p.tu.toFixed(2);p.wp=+p.wp.toFixed(2);
   applyOne(p,sel); setF('ex','exn',p.lp);setF('ey','eyn',p.tu);setF('ew','ewn',p.wp); updateOut();
 };
@@ -221,11 +262,12 @@ function updateOut(){
 }
 function copyOut(){ const t=document.getElementById('out'); t.select(); navigator.clipboard.writeText(t.value); alert('좌표를 복사했어요. 채팅에 붙여넣어 주세요.'); }
 function setBg(m){ stage.className=''; if(m==='checker')stage.classList.add('checker'); if(m==='game')stage.classList.add('game'); }
-function reset(){ build(clone()); }
+function reset(){ pushHistory(); build(clone()); }
 function save(){ localStorage.setItem('rigedit', JSON.stringify(parts.map(p=>({name:p.name,lp:p.lp,tu:p.tu,wp:p.wp,cls:p.cls,hidden:p.hidden})))); alert('저장됨'); }
-function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장된 게 없어요');return;} build(JSON.parse(s)); }
+function load(){ const s=localStorage.getItem('rigedit'); if(!s){alert('저장된 게 없어요');return;} pushHistory(); build(JSON.parse(s)); }
 
 build(clone());
+history.length=0; redo.length=0; updateUndoBtn();
 </script>
 </body>
 </html>
