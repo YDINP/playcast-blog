@@ -882,33 +882,33 @@ button {
   transform-origin: 50% 100%;
   transition: transform 0.25s ease;
 }
-/* 입: 은은한 미소 baseline(--mSY) + 말할 때 개폐 */
+/* 입: 기본=닫힌 미소, 말할 때 열린 입으로 스왑 + 개폐 */
 .rig-mouth {
-  --mSY: 0.85;
-  transform-origin: 50% 20%;
-  transform: scaleY(var(--mSY));
-  transition: transform 0.2s ease;
+  transform-origin: 50% 50%;
+  transition: opacity 0.12s;
 }
-.sp-host.is-talking .rig-mouth {
+.rig-mouth-open {
+  opacity: 0;
+  transform-origin: 50% 20%;
+}
+.sp-host.is-talking .rig-mouth { opacity: 0; }
+.sp-host.is-talking .rig-mouth-open {
+  opacity: 1;
   animation: rig-talk 0.26s ease-in-out infinite;
-  transition: none;
 }
 @keyframes rig-talk {
-  0%, 100% { transform: scaleY(calc(var(--mSY) * 0.7)); }
-  50% { transform: scaleY(calc(var(--mSY) * 1.5)) translateY(6%); }
+  0%, 100% { transform: scaleY(0.55); }
+  50% { transform: scaleY(1.2) translateY(6%); }
 }
 
 /* ===== 표정 전환 (씬 emotion → .sp-host.emo-*) ===== */
 .sp-host.emo-happy .rig-eye { --eSY: 0.7; }
 .sp-host.emo-happy .rig-brow { transform: translateY(-10%); }
-.sp-host.emo-happy .rig-mouth { --mSY: 1.05; }
 .sp-host.emo-surprised .rig-eye { --eSY: 1.15; }
 .sp-host.emo-surprised .rig-brow { transform: translateY(-22%); }
-.sp-host.emo-surprised .rig-mouth { --mSY: 1.5; }
 .sp-host.emo-think .rig-eye { --eSY: 0.85; }
 .sp-host.emo-think .rig-brow.l { transform: translateY(-14%) rotate(-8deg); }
 .sp-host.emo-think .rig-brow.r { transform: translateY(2%) rotate(6deg); }
-.sp-host.emo-think .rig-mouth { --mSY: 0.6; }
 @media (prefers-reduced-motion: reduce) {
   .rig, .rig-eye, .rig-eyec { animation: none; }
   .rig-eyec { opacity: 0; }
