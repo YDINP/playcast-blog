@@ -9,6 +9,8 @@ const pages = Object.fromEntries(entries.map((e) => [e.id, e.data]));
 const catAccent: Record<string, [number, number, number]> = {
   free: [87, 230, 195],
   indie: [139, 123, 255],
+  new: [255, 179, 71],
+  vtuber: [255, 105, 180],
   review: [236, 72, 153],
   guide: [255, 179, 71],
 };
