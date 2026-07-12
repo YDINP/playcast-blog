@@ -877,18 +877,14 @@ button {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-0.4%) scale(1.005); }
 }
-/* 눈 깜빡임: 눈 감은 컷의 눈 밴드를 평소 숨겨뒀다가 주기적으로 잠깐 노출.
-   6.4s 주기 안에서 두 번(연속 깜빡) — 사람 눈처럼 불규칙하게 보이도록 간격을 다르게 뒀다. */
+/* 눈 깜빡임: 눈 감은 컷의 눈 밴드를 평소 숨겨두고, 감는 순간에만 노출.
+   타이밍은 scene-player.js의 스케줄러가 랜덤으로 준다(CSS 애니메이션은 주기가 고정이라
+   매번 같은 리듬으로 두 번씩 깜빡이는 게 티가 났음). */
 .rig-blink {
   opacity: 0;
-  animation: rig-blink 6.4s infinite;
 }
-@keyframes rig-blink {
-  0%, 41.4% { opacity: 0; }
-  42%, 43.8% { opacity: 1; }
-  44.4%, 46.8% { opacity: 0; }
-  47.4%, 48.8% { opacity: 1; }
-  49.4%, 100% { opacity: 0; }
+.rig-blink.is-blink {
+  opacity: 1;
 }
 /* 입 오버레이: 평소 숨김, 말하는 중에만 나타나 개폐 */
 .rig-mouth-open {

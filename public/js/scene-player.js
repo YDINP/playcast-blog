@@ -397,11 +397,38 @@
     io.observe(this.stage);
   };
 
+  // 눈 깜빡임 스케줄러 — CSS 애니메이션은 주기가 고정이라 "항상 같은 리듬으로 두 번"이
+  // 눈에 띈다. 간격(2.4~7s)·연속 깜빡 여부(약 22%)를 매번 랜덤으로 뽑는다.
+  function startBlink(el) {
+    if (el.__blink) return;
+    el.__blink = true;
+    var reduce =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    var CLOSE_MS = 110; // 눈 감고 있는 시간
+    function close(then) {
+      el.classList.add('is-blink');
+      setTimeout(function () {
+        el.classList.remove('is-blink');
+        if (then) setTimeout(then, 130 + Math.random() * 60); // 연속 깜빡 사이 간격
+      }, CLOSE_MS);
+    }
+    function schedule() {
+      setTimeout(function () {
+        if (Math.random() < 0.22) close(function () { close(schedule); });
+        else close(schedule);
+      }, 2400 + Math.random() * 4600);
+    }
+    schedule();
+  }
+
   function init() {
     document.querySelectorAll('.sp-stage').forEach(function (stage) {
       if (stage.__sp) return;
       stage.__sp = new Player(stage);
     });
+    document.querySelectorAll('.rig-blink').forEach(startBlink);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
