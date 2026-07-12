@@ -8,15 +8,13 @@ host: "rosie"
 views: 24800
 ads: false  # 공식 게임 이미지 사용 → 인용 근거 강화 위해 광고 미표시
 # 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 public/games/gta6.jpg 로 저장.
-# GTA6는 스팀 미배포 → 공식 이미지 자동 수급 불가.
-# Rockstar Newswire에서 이미지를 받아 public/games/gta6.jpg 로 저장한 뒤 아래 줄의 주석을 해제하세요.
-# (파일이 없는 상태로 두면 매 페이지 로드마다 404가 납니다)
-# thumbnail: "/games/gta6.jpg"
+thumbnail: "/games/gta6.jpg"  # Rockstar 공식 키아트 (수동 수급)
 imageCredit:
   text: "© Rockstar Games (공식 뉴스와이어)"
   url: "https://www.rockstargames.com/newswire"
 scenes:
   - text: "로지의 신작 코너, 오늘은 그 게임! 네, GTA 6예요. 루머 말고 공식 확정된 것만 정리했어요."
+    image: "/games/scenes/gta6.jpg"
     emotion: "surprised"
     chapter: "오프닝"
   - text: "출시일부터. 2026년 11월 19일, 플레이스테이션5와 엑스박스 시리즈 X·S로 나와요. 여러 번 연기 끝에 확정됐죠."
