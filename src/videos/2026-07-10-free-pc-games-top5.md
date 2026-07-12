@@ -6,6 +6,11 @@ category: "Free"
 tags: ["무료게임", "PC게임", "F2P", "스팀무료", "게임추천"]
 host: "rosie"
 views: 18400
+thumbnail: "/games/scenes/warframe.jpg"
+ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 광고 미표시
+imageCredit:
+  text: "각 게임 공식 스팀 상점 페이지 스크린샷 (© 각 개발사). LoL·원신 장면은 이미지 없음"
+  url: "https://store.steampowered.com/"
 scenes:
   - text: "안녕하세요, 로지예요! 오늘은 지갑 안 열어도 되는 무료 PC 게임만 골라왔어요."
     emotion: "happy"
@@ -14,11 +19,13 @@ scenes:
     emotion: "idle"
     chapter: "선정 기준"
   - text: "1번, 워프레임! 우주 닌자가 되는 루터 슈터인데, 10년 넘게 쌓인 콘텐츠가 전부 무료예요."
+    image: "/games/scenes/warframe.jpg"
     emotion: "surprised"
     chapter: "① 워프레임"
   - text: "과금 재화도 유저 거래로 벌 수 있어서 과금 압박이 정말 낮아요. 첫 10시간만 버티면 신세계!"
     emotion: "idle"
   - text: "2번, 패스 오브 엑자일. 디아블로 좋아하면 무조건이에요. 빌드 짜는 게 본편이라는 말이 있죠."
+    image: "/games/scenes/path-of-exile.jpg"
     emotion: "happy"
     chapter: "② 패스 오브 엑자일"
   - text: "3번, 리그 오브 레전드. 과금은 스킨뿐, 승패엔 영향 없어요. 무료 게임 공정성의 기준이죠."
@@ -28,6 +35,7 @@ scenes:
     emotion: "think"
     chapter: "④ 원신"
   - text: "5번, 파이널판타지14 무료 체험판. 레벨 60까지, 스토리 두 편을 시간 제한 없이 즐겨요."
+    image: "/games/scenes/ffxiv.jpg"
     emotion: "happy"
     chapter: "⑤ 파판14 체험판"
   - text: "오늘의 결론! 무료라고 얕보지 마세요. 설치는 꼭 공식 채널로, 초반 과금은 참기. 다음 편에서 또 만나요!"

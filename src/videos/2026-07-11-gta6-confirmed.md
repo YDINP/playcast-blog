@@ -8,7 +8,10 @@ host: "rosie"
 views: 24800
 ads: false  # 공식 게임 이미지 사용 → 인용 근거 강화 위해 광고 미표시
 # 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 public/games/gta6.jpg 로 저장.
-thumbnail: "/games/gta6.jpg"
+# GTA6는 스팀 미배포 → 공식 이미지 자동 수급 불가.
+# Rockstar Newswire에서 이미지를 받아 public/games/gta6.jpg 로 저장한 뒤 아래 줄의 주석을 해제하세요.
+# (파일이 없는 상태로 두면 매 페이지 로드마다 404가 납니다)
+# thumbnail: "/games/gta6.jpg"
 imageCredit:
   text: "© Rockstar Games (공식 뉴스와이어)"
   url: "https://www.rockstargames.com/newswire"

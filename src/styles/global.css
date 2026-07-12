@@ -323,6 +323,19 @@ button {
 .sp-bg.is-on {
   opacity: 1;
 }
+/* Ken Burns: 정지 스크린샷을 천천히 밀어 "영상처럼" 보이게. 재생 중에만 동작 */
+.sp-stage:not(.is-paused) .sp-bg.is-on:not(.is-grad) {
+  animation: sp-kenburns 18s ease-out forwards;
+}
+@keyframes sp-kenburns {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.12) translate3d(-1.2%, -0.8%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-stage:not(.is-paused) .sp-bg.is-on:not(.is-grad) {
+    animation: none;
+  }
+}
 .sp-bg::after {
   /* legibility scrim */
   content: '';
