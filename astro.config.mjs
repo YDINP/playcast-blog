@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://playcast-vip.vercel.app',
+  site: 'https://virtual-in-playing.vercel.app',
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/dashboard'),
