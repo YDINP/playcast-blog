@@ -15,8 +15,5 @@
     "astro": "^5.0.0",
     "astro-og-canvas": "^0.13.0",
     "canvaskit-wasm": "^0.41.1"
-  },
-  "devDependencies": {
-    "playwright": "^1.61.1"
   }
 }
