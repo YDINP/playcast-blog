@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HostStage from '../../components/HostStage.astro';
-import HostMascot from '../../components/HostMascot.astro';
 import VideoCard from '../../components/VideoCard.astro';
 import CommentSection from '../../components/CommentSection.astro';
 import {
@@ -98,93 +97,83 @@ const breadcrumbSchema = {
   article={{ published, modified, section: data.category, tags: data.tags }}
   schemas={[blogPostingSchema, breadcrumbSchema]}
 >
-  <div class="watch">
-    <div class="watch-main">
-      <HostStage scenes={scenes} playerId={playerId} host={data.host} />
-
+  <article class="vw">
+    <!-- 헤더: 제목·리드를 플레이어 위로 올려 "무엇에 관한 방송인지" 먼저 읽히게 -->
+    <header class="vw-head">
+      <div class="vw-chips">
+        <span class="vw-chip is-cat">{data.category}</span>
+        {data.tags.slice(0, 4).map((t) => <span class="vw-chip">#{t}</span>)}
+      </div>
       <h1>{data.title}</h1>
-      <div class="watch-stats">
+      <p class="vw-lead">{data.description}</p>
+      <div class="vw-meta">
         <span>{formatViews(data.views)}</span>
         <span>·</span>
-        <span>{data.pubDate.toLocaleDateString('ko-KR')}</span>
+        <span>{timeAgo(data.pubDate)}</span>
         <span>·</span>
         <span>{dur}</span>
-        {data.tags.slice(0, 4).map((t) => <span style="color:var(--host)">#{t}</span>)}
+        <span>·</span>
+        <span>{scenes.length}개 장면</span>
       </div>
+    </header>
 
-      <!-- 채널 행 -->
-      <div class="ch-row">
-        <span class="ch-ava"><HostMascot variant="avatar" /></span>
-        <div>
-          <div class="ch-name">로지 <span style="color:var(--host)">◆</span></div>
-          <div class="ch-sub">VIP · 게임 소개 방송</div>
-        </div>
-        <button class="ch-subscribe" id="btn-sub" type="button">구독</button>
-        <div class="ch-actions">
-          <button class="ch-pill" id="btn-like" type="button" aria-label="좋아요">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v11M2 13a2 2 0 012-2h3v10H4a2 2 0 01-2-2zM7 11l4-8a2 2 0 013 2l-1 5h5a2 2 0 012 2l-2 6a2 2 0 01-2 1H7"/></svg>
-            <span id="like-n">{Math.max(1, Math.round(data.views * 0.04))}</span>
-          </button>
-          <button class="ch-pill" id="btn-share" type="button" aria-label="공유">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
-            공유
-          </button>
-        </div>
-      </div>
+    <!-- 스테이지: 영상 프레임 + 우측 호스트 부스 -->
+    <HostStage scenes={scenes} playerId={playerId} host={data.host} booth />
 
-      <!-- 설명란 -->
-      <div class="desc-box">
-        <div class="meta">{formatViews(data.views)} · {timeAgo(data.pubDate)}</div>
-        <div class="body clamp" id="desc-body">{data.description}</div>
-        <button class="desc-toggle" id="desc-toggle" type="button">...더보기</button>
-        {
-          data.imageCredit && (
-            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-muted)">
-              이미지 출처:{' '}
-              {data.imageCredit.url ? (
-                <a href={data.imageCredit.url} target="_blank" rel="noopener nofollow" style="color:var(--text-2);text-decoration:underline">
-                  {data.imageCredit.text}
-                </a>
-              ) : (
-                <span>{data.imageCredit.text}</span>
-              )}
-            </div>
-          )
-        }
-      </div>
-
-      <!-- 트랜스크립트 (SEO/접근성: 대사 전문 정적 노출) -->
-      <section class="transcript">
-        <h2>대본 · 챕터</h2>
-        <div class="tr-list" data-transcript={playerId}>
-          {chapters.map((c) => (
-            <button class="tr-item" type="button">
-              <span class="t">{c.time}</span>
-              <span>{c.label}</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <CommentSection slug={video.id} source="vip" />
+    <div class="vw-actions">
+      <button class="ch-pill" id="btn-like" type="button" aria-label="좋아요">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v11M2 13a2 2 0 012-2h3v10H4a2 2 0 01-2-2zM7 11l4-8a2 2 0 013 2l-1 5h5a2 2 0 012 2l-2 6a2 2 0 01-2 1H7"/></svg>
+        <span id="like-n">{Math.max(1, Math.round(data.views * 0.04))}</span>
+      </button>
+      <button class="ch-pill" id="btn-share" type="button" aria-label="공유">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        공유
+      </button>
+      <span class="spacer"></span>
+      {
+        data.imageCredit && (
+          <span class="vw-credit">
+            이미지:{' '}
+            {data.imageCredit.url ? (
+              <a href={data.imageCredit.url} target="_blank" rel="noopener nofollow">
+                {data.imageCredit.text}
+              </a>
+            ) : (
+              <span>{data.imageCredit.text}</span>
+            )}
+          </span>
+        )
+      }
     </div>
 
-    <aside class="watch-side">
-      <h2>다음 추천</h2>
-      <div class="side-list">
-        {related.map((v) => <VideoCard video={v} variant="side" />)}
+    <!-- 대본 = 챕터 타임라인 (클릭 시 해당 장면으로 점프 / SEO상 대사 전문 노출) -->
+    <section class="vw-sec vw-script">
+      <h2>대본 타임라인</h2>
+      <div class="tr-list" data-transcript={playerId}>
+        {chapters.map((c) => (
+          <button class="tr-item" type="button">
+            <span class="t">{c.time}</span>
+            <span>{c.label}</span>
+          </button>
+        ))}
       </div>
-    </aside>
-  </div>
+    </section>
+
+    <!-- 추천: 우측 사이드바 대신 하단 풀폭 그리드 -->
+    <section class="vw-sec">
+      <h2>이어서 볼 방송</h2>
+      <div class="pc-grid">
+        {related.map((v) => <VideoCard video={v} />)}
+      </div>
+    </section>
+
+    <section class="vw-sec">
+      <CommentSection slug={video.id} source="vip" />
+    </section>
+  </article>
 
   <script is:inline slot="tail">
     (function () {
-      var sub = document.getElementById('btn-sub');
-      if (sub)
-        sub.addEventListener('click', function () {
-          var on = sub.classList.toggle('is-on');
-          sub.textContent = on ? '구독중' : '구독';
-        });
       var like = document.getElementById('btn-like');
       var likeN = document.getElementById('like-n');
       if (like && likeN)
@@ -203,13 +192,6 @@ const breadcrumbSchema = {
             navigator.clipboard.writeText(location.href);
             share.lastChild.textContent = ' 복사됨';
           }
-        });
-      var body = document.getElementById('desc-body');
-      var tg = document.getElementById('desc-toggle');
-      if (body && tg)
-        tg.addEventListener('click', function () {
-          var clamped = body.classList.toggle('clamp');
-          tg.textContent = clamped ? '...더보기' : '간략히';
         });
     })();
   </script>

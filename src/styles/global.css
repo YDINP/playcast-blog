@@ -893,3 +893,357 @@ button {
     transition: none;
   }
 }
+
+/* ============================================================
+   STAGE SHELL — 영상(.sp-stage) + 호스트 부스(.sp-booth) 분리
+   booth 모드에서만 적용. 홈 히어로는 기존 인라인 오버레이 유지.
+   ============================================================ */
+.sp-shell.has-booth {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(200px, 23%, 280px);
+  gap: 14px;
+  align-items: stretch;
+}
+.sp-booth {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(115% 70% at 50% 0%, rgba(87, 230, 195, 0.16), transparent 62%),
+    linear-gradient(180deg, var(--bg-elev), var(--card));
+  overflow: hidden;
+  isolation: isolate;
+}
+/* 스튜디오 스캔라인 */
+.sp-booth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 100% 7px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.booth-live {
+  position: relative;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 61, 84, 0.16);
+  color: var(--live-2);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.booth-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+  animation: booth-blink 1.4s ease-in-out infinite;
+}
+@keyframes booth-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.booth-figure {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 6px 8px 0;
+}
+/* 발밑 글로우 */
+.booth-figure::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78%;
+  height: 30%;
+  background: radial-gradient(60% 100% at 50% 100%, rgba(139, 123, 255, 0.4), transparent 72%);
+  filter: blur(8px);
+  z-index: 0;
+}
+/* 오버레이 해제 → 부스 칸 높이에 맞춰 세로 기준으로 크기 결정 */
+.sp-shell.has-booth .sp-host {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  z-index: 1;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+.booth-foot {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 10px;
+  padding: 9px 12px 11px;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.28);
+}
+.booth-name {
+  display: block;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.booth-role {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.booth-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+.booth-eq span {
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--host);
+  opacity: 0.3;
+}
+.sp-booth:has(.sp-host.is-talking) .booth-eq span {
+  opacity: 1;
+  animation: booth-eq 0.7s ease-in-out infinite;
+}
+.booth-eq span:nth-child(2) { animation-delay: 0.1s; }
+.booth-eq span:nth-child(3) { animation-delay: 0.22s; }
+.booth-eq span:nth-child(4) { animation-delay: 0.32s; }
+@keyframes booth-eq {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+.booth-status {
+  grid-column: 1 / -1;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.booth-status .talk {
+  display: none;
+  color: var(--host);
+  font-weight: 700;
+}
+.sp-booth:has(.sp-host.is-talking) .booth-status .idle { display: none; }
+.sp-booth:has(.sp-host.is-talking) .booth-status .talk { display: inline; }
+
+/* 모바일: 부스가 영상 아래 가로 스트립으로 */
+@media (max-width: 900px) {
+  .sp-shell.has-booth {
+    grid-template-columns: 1fr;
+  }
+  .sp-booth {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+  .booth-live {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    margin: 0;
+  }
+  .booth-figure {
+    flex: 0 0 76px;
+    height: 92px;
+    padding: 0;
+  }
+  .booth-figure::after { display: none; }
+  .booth-foot {
+    flex: 1;
+    padding: 0;
+    border-top: 0;
+    background: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .booth-live i,
+  .sp-booth:has(.sp-host.is-talking) .booth-eq span {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   WATCH PAGE (.vw-*) — 유튜브식 구독행/사이드바 대신 에디토리얼 구조
+   ============================================================ */
+.vw {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.vw-head {
+  margin: 2px 0 16px;
+}
+.vw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+.vw-chip {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elev);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.vw-chip.is-cat {
+  border-color: transparent;
+  background: var(--accent-grad);
+  color: #0b0b0d;
+}
+.vw h1 {
+  font-size: clamp(1.55rem, 3.2vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.vw-lead {
+  max-width: 68ch;
+  margin: 0 0 14px;
+  color: var(--text-2);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.vw-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+/* 액션바 (구독 버튼 없음) */
+.vw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+.vw-actions .ch-pill {
+  white-space: nowrap;
+}
+.vw-actions .spacer {
+  flex: 1;
+}
+.vw-credit {
+  min-width: 0;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+/* 좁은 폭: 출처를 아랫줄로 내려 버튼이 눌리지 않게 */
+@media (max-width: 640px) {
+  .vw-actions .spacer {
+    display: none;
+  }
+  .vw-credit {
+    flex: 1 0 100%;
+  }
+}
+.vw-credit a {
+  color: var(--text-2);
+  text-decoration: underline;
+}
+
+.vw-sec {
+  margin-top: 36px;
+}
+.vw-sec > h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+}
+.vw-sec > h2::before {
+  content: '';
+  width: 3px;
+  height: 17px;
+  border-radius: 2px;
+  background: var(--accent-grad);
+}
+
+/* 대본 = 타임라인 (트랜스크립트 겸용: SEO상 전문 노출 유지) */
+.vw-script .tr-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 14px;
+  border-left: 1px solid var(--border);
+}
+.vw-script .tr-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.vw-script .tr-item::before {
+  content: '';
+  position: absolute;
+  left: -18px; /* padding-left(14px) + border(1px) 만큼 밖으로 → 타임라인 축 위에 */
+  top: 15px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.vw-script .tr-item:hover {
+  background: var(--card);
+  transform: translateX(2px);
+}
+.vw-script .tr-item.is-active {
+  background: var(--card-hover);
+  color: var(--text);
+}
+.vw-script .tr-item.is-active::before {
+  background: var(--host);
+  box-shadow: 0 0 0 3px rgba(87, 230, 195, 0.18);
+}
+.vw-script .tr-item .t {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.vw-script .tr-item.is-active .t {
+  color: var(--host);
+}

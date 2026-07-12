@@ -43,7 +43,12 @@
     // refs
     this.bgA = stage.querySelector('.sp-bg-a');
     this.bgB = stage.querySelector('.sp-bg-b');
-    this.host = stage.querySelector('.sp-host');
+    // booth 모드에서는 호스트가 스테이지 밖(.sp-shell > .sp-booth)에 있다
+    var shell = stage.closest('.sp-shell');
+    this.host =
+      stage.querySelector('.sp-host') ||
+      (shell && shell.querySelector('.sp-host')) ||
+      document.createElement('div'); // 호스트 없는 변형에서도 classList 호출이 안전하도록
     this.textEl = stage.querySelector('.sp-text');
     this.captionBox = stage.querySelector('.sp-caption .box');
     this.fill = stage.querySelector('.sp-progress-fill');

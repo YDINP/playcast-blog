@@ -14,11 +14,14 @@ interface Props {
   scenes: Scene[];
   playerId: string;
   host?: string;
+  /** true면 호스트를 영상 밖 전용 부스 패널로 분리 (시청 페이지). false면 영상 내 오버레이 (홈 히어로). */
+  booth?: boolean;
 }
-const { scenes, playerId, host = 'rosie' } = Astro.props;
+const { scenes, playerId, host = 'rosie', booth = false } = Astro.props;
 const first = scenes[0] || { text: '' };
 ---
 
+<div class:list={['sp-shell', { 'has-booth': booth }]}>
 <div class="sp-stage is-paused" data-player={playerId} data-host={host}>
   <!-- 배경 크로스페이드 2레이어 (첫 씬 미리 노출) -->
   <div
@@ -28,10 +31,14 @@ const first = scenes[0] || { text: '' };
   </div>
   <div class="sp-bg sp-bg-b"></div>
 
-  <!-- 호스트 (파츠 재조립 리그) -->
-  <div class="sp-host">
-    <HostRig />
-  </div>
+  <!-- 호스트 (파츠 재조립 리그) — booth 모드에서는 스테이지 밖으로 -->
+  {
+    !booth && (
+      <div class="sp-host">
+        <HostRig />
+      </div>
+    )
+  }
 
   <!-- 자막 -->
   <div class="sp-caption">
@@ -71,4 +78,37 @@ const first = scenes[0] || { text: '' };
 
   <!-- 씬 데이터 (인라인 JSON, 작은 페이로드) -->
   <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
+</div>
+
+{
+  booth && (
+    <aside class="sp-booth" aria-label="호스트 로지">
+      <div class="booth-live">
+        <i />
+        LIVE
+      </div>
+      <div class="booth-figure">
+        <div class="sp-host">
+          <HostRig />
+        </div>
+      </div>
+      <div class="booth-foot">
+        <div class="booth-id">
+          <span class="booth-name">로지</span>
+          <span class="booth-role">VIP 호스트</span>
+        </div>
+        <div class="booth-eq" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+        <div class="booth-status">
+          <span class="idle">대기 중</span>
+          <span class="talk">방송 중</span>
+        </div>
+      </div>
+    </aside>
+  )
+}
 </div>
