@@ -17,3 +17,6 @@ Thumbs.db
 
 # scratch (cutout tooling)
 .tmp/
+
+.vercel
+.env*
