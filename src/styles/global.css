@@ -960,6 +960,7 @@ button {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  overflow: hidden; /* 호스트가 칸보다 넓으면 어깨만 잘림 (비율은 유지) */
   padding: 6px 8px 0;
 }
 /* 발밑 글로우 */
@@ -975,15 +976,20 @@ button {
   filter: blur(8px);
   z-index: 0;
 }
-/* 오버레이 해제 → 부스 칸 높이에 맞춰 세로 기준으로 크기 결정 */
+/* 오버레이 해제 → 부스 폭 기준으로 크기 결정.
+   ⚠️ 입 오버레이 좌표는 .rig(=.sp-host) 박스 기준 %라, 박스 비율이 vt.png(586:752)와
+   어긋나는 순간 입이 얼굴에서 밀린다(턱/목으로 내려감). 그래서:
+   - height는 auto로 두어 비율이 항상 이미지와 일치하게 하고
+   - flex:none 으로 flex shrink에 폭이 눌리는 것(=비율 붕괴)을 막는다. */
 .sp-shell.has-booth .sp-host {
   position: relative;
   right: auto;
   bottom: auto;
   z-index: 1;
-  width: auto;
-  height: 100%;
-  max-width: 100%;
+  flex: none;
+  width: 100%;
+  height: auto;
+  max-width: none;
   min-width: 0;
   margin-inline: auto;
 }
@@ -1065,6 +1071,11 @@ button {
     flex: 0 0 76px;
     height: 92px;
     padding: 0;
+  }
+  /* 좁은 스트립에선 높이 기준으로 (폭 기준이면 세로가 넘쳐 머리가 잘림) */
+  .sp-shell.has-booth .sp-host {
+    width: auto;
+    height: 100%;
   }
   .booth-figure::after { display: none; }
   .booth-foot {
