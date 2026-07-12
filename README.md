@@ -4,8 +4,16 @@
 배경 크로스페이드 + 타이핑 자막 + 호스트 입모양 애니를 브라우저 타임라인으로 재생하는
 **합성 씬플레이어(가짜 영상, 모션 블로그)**. 실제 영상 파일 0, 정적 배포, 생성비용 0.
 
+**프로덕션: https://virtual-in-playing.vercel.app**
+
 ## 스택
 Astro 5 (static) · 바닐라 씬플레이어 · 인라인 SVG 마스코트 · astro-og-canvas · Supabase 댓글
+
+## 배포
+GitHub `YDINP/playcast-blog` → Vercel 프로젝트 `virtual-in-playing` (Git 연동).
+`master`에 push하면 프로덕션 자동 배포. 환경변수 없음.
+> `vercel alias set`으로 도메인을 붙이면 특정 배포에 고정돼 다음 배포 때 SSO 302로 죽는다.
+> 도메인 추가는 반드시 `vercel domains add <name>.vercel.app virtual-in-playing`.
 
 ## 개발
 ```bash
