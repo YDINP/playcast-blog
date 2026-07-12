@@ -1047,8 +1047,14 @@ button {
   color: var(--host);
   font-weight: 700;
 }
-.sp-booth:has(.sp-host.is-talking) .booth-status .idle { display: none; }
-.sp-booth:has(.sp-host.is-talking) .booth-status .talk { display: inline; }
+/* 상태 문구는 '재생 여부'를 따른다 (타이핑 여부가 아님 — 장면 사이 정지마다 깜빡였음).
+   .sp-stage.is-paused = 정지, 없으면 재생 중. */
+.sp-shell:has(.sp-stage:not(.is-paused)) .booth-status .idle { display: none; }
+.sp-shell:has(.sp-stage:not(.is-paused)) .booth-status .talk { display: inline; }
+/* 정지 중엔 LIVE 뱃지도 죽인다 */
+.sp-shell:has(.sp-stage.is-paused) .booth-live {
+  opacity: 0.45;
+}
 
 /* 모바일: 부스가 영상 아래 가로 스트립으로 */
 @media (max-width: 900px) {
