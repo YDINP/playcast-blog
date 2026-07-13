@@ -33,6 +33,13 @@ const used = [...new Set(emotions)].filter((e) => FACE[e]);
 
   <!-- 얼굴 파츠 레이어: 포인터 시차(parallax)용으로 한 겹 묶는다. scene-player가 transform 조작 -->
   <div class="rig-parts">
+    <!-- 눈: 흰자 패치(원래 홍채 자리를 덮음) 위에 눈동자를 얹어 커서를 따라 움직인다.
+         base(rosie.png)에서 홍채를 오려 만든 파츠 — 표정 파츠가 눈을 다시 그리므로 idle에서만 노출. -->
+    <img class="rig-part rig-eye" src="/host/eye/sclera-l.png" alt="" style="left:34.50%;top:35.89%;width:8.33%;height:6.70%" />
+    <img class="rig-part rig-eye" src="/host/eye/sclera-r.png" alt="" style="left:55.17%;top:36.00%;width:8.50%;height:6.59%" />
+    <img class="rig-part rig-eye rig-pupil" src="/host/eye/pupil-l.png" alt="" style="left:34.50%;top:35.89%;width:8.33%;height:6.70%" />
+    <img class="rig-part rig-eye rig-pupil" src="/host/eye/pupil-r.png" alt="" style="left:55.17%;top:36.00%;width:8.50%;height:6.59%" />
+
     {
       used.map((emo) => (
         <img

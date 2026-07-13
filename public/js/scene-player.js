@@ -152,8 +152,9 @@
     Array.prototype.slice.call(host.classList).forEach(function (c) {
       if (c.indexOf('emo-') === 0) host.classList.remove(c);
     });
-    if (sc.emotion && sc.emotion !== 'idle')
-      this.host.classList.add('emo-' + sc.emotion);
+    var hasEmo = !!(sc.emotion && sc.emotion !== 'idle');
+    if (hasEmo) this.host.classList.add('emo-' + sc.emotion);
+    this.host.classList.toggle('has-emo', hasEmo); // 표정 파츠가 눈을 덮으므로 눈동자 레이어 숨김
     this.host.classList.remove('is-talking');
 
     // 자막 초기화
@@ -457,7 +458,8 @@
     rigs.push({
       host: host,
       parts: parts,
-      cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0 },
+      pupils: host.querySelectorAll('.rig-pupil'),
+      cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0, px: 0, py: 0 },
     });
   }
 
@@ -501,6 +503,17 @@
         c.rot.toFixed(2) + 'deg) scale(' + c.scale.toFixed(4) + ')';
       r.parts.style.transform =
         'translate(' + c.fx.toFixed(2) + 'px,' + c.fy.toFixed(2) + 'px)';
+
+      // 눈동자: 커서를 따라 이동. 파츠 좌표는 base(600px 폭) 기준이라 렌더 크기에 맞춰 환산.
+      if (r.pupils.length) {
+        var s = host.clientWidth / 600;
+        var tpx = ptr.x * 5.5 * s;          // 좌우 ±5.5px(base). 더 키우면 홍채가 눈꺼풀을 넘는다
+        var tpy = ptr.y * 3 * s;
+        c.px += (tpx - c.px) * 0.14;
+        c.py += (tpy - c.py) * 0.14;
+        var tr = 'translate(' + c.px.toFixed(2) + 'px,' + c.py.toFixed(2) + 'px)';
+        for (var j = 0; j < r.pupils.length; j++) r.pupils[j].style.transform = tr;
+      }
     }
     requestAnimationFrame(rigLoop);
   }

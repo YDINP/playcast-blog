@@ -1650,3 +1650,12 @@ body::after {
 .sp-host.emo-cry .rig-mouth-open {
   display: none;
 }
+
+/* ---------- 눈동자 시선 추적 ----------
+   표정 파츠가 눈을 다시 그리므로, 표정이 켜져 있으면(.has-emo) 눈 레이어는 숨긴다. */
+.rig-pupil {
+  will-change: transform;
+}
+.sp-host.has-emo .rig-eye {
+  display: none;
+}
