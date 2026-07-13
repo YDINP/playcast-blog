@@ -97,25 +97,31 @@ const allSchemas = [websiteSchema, ...schemas];
   </head>
   <body>
     <header class="pc-header">
-      <a href="/" class="pc-logo">
-        <span class="dot">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
-        </span>
-        <b>V<span>I</span>P</b>
-      </a>
-      <div class="pc-search">
-        <input
-          type="search"
-          id="pc-search-input"
-          placeholder="게임·채널 검색"
-          autocomplete="off"
-          aria-label="검색"
-        />
+      <div class="pc-bar">
+        <a href="/" class="pc-logo">
+          <span class="dot">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+          </span>
+          <b>V<span>I</span>P</b>
+        </a>
+        <div class="pc-search">
+          <svg class="pc-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+          </svg>
+          <input
+            type="search"
+            id="pc-search-input"
+            placeholder="게임·채널 검색"
+            autocomplete="off"
+            aria-label="검색"
+          />
+        </div>
+        <nav class="pc-nav">
+          <a href="/" class="hide-sm">홈</a>
+          <a href="/about">채널</a>
+          <span class="pc-onair" title="로지는 항상 방송 중입니다"><i></i>ON AIR</span>
+        </nav>
       </div>
-      <nav class="pc-nav">
-        <a href="/" class="hide-sm">홈</a>
-        <a href="/about">채널</a>
-      </nav>
     </header>
 
     <main class="pc-main">

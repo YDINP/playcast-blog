@@ -17,9 +17,10 @@ const href = watchHref(video.id);
 {
   variant === 'grid' ? (
     <a href={href} class="vcard">
-      <div class="vcard-thumb">
+      <div class:list={['vcard-thumb', { 'is-empty': !poster }]}>
         <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
         {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
+        <span class="vcard-cat">{data.category}</span>
         <span class="vcard-dur">{dur}</span>
         <span class="vcard-play">
           <span>

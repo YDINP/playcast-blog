@@ -1336,3 +1336,289 @@ button {
     width: 100%;
   }
 }
+
+/* ============================================================
+   REDESIGN v2 — "버츄얼 스트리밍 스튜디오"
+   앰비언트 네온 배경 · 플로팅 글래스 헤더 · 발광 카드 · 디스플레이 타이포
+   (앞선 기본 스타일을 의도적으로 덮어쓴다)
+   ============================================================ */
+
+/* 무대 조명처럼 깔리는 앰비언트 배경 (스크롤과 무관하게 고정) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 42% at 8% -8%, rgba(87, 230, 195, 0.13), transparent 62%),
+    radial-gradient(52% 44% at 100% -4%, rgba(139, 123, 255, 0.16), transparent 62%),
+    radial-gradient(46% 34% at 52% 108%, rgba(255, 61, 84, 0.07), transparent 64%);
+}
+/* 아주 옅은 스캔라인 — 방송 화면 질감 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+  background-size: 100% 3px;
+}
+.pc-header,
+.pc-main,
+.pc-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 헤더: 떠 있는 글래스 캡슐 ---------- */
+.pc-header {
+  position: sticky;
+  top: 10px;
+  height: auto;
+  display: block;
+  padding: 10px 16px 0;
+  background: none;
+  backdrop-filter: none;
+  border-bottom: 0;
+}
+.pc-bar {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 10px 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: rgba(19, 19, 24, 0.72);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow:
+    0 18px 40px -26px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.pc-logo .dot {
+  background: var(--accent-grad);
+  color: #06231d;
+  box-shadow: 0 0 20px rgba(87, 230, 195, 0.45);
+}
+.pc-logo b span {
+  color: var(--host);
+}
+.pc-search {
+  position: relative;
+}
+.pc-search-ico {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.pc-search input {
+  height: 36px;
+  padding: 0 14px 0 36px;
+  background: rgba(0, 0, 0, 0.35);
+  border-color: var(--border);
+}
+.pc-nav a {
+  font-weight: 600;
+}
+/* ON AIR 표시 — 채널이 "살아있다"는 신호 */
+.pc-onair {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(255, 61, 84, 0.14);
+  border: 1px solid rgba(255, 61, 84, 0.28);
+  color: var(--live-2);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.pc-onair i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 8px var(--live);
+  animation: booth-blink 1.6s ease-in-out infinite;
+}
+
+/* ---------- 히어로: 스테이지 뒤 무대 조명 ---------- */
+.pc-hero {
+  position: relative;
+  margin-bottom: 40px;
+}
+.pc-hero::before {
+  content: '';
+  position: absolute;
+  inset: -30px -10px 20px;
+  z-index: -1;
+  background:
+    radial-gradient(46% 60% at 28% 42%, rgba(139, 123, 255, 0.2), transparent 70%),
+    radial-gradient(38% 58% at 86% 34%, rgba(87, 230, 195, 0.17), transparent 70%);
+  filter: blur(26px);
+}
+
+/* ---------- 섹션 타이틀: 키커 + 디스플레이 ---------- */
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 34px 0 18px;
+  gap: 10px;
+}
+.section-title .bar {
+  width: 4px;
+  height: 22px;
+  background: var(--accent-grad);
+  box-shadow: 0 0 12px rgba(87, 230, 195, 0.5);
+}
+
+/* ---------- 카테고리 칩: 글래스 → 활성 시 네온 ---------- */
+.pc-chip {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+}
+.pc-chip.is-active {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: #06231d;
+  box-shadow: 0 6px 20px -8px rgba(87, 230, 195, 0.6);
+}
+
+/* ---------- 카드: 발광 링 + 리프트 ---------- */
+.pc-grid {
+  gap: 30px 20px;
+}
+.vcard-thumb {
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 34px -24px rgba(0, 0, 0, 0.9);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.vcard:hover .vcard-thumb {
+  transform: translateY(-4px);
+  border-color: rgba(87, 230, 195, 0.45);
+  box-shadow:
+    0 26px 46px -26px rgba(87, 230, 195, 0.4),
+    0 0 0 1px rgba(87, 230, 195, 0.18);
+}
+/* 썸네일 하단 그라데이션 — 자막/배지 가독성 */
+.vcard-thumb::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 46%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+.vcard-cat {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(10, 10, 12, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  color: var(--host);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.vcard-dur {
+  z-index: 2;
+  background: rgba(10, 10, 12, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+}
+.vcard-play {
+  z-index: 2;
+}
+.vcard-ava {
+  padding: 2px;
+  border: 0;
+  background: var(--accent-grad);
+  box-shadow: 0 0 14px -3px rgba(87, 230, 195, 0.55);
+}
+.vcard-ava img {
+  border-radius: 50%;
+  background: var(--card);
+}
+.vcard-info h3 {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  transition: color 0.18s;
+}
+.vcard:hover .vcard-info h3 {
+  color: var(--host);
+}
+
+/* ---------- 푸터: 네온 디바이더 ---------- */
+.pc-footer {
+  position: relative;
+  border-top: 0;
+  margin-top: 40px;
+}
+.pc-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, 90%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(87, 230, 195, 0.5), transparent);
+}
+
+@media (max-width: 640px) {
+  .pc-bar {
+    gap: 8px;
+    padding: 0 8px 0 10px;
+  }
+  .pc-onair {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-onair i {
+    animation: none;
+  }
+}
+
+/* 카드 썸네일: 그라디언트 플레이스홀더(.sp-bg, z-index:1)가 실제 이미지를 덮지 않도록 */
+.vcard-thumb img,
+.side-card .vcard-thumb img {
+  position: relative;
+  z-index: 1;
+}
+
+/* 이미지가 없는 카드: 빈 그라디언트 대신 채널 워터마크(로지)로 브랜딩 */
+.vcard-thumb.is-empty::before {
+  content: '';
+  position: absolute;
+  right: -6%;
+  bottom: -14%;
+  z-index: 2; /* .sp-bg(z-index:1) 위에 올려야 보인다 */
+  width: 46%;
+  aspect-ratio: 600 / 911;
+  background: url('/host/rosie.png') no-repeat center / contain;
+  opacity: 0.16;
+  filter: grayscale(0.2);
+  pointer-events: none;
+}
+.vcard:hover .vcard-thumb.is-empty::before {
+  opacity: 0.26;
+}
