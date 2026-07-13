@@ -1,40 +1,58 @@
 {
   "canvas": {
-    "w": 620,
-    "h": 880
+    "w": 600,
+    "h": 911
   },
-  "note": "원본 rosie.png의 눈·입 좌표를 고양이귀 2점 매칭으로 전사. head는 머리카락에 맞춰 0.82배 축소(시트 타일마다 스케일이 달랐음).",
-  "scale_v3_over_original": 1.0519,
+  "note": "원본 rosie(600x911) 좌표계 기준. 레이어마다 배율이 다른 이유: 시트 타일별로 캐릭터 크기가 제각각이라 각각 원본 랜드마크에 맞춰 개별 보정.",
   "layers": {
     "body": {
-      "left": 0,
-      "top": 29.55,
-      "width": 100
+      "left": -152,
+      "top": 242,
+      "width": 744,
+      "scale": 1.2
     },
     "head": {
-      "left": 15.84,
-      "top": 17.55,
-      "width": 82
+      "left": -7.7,
+      "top": 76.8,
+      "width": 570.4,
+      "scale": 0.92
     },
     "hair": {
-      "left": 20.48,
-      "top": 0,
-      "width": 100
+      "left": 63.6,
+      "top": -12.1,
+      "width": 589.5,
+      "scale": 0.9508
     },
     "eyes": {
-      "left": 36.05,
-      "top": 26.76,
-      "width": 47.21
+      "left": 154.6,
+      "top": 210.9,
+      "width": 279.4,
+      "scale": 0.7353
     },
     "brow": {
-      "left": 38.52,
-      "top": 20.18,
-      "width": 42.77
+      "left": 169,
+      "top": 149.3,
+      "width": 253.1,
+      "scale": 0.7669
     },
     "mouth": {
-      "left": 46.16,
-      "top": 44.84,
-      "width": 25.99
+      "left": 197.3,
+      "top": 348.1,
+      "width": 188.2,
+      "scale": 0.5702
     }
-  }
+  },
+  "zorder": [
+    "body",
+    "head",
+    "eye-white",
+    "iris",
+    "gleam",
+    "lid-*",
+    "lash",
+    "brow-*",
+    "blush",
+    "mouth-*",
+    "hair"
+  ]
 }
