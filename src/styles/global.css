@@ -886,22 +886,25 @@ button {
 .rig-blink.is-blink {
   opacity: 1;
 }
-/* 입 오버레이: 평소 숨김, 말하는 중에만 나타나 개폐 */
+/* 얼굴 파츠 레이어 — 포인터 시차(깊이감). transform은 scene-player가 넣는다 */
+.rig-parts {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+/* 입 오버레이: 평소 숨김, 말하는 중에만. 벌어짐(--mouth)은 타이핑되는 글자마다 갱신 →
+   고정 주기 애니메이션보다 실제 말하는 리듬에 가깝다. */
 .rig-mouth-open {
   opacity: 0;
-  transform-origin: 50% 25%;
-  transition: opacity 0.1s;
+  transform-origin: 50% 12%;
+  transform: scaleY(calc(var(--mouth, 0.4) * var(--mScale, 1)));
+  transition: opacity 0.1s, transform 0.07s linear;
 }
 .sp-host.is-talking .rig-mouth-open {
   opacity: 1;
-  animation: rig-talk 0.26s ease-in-out infinite;
-}
-@keyframes rig-talk {
-  0%, 100% { transform: scaleY(0.5); }
-  50% { transform: scaleY(1.15) translateY(6%); }
 }
 /* 놀람 씬에서 입 더 크게 */
-.sp-host.emo-surprised.is-talking .rig-mouth-open { --mScale: 1.3; }
+.sp-host.emo-surprised { --mScale: 1.25; }
 @media (prefers-reduced-motion: reduce) {
   .rig { animation: none; }
   .rig-blink { animation: none; }

@@ -200,6 +200,11 @@
     );
     if (this.textEl.textContent.length !== reveal) {
       this.textEl.textContent = text.slice(0, reveal);
+      // 립싱크: 글자가 하나 찍힐 때마다 입 벌어짐을 새로 뽑는다(공백은 다물기).
+      // 고정 주기 애니메이션과 달리 실제 대사 리듬을 따라간다.
+      var ch = text.charAt(reveal - 1);
+      var open = /\s/.test(ch) ? 0.12 : 0.5 + Math.random() * 0.75;
+      this.host.style.setProperty('--mouth', open.toFixed(2));
     }
     var isTyping = elapsed < typingDur && reveal < text.length;
     this.stage.classList.toggle('is-typing', isTyping);
@@ -428,12 +433,103 @@
     schedule();
   }
 
+  // ── 리깅(2.5D) ──────────────────────────────────────────────
+  // 있는 파츠만으로 가능한 것: 포인터 방향으로 몸 기울임 + 얼굴 레이어 시차(깊이감),
+  // 아이들 흔들림, 말할 때 끄덕임, 표정별 몸짓. (진짜 Live2D의 메시 변형은 아님)
+  var POSE = {
+    'emo-surprised': { dy: -4, rot: 0, scale: 1.015 },
+    'emo-laugh': { dy: -3, rot: 1.0, scale: 1.01 },
+    'emo-wink': { dy: -1, rot: -1.0, scale: 1 },
+    'emo-happy': { dy: -1, rot: 0.5, scale: 1 },
+    'emo-shy': { dy: 1, rot: 1.2, scale: 0.997 },
+    'emo-think': { dy: 1, rot: -1.4, scale: 1 },
+    'emo-sad': { dy: 4, rot: -1.2, scale: 0.995 },
+    'emo-cry': { dy: 5, rot: -1.6, scale: 0.993 },
+  };
+  var rigs = [];
+  var ptr = { x: 0, y: 0 }; // -1..1
+
+  function startRig(host) {
+    if (host.__rig) return;
+    host.__rig = true;
+    var parts = host.querySelector('.rig-parts');
+    if (!parts) return;
+    rigs.push({
+      host: host,
+      parts: parts,
+      cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0 },
+    });
+  }
+
+  function poseOf(host) {
+    for (var k in POSE) if (host.classList.contains(k)) return POSE[k];
+    return { dy: 0, rot: 0, scale: 1 };
+  }
+
+  var t0 = performance.now();
+  function rigLoop() {
+    var t = (performance.now() - t0) / 1000;
+    for (var i = 0; i < rigs.length; i++) {
+      var r = rigs[i], host = r.host, c = r.cur;
+      var pose = poseOf(host);
+      var talking = host.classList.contains('is-talking');
+
+      // 목표값: 아이들 흔들림 + 포인터 + 표정 몸짓 + 말할 때 끄덕임
+      var sway = Math.sin(t * 0.55) * 0.5 + Math.sin(t * 0.23) * 0.3; // deg
+      var bob = Math.sin(t * 0.8) * 1.6; // px
+      var nodY = talking ? Math.sin(t * 7.5) * 1.4 : 0;
+      var nodR = talking ? Math.sin(t * 3.6) * 0.3 : 0;
+
+      var tx = ptr.x * 7;
+      var ty = ptr.y * 4 + bob + nodY + pose.dy;
+      var rot = ptr.x * 2.2 + sway + nodR + pose.rot;
+      var sc = pose.scale;
+      // 얼굴 레이어는 몸보다 조금 더 움직여 깊이감을 만든다
+      var fx = ptr.x * 3.5;
+      var fy = ptr.y * 2;
+
+      var k = 0.12; // 감쇠(lerp) — 뚝뚝 끊기지 않게
+      c.x += (tx - c.x) * k;
+      c.y += (ty - c.y) * k;
+      c.rot += (rot - c.rot) * k;
+      c.scale += (sc - c.scale) * k;
+      c.fx += (fx - c.fx) * k;
+      c.fy += (fy - c.fy) * k;
+
+      host.style.transform =
+        'translate(' + c.x.toFixed(2) + 'px,' + c.y.toFixed(2) + 'px) rotate(' +
+        c.rot.toFixed(2) + 'deg) scale(' + c.scale.toFixed(4) + ')';
+      r.parts.style.transform =
+        'translate(' + c.fx.toFixed(2) + 'px,' + c.fy.toFixed(2) + 'px)';
+    }
+    requestAnimationFrame(rigLoop);
+  }
+
+  function initRigs() {
+    if (reduceMotion) return; // 모션 최소화 사용자는 정지 포트레이트로
+    document.querySelectorAll('.sp-host').forEach(startRig);
+    if (!rigs.length) return;
+    // 포인터: 화면 중앙 기준 -1..1 (터치 기기는 hover가 없어 자동 제외)
+    if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+      window.addEventListener(
+        'pointermove',
+        function (e) {
+          ptr.x = Math.max(-1, Math.min(1, (e.clientX / window.innerWidth) * 2 - 1));
+          ptr.y = Math.max(-1, Math.min(1, (e.clientY / window.innerHeight) * 2 - 1));
+        },
+        { passive: true }
+      );
+    }
+    requestAnimationFrame(rigLoop);
+  }
+
   function init() {
     document.querySelectorAll('.sp-stage').forEach(function (stage) {
       if (stage.__sp) return;
       stage.__sp = new Player(stage);
     });
     document.querySelectorAll('.rig-blink').forEach(startBlink);
+    initRigs();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
