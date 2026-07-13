@@ -507,8 +507,8 @@
       // 눈동자: 커서를 따라 이동. 파츠 좌표는 base(600px 폭) 기준이라 렌더 크기에 맞춰 환산.
       if (r.pupils.length) {
         var s = host.clientWidth / 600;
-        var tpx = ptr.x * 5.5 * s;          // 좌우 ±5.5px(base). 더 키우면 홍채가 눈꺼풀을 넘는다
-        var tpy = ptr.y * 3 * s;
+        var tpx = ptr.x * 8 * s;            // 좌우 ±8px(base). 눈 소켓 마스크가 잘라주므로 넘칠 걱정 없음
+        var tpy = ptr.y * 4 * s;
         c.px += (tpx - c.px) * 0.14;
         c.py += (tpy - c.py) * 0.14;
         var tr = 'translate(' + c.px.toFixed(2) + 'px,' + c.py.toFixed(2) + 'px)';

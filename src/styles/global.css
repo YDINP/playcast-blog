@@ -1659,3 +1659,20 @@ body::after {
 .sp-host.has-emo .rig-eye {
   display: none;
 }
+
+/* 눈 소켓: 흰자 alpha를 마스크로 써서 내부(이동하는 홍채 포함)를 눈 모양으로 잘라낸다 */
+.rig-eye {
+  display: block;
+  overflow: hidden;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.rig-eye .eye-bg,
+.rig-eye .rig-pupil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
