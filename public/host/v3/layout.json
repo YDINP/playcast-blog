@@ -1,0 +1,81 @@
+{
+  "canvas": {
+    "w": 620,
+    "h": 880
+  },
+  "note": "좌표는 캔버스(620x880) 기준 %. 코 점(372,347)·얼굴폭 254px에 앵커해 산출.",
+  "layers": {
+    "body": {
+      "left": 0,
+      "top": 29.55,
+      "width": 100
+    },
+    "head": {
+      "left": 6.94,
+      "top": 0,
+      "width": 100
+    },
+    "hair": {
+      "left": 20.48,
+      "top": 0,
+      "width": 100
+    },
+    "eyes": {
+      "left": 41.59,
+      "top": 22.96,
+      "width": 36.63,
+      "files": [
+        "eye-white",
+        "iris",
+        "gleam",
+        "lid-open",
+        "lid-half",
+        "lid-closed",
+        "lash",
+        "blush"
+      ]
+    },
+    "brow": {
+      "left": 43.51,
+      "top": 15.7,
+      "width": 33.18,
+      "files": [
+        "brow-neutral",
+        "brow-up",
+        "brow-down",
+        "brow-sad"
+      ]
+    },
+    "mouth": {
+      "left": 49.08,
+      "top": 36.93,
+      "width": 21.46,
+      "files": [
+        "mouth-closed",
+        "mouth-smile",
+        "mouth-a",
+        "mouth-i",
+        "mouth-u",
+        "mouth-e",
+        "mouth-o"
+      ]
+    }
+  },
+  "zorder": [
+    "body",
+    "head",
+    "eye-white",
+    "iris",
+    "gleam",
+    "lid-*",
+    "lash",
+    "brow-*",
+    "blush",
+    "mouth-*",
+    "hair"
+  ],
+  "gaze": {
+    "iris_range_px": 16,
+    "note": "홍채만 이동. gleam은 고정. lid/lash가 위에 있어 자동 클리핑"
+  }
+}
