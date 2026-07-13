@@ -3,7 +3,7 @@
     "w": 600,
     "h": 911
   },
-  "note": "원본 rosie(600x911) 정답 좌표계. 사용자 가이드선 최종(B): body 0.90·목y480(스케일↓+어깨 위로), hair 1.0·귀y222(1칸↓), head 1.076, eyes 0.85·y350, mouth x300·y445. lid는 살색 제거(라인만).",
+  "note": "원본 rosie(600x911) 정답 좌표계. 격자 실측 최종: eyes 0.752·y359(홍채폭161), head 코앵커 y425(정수리 hair 밑으로), hair 1.10, body 0.90·y480. head는 살색 베이스라 내려도 눈코입 불변. lid 살색 제거.",
   "layers": {
     "body": {
       "left": -40.3,
@@ -13,27 +13,27 @@
     },
     "head": {
       "left": -59,
-      "top": 22.6,
+      "top": 51.6,
       "width": 667.1,
       "scale": 1.076
     },
     "hair": {
-      "left": 56,
-      "top": 62,
-      "width": 620,
-      "scale": 1
+      "left": 40.5,
+      "top": 46,
+      "width": 682,
+      "scale": 1.1
     },
     "eyes": {
-      "left": 142.4,
-      "top": 180,
-      "width": 323,
-      "scale": 0.85
+      "left": 152.8,
+      "top": 208.6,
+      "width": 285.8,
+      "scale": 0.752
     },
     "brow": {
-      "left": 149.4,
-      "top": 115.7,
-      "width": 292.5,
-      "scale": 0.8865
+      "left": 166.1,
+      "top": 146.6,
+      "width": 258.8,
+      "scale": 0.7843
     },
     "mouth": {
       "left": 204.8,
