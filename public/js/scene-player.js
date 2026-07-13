@@ -146,7 +146,12 @@
     this.activeBg = this.activeBg === 'a' ? 'b' : 'a';
 
     // 표정
-    this.host.classList.remove('emo-happy', 'emo-surprised', 'emo-think');
+    // 표정 클래스 전체 제거 (emo-* 는 계속 늘어난다: shy/wink/laugh/sad/cry ...)
+    // classList는 라이브 컬렉션이라 순회 중 제거하면 항목을 건너뛴다 → 스냅샷 후 제거
+    var host = this.host;
+    Array.prototype.slice.call(host.classList).forEach(function (c) {
+      if (c.indexOf('emo-') === 0) host.classList.remove(c);
+    });
     if (sc.emotion && sc.emotion !== 'idle')
       this.host.classList.add('emo-' + sc.emotion);
     this.host.classList.remove('is-talking');

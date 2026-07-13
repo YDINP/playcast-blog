@@ -1622,3 +1622,28 @@ body::after {
 .vcard:hover .vcard-thumb.is-empty::before {
   opacity: 0.26;
 }
+
+/* ---------- 표정 파츠 (얼굴 밴드 교체) ----------
+   씬의 emotion → .sp-host.emo-<emotion> → 해당 파츠만 노출. 기본(idle)은 base 그대로. */
+.rig-face {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.sp-host.emo-happy .rig-face.f-happy,
+.sp-host.emo-surprised .rig-face.f-surprised,
+.sp-host.emo-think .rig-face.f-think,
+.sp-host.emo-shy .rig-face.f-shy,
+.sp-host.emo-wink .rig-face.f-wink,
+.sp-host.emo-laugh .rig-face.f-laugh,
+.sp-host.emo-sad .rig-face.f-sad,
+.sp-host.emo-cry .rig-face.f-cry {
+  opacity: 1;
+}
+/* 이미 눈을 감고 있는 표정(활짝 웃음·울음)에선 깜빡임을, 입이 크게 벌어진 표정에선
+   립싱크 오버레이를 끈다 — 겹치면 얼굴이 뭉개진다. */
+.sp-host.emo-laugh .rig-blink,
+.sp-host.emo-cry .rig-blink,
+.sp-host.emo-laugh .rig-mouth-open,
+.sp-host.emo-cry .rig-mouth-open {
+  display: none;
+}

@@ -1,15 +1,47 @@
 ---
-// 호스트 리그: rosie.png(눈 뜬 통짜 컷, 크로마키 배경 제거) 위에 두 장의 오버레이.
-//   - 눈 깜빡임: rosie-blink.png(눈 감은 컷의 눈 밴드만 잘라 페더링) — 평소 숨김, 주기적으로 깜빡
-//   - 립싱크:    face/mouth/1.png — 말하는 중(.sp-host.is-talking)에만 나타나 개폐
-//   - 호흡:      전체 미세 스케일
-// ⚠️ 좌표는 모두 .rig(=.sp-host) 박스 기준 %라, 박스 비율이 rosie.png(600:911)와
-//    어긋나면 눈/입이 얼굴에서 밀린다. .sp-host의 aspect-ratio를 함께 유지할 것.
-// 원본: Downloads/c.png(2그리드, 노랑 크로마) → .tmp/build-rosie.mjs 로 분리·마스킹.
+// 호스트 리그 = 공유 몸통(rosie.png) 위에 얹는 파츠 레이어들. Live2D처럼 부위별 교체.
+//   1) base       rosie.png            눈 뜬 기본(닫힌 미소) — 크로마키 배경 제거본
+//   2) 표정        expr/<name>.png      얼굴 밴드(눈썹~턱)만 잘라낸 파츠. .sp-host.emo-* 로 전환
+//   3) 눈 깜빡임   rosie-blink.png      표정 위에 얹혀 눈만 감김 (scene-player가 랜덤 스케줄)
+//   4) 립싱크      face/mouth/1.png     말하는 중(.sp-host.is-talking)에만 개폐
+// ⚠️ 모든 좌표는 .rig(=.sp-host) 박스 기준 %. 박스 비율이 rosie.png(600:911)와 어긋나면
+//    눈·입·표정이 전부 얼굴에서 밀린다.
+// 파츠 생성: .tmp/build-expr.mjs (원본 Downloads/c1~c4.png, 노랑 크로마 2그리드)
+
+interface Props {
+  /** 이 영상이 실제로 쓰는 표정만 로드한다 (8개 전부 얹으면 ~880KB) */
+  emotions?: string[];
+}
+const { emotions = [] } = Astro.props;
+
+// 씬의 emotion 값 → 표정 파츠 파일
+const FACE: Record<string, string> = {
+  happy: 'smile',
+  surprised: 'surprised',
+  think: 'pout',
+  shy: 'shy',
+  wink: 'wink',
+  laugh: 'laugh',
+  sad: 'sad',
+  cry: 'cry',
+};
+const used = [...new Set(emotions)].filter((e) => FACE[e]);
 ---
 
 <div class="rig">
   <img class="rig-base" src="/host/rosie.png" alt="채널 호스트 로지" draggable="false" />
+
+  {
+    used.map((emo) => (
+      <img
+        class:list={['rig-part', 'rig-face', `f-${emo}`]}
+        src={`/host/expr/${FACE[emo]}.png`}
+        alt=""
+        style="left:27.2%;top:31.72%;width:45.33%;height:20.71%"
+      />
+    ))
+  }
+
   <img
     class="rig-part rig-blink"
     src="/host/rosie-blink.png"

@@ -19,6 +19,8 @@ interface Props {
 }
 const { scenes, playerId, host = 'rosie', booth = false } = Astro.props;
 const first = scenes[0] || { text: '' };
+// 이 영상이 쓰는 표정만 로드 (파츠 8개 전부 얹으면 ~880KB)
+const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as string[];
 ---
 
 <div class:list={['sp-shell', { 'has-booth': booth }]}>
@@ -35,7 +37,7 @@ const first = scenes[0] || { text: '' };
   {
     !booth && (
       <div class="sp-host">
-        <HostRig />
+        <HostRig emotions={emotions} />
       </div>
     )
   }
@@ -89,7 +91,7 @@ const first = scenes[0] || { text: '' };
       </div>
       <div class="booth-figure">
         <div class="sp-host">
-          <HostRig />
+          <HostRig emotions={emotions} />
         </div>
       </div>
       <div class="booth-foot">
