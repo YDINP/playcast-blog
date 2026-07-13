@@ -3,7 +3,8 @@
     "w": 620,
     "h": 880
   },
-  "note": "좌표는 캔버스(620x880) 기준 %. 코 점(372,347)·얼굴폭 254px에 앵커해 산출.",
+  "note": "원본 rosie.png의 눈·입 좌표를 고양이귀 2점 매칭으로 전사. head는 머리카락에 맞춰 0.82배 축소(시트 타일마다 스케일이 달랐음).",
+  "scale_v3_over_original": 1.0519,
   "layers": {
     "body": {
       "left": 0,
@@ -11,9 +12,9 @@
       "width": 100
     },
     "head": {
-      "left": 6.94,
-      "top": 0,
-      "width": 100
+      "left": 15.84,
+      "top": 17.55,
+      "width": 82
     },
     "hair": {
       "left": 20.48,
@@ -21,61 +22,19 @@
       "width": 100
     },
     "eyes": {
-      "left": 41.59,
-      "top": 22.96,
-      "width": 36.63,
-      "files": [
-        "eye-white",
-        "iris",
-        "gleam",
-        "lid-open",
-        "lid-half",
-        "lid-closed",
-        "lash",
-        "blush"
-      ]
+      "left": 36.05,
+      "top": 26.76,
+      "width": 47.21
     },
     "brow": {
-      "left": 43.51,
-      "top": 15.7,
-      "width": 33.18,
-      "files": [
-        "brow-neutral",
-        "brow-up",
-        "brow-down",
-        "brow-sad"
-      ]
+      "left": 38.52,
+      "top": 20.18,
+      "width": 42.77
     },
     "mouth": {
-      "left": 49.08,
-      "top": 36.93,
-      "width": 21.46,
-      "files": [
-        "mouth-closed",
-        "mouth-smile",
-        "mouth-a",
-        "mouth-i",
-        "mouth-u",
-        "mouth-e",
-        "mouth-o"
-      ]
+      "left": 46.16,
+      "top": 44.84,
+      "width": 25.99
     }
-  },
-  "zorder": [
-    "body",
-    "head",
-    "eye-white",
-    "iris",
-    "gleam",
-    "lid-*",
-    "lash",
-    "brow-*",
-    "blush",
-    "mouth-*",
-    "hair"
-  ],
-  "gaze": {
-    "iris_range_px": 16,
-    "note": "홍채만 이동. gleam은 고정. lid/lash가 위에 있어 자동 클리핑"
   }
 }
