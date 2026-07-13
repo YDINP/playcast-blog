@@ -22,32 +22,21 @@ const fPlayerId = featured ? 'hero' + featured.id.replace(/[^a-z0-9]/gi, '') : '
   {
     featured && (
       <section class="pc-hero">
-        <div class="watch" style="align-items:start">
-          <div class="watch-main">
-            <HostStage
-              scenes={featured.data.scenes}
-              playerId={fPlayerId}
-              host={featured.data.host}
-            />
+        <HostStage
+          scenes={featured.data.scenes}
+          playerId={fPlayerId}
+          host={featured.data.host}
+          booth
+        />
+        <div class="hero-info">
+          <div class="hero-copy">
+            <div class="hero-kicker">▶ 이번 편</div>
+            <h2>{featured.data.title}</h2>
+            <p>{featured.data.description}</p>
           </div>
-          <aside class="watch-side">
-            <div style="font-size:0.78rem;font-weight:800;color:var(--live);letter-spacing:.06em">
-              ▶ 이번 편
-            </div>
-            <h2 style="font-size:1.25rem;margin:.4rem 0 .6rem;line-height:1.35">
-              {featured.data.title}
-            </h2>
-            <p style="color:var(--text-2);font-size:.9rem;line-height:1.7;margin:0 0 1rem">
-              {featured.data.description}
-            </p>
-            <a
-              href={watchHref(featured.id)}
-              class="ch-subscribe"
-              style="display:inline-block;text-align:center"
-            >
-              시청 페이지로 →
-            </a>
-          </aside>
+          <a href={watchHref(featured.id)} class="ch-subscribe hero-cta">
+            시청 페이지로 →
+          </a>
         </div>
       </section>
     )

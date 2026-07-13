@@ -1287,3 +1287,52 @@ button {
 .vw-script .tr-item.is-active .t {
   color: var(--host);
 }
+
+/* 홈 히어로: 영상+부스는 한 줄 전체, "이번 편" 정보는 그 아래 (구 3열 사이드바 제거) */
+.hero-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+.hero-kicker {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--live);
+}
+.hero-info h2 {
+  margin: 5px 0 6px;
+  font-size: 1.3rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.hero-info p {
+  margin: 0;
+  max-width: 76ch;
+  color: var(--text-2);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.hero-cta {
+  flex: none;
+  text-align: center;
+  text-decoration: none;
+}
+@media (max-width: 700px) {
+  .hero-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-cta {
+    width: 100%;
+  }
+}
