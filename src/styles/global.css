@@ -328,8 +328,8 @@ button {
   animation: sp-kenburns 18s ease-out forwards;
 }
 @keyframes sp-kenburns {
-  from { transform: scale(1.02); }
-  to { transform: scale(1.12) translate3d(-1.2%, -0.8%, 0); }
+  from { transform: scale(1.0); }
+  to { transform: scale(1.05) translate3d(-0.8%, -0.5%, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .sp-stage:not(.is-paused) .sp-bg.is-on:not(.is-grad) {
