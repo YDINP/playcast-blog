@@ -1639,22 +1639,39 @@ body::after {
   z-index: 1;
 }
 
-/* 이미지가 없는 카드: 빈 그라디언트 대신 채널 워터마크(로지)로 브랜딩 */
-.vcard-thumb.is-empty::before {
-  content: '';
+/* 썸네일 미니 로지 — 위치/크기/좌우반전/표정은 VideoCard에서 video.id 시드로 랜덤 인라인.
+   모든 카드에 얹혀 채널 브랜딩(예전 is-empty 워터마크를 대체). */
+.card-roji {
   position: absolute;
-  right: -6%;
-  bottom: -14%;
-  z-index: 2; /* .sp-bg(z-index:1) 위에 올려야 보인다 */
-  width: 46%;
+  bottom: 0;
+  z-index: 2; /* 포스터(z:1) 위, 배지(z:2, DOM 뒤라 위에 그려짐) 아래 */
+  height: 70%;
   aspect-ratio: 600 / 911;
-  background: url('/host/rosie.png') no-repeat center / contain;
-  opacity: 0.16;
-  filter: grayscale(0.2);
   pointer-events: none;
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.45));
 }
-.vcard:hover .vcard-thumb.is-empty::before {
-  opacity: 0.26;
+.card-roji .roji-base,
+.card-roji .roji-face {
+  position: absolute;
+  z-index: auto;
+}
+.card-roji .roji-base {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.card-roji .roji-face {
+  left: 27.2%;
+  top: 26.49%;
+  width: 45.33%;
+  height: 26.12%;
+  object-fit: contain;
+}
+/* 카드 hover 시 포스터만 확대(.vcard-thumb img scale)되고 로지는 고정 — 얼굴 밴드 어긋남 방지 */
+.vcard:hover .card-roji .roji-base,
+.vcard:hover .card-roji .roji-face {
+  transform: none;
 }
 
 /* ---------- 표정 파츠 (얼굴 밴드 교체) ----------

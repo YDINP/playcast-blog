@@ -4,6 +4,7 @@ description: "아바타로 노래하고 춤추는 버추얼 아이돌. 버추얼
 pubDate: 2026-07-11
 category: "VTuber"
 tags: ["버추얼아이돌", "가상아이돌", "버추얼걸그룹", "K팝", "음악방송"]
+draft: true
 host: "rosie"
 views: 5600
 scenes:
