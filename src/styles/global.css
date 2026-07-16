@@ -385,27 +385,31 @@ button {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 12%;
+  bottom: 8%;
   z-index: 4;
   display: flex;
   justify-content: center;
   padding: 0 6%;
   pointer-events: none;
+  transition: bottom 0.28s ease, height 0.28s ease, background 0.28s ease,
+    opacity 0.2s ease;
+}
+/* 대사 없는 씬/전환 구간: 자막을 감춰 이미지 100% 노출 */
+.sp-caption.is-empty {
+  opacity: 0;
 }
 .sp-caption .box {
-  max-width: 78%;
-  background: rgba(6, 6, 10, 0.72);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-size: clamp(0.9rem, 2.1vw, 1.25rem);
-  font-weight: 600;
-  line-height: 1.5;
+  max-width: 84%;
+  padding: 2px 10px;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  font-weight: 700;
+  line-height: 1.45;
   color: #fff;
   text-align: center;
   word-break: keep-all;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  /* 불투명 박스 대신 외곽선형 텍스트(유튜브식) — 이미지가 뒤로 비쳐 가림 최소화 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 5px rgba(0, 0, 0, 0.85),
+    0 2px 12px rgba(0, 0, 0, 0.7);
 }
 .sp-caption .cursor {
   display: inline-block;
@@ -423,6 +427,33 @@ button {
 }
 .sp-stage.is-paused .sp-caption .cursor {
   animation: none;
+}
+
+/* ── 자막 위치 토글(cap-safe) ──────────────────────────────
+   overlay(기본): 이미지 위 하단, 스크림+외곽선 텍스트(최소 가림)
+   safe: 이미지를 위로 올리고 하단 전용 띠에 자막 → 이미지 0% 가림 */
+.sp-stage.cap-safe .sp-bg {
+  bottom: 20%;
+}
+.sp-stage.cap-safe .sp-caption {
+  bottom: 0;
+  height: 20%;
+  align-items: center;
+  padding: 0 4%;
+  background: #0a0a0f;
+}
+.sp-stage.cap-safe .sp-caption .box {
+  max-width: 94%;
+  text-shadow: none; /* 어두운 띠 위라 그림자 불필요 */
+}
+/* safe 모드: 히어로 오버레이 호스트도 이미지 '바닥'선에 맞춰 올림 */
+.sp-stage.cap-safe .sp-host {
+  bottom: 20%;
+}
+/* 자막 위치 버튼 활성(safe) 강조 */
+.sp-btnrow .sp-cap.is-safe {
+  color: var(--live);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* big center play (before start / paused) */

@@ -51,6 +51,14 @@
       document.createElement('div'); // 호스트 없는 변형에서도 classList 호출이 안전하도록
     this.textEl = stage.querySelector('.sp-text');
     this.captionBox = stage.querySelector('.sp-caption .box');
+    this.capWrap = stage.querySelector('.sp-caption');
+    this.capBtn = stage.querySelector('.sp-cap');
+    // 자막 위치 모드: 'overlay'(이미지 위 스크림) | 'safe'(이미지 아래 전용 띠)
+    this.capMode = 'overlay';
+    try {
+      var savedCap = localStorage.getItem('sp-cap-mode');
+      if (savedCap === 'safe' || savedCap === 'overlay') this.capMode = savedCap;
+    } catch (e) {}
     this.fill = stage.querySelector('.sp-progress-fill');
     this.ticks = stage.querySelector('.sp-ticks');
     this.progress = stage.querySelector('.sp-progress');
@@ -165,6 +173,9 @@
     } else {
       this.textEl.textContent = '';
     }
+    // 대사 없는 씬/전환: 자막 영역 숨겨 이미지 100% 노출
+    if (this.capWrap)
+      this.capWrap.classList.toggle('is-empty', !this.textEl.textContent);
   };
 
   Player.prototype._enterScene = function (idx) {
@@ -207,6 +218,7 @@
       var open = /\s/.test(ch) ? 0.12 : 0.5 + Math.random() * 0.75;
       this.host.style.setProperty('--mouth', open.toFixed(2));
     }
+    if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < text.length;
     this.stage.classList.toggle('is-typing', isTyping);
 
@@ -312,6 +324,27 @@
     this._setMuteIcon(m);
   };
 
+  // 자막 위치 전환: overlay(이미지 위) ↔ safe(이미지 아래 전용 띠, 이미지 0% 가림)
+  Player.prototype.setCapMode = function (mode, silent) {
+    this.capMode = mode === 'safe' ? 'safe' : 'overlay';
+    var safe = this.capMode === 'safe';
+    this.stage.classList.toggle('cap-safe', safe);
+    if (this.capBtn) {
+      this.capBtn.classList.toggle('is-safe', safe);
+      this.capBtn.setAttribute(
+        'title',
+        safe ? '자막: 이미지 아래 (탭하면 이미지 위로)' : '자막: 이미지 위 (탭하면 아래로 내려 이미지 안 가림)'
+      );
+    }
+    this._setCapIcon();
+    if (!silent) {
+      try { localStorage.setItem('sp-cap-mode', this.capMode); } catch (e) {}
+    }
+  };
+  Player.prototype.toggleCapMode = function () {
+    this.setCapMode(this.capMode === 'safe' ? 'overlay' : 'safe');
+  };
+
   // ── 아이콘 ────────────────────────────────────────────────
   Player.prototype._setPlayIcon = function (playing) {
     var b = this.stage.querySelector('.sp-play');
@@ -326,6 +359,16 @@
     b.innerHTML = m
       ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16 9l4 6M20 9l-4 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M15 8a5 5 0 010 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  };
+  Player.prototype._setCapIcon = function () {
+    if (!this.capBtn) return;
+    // CC 배지 + 자막이 놓이는 위치를 밑줄로 표시(safe=이미지 아래)
+    this.capBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none">' +
+      '<rect x="3" y="5" width="18" height="11" rx="2.5" fill="currentColor"/>' +
+      '<text x="12" y="13.6" text-anchor="middle" font-size="7.5" font-weight="800" fill="#0a0a0f" font-family="Arial, sans-serif">CC</text>' +
+      '<rect x="6" y="19" width="12" height="2" rx="1" fill="currentColor"/>' +
+      '</svg>';
   };
 
   Player.prototype._updateActiveChapter = function (idx) {
@@ -352,6 +395,7 @@
       '.sp-next': function () { self.seekScene(self.i + 1); },
       '.sp-replay': function () { self.replay(); },
       '.sp-mute': function () { self.setMuted(!self.muted); },
+      '.sp-cap': function () { self.toggleCapMode(); },
     };
     Object.keys(map).forEach(function (sel) {
       var el = self.stage.querySelector(sel);
@@ -382,6 +426,7 @@
     }
     this._setPlayIcon(false);
     this._setMuteIcon(true);
+    this.setCapMode(this.capMode, true);
     this.stage.classList.add('is-muted');
   };
 
