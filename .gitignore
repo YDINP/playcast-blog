@@ -20,3 +20,6 @@ Thumbs.db
 
 .vercel
 .env*
+
+# 이미지 생성 API 키 (커밋 금지)
+.imagegen.env
