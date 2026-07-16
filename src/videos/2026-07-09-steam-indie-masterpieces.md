@@ -13,6 +13,7 @@ imageCredit:
   url: "https://store.steampowered.com/"
 scenes:
   - text: "로지의 인디 코너! 오늘은 인디 입문자가 실패 없이 시작할 **명작**만 데려왔어요."
+    image: "/games/scenes/indie-open.jpg"
     emotion: "happy"
     chapter: "오프닝"
   - text: "1번, **스타듀밸리**. 농장 꾸리고 마을 사람과 친해지는 힐링 게임인데, 한 번 잡으면 새벽이에요."
@@ -40,6 +41,7 @@ scenes:
     emotion: "surprised"
     chapter: "⑥ 아우터 와일즈"
   - text: "인디는 예산이 아니라 **아이디어**로 승부해요. 오늘 하나만 골라 시작해보는 건 어때요? 다음 편에서 만나요!"
+    image: "/games/scenes/indie-outro.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

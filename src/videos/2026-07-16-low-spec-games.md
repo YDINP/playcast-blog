@@ -9,6 +9,7 @@ host: "rosie"
 views: 0
 scenes:
   - text: "'내 노트북으로도 될까?' 걱정 마세요. 사양 낮아도 **몇백 시간** 녹아드는 명작만 골랐어요."
+    image: "/games/scenes/low-open.jpg"
     emotion: "happy"
     chapter: "오프닝"
   - text: "먼저 **스타듀밸리**. 농장 힐링의 왕이에요. 사양을 거의 안 타고, 친구랑 협동도 돼요."
@@ -28,9 +29,11 @@ scenes:
     emotion: "happy"
     chapter: "④ 문명·발라트로"
   - text: "고르는 팁! 스팀 상점의 '시스템 요구사항' **최소사양**을 보고, 2D·픽셀·턴제 위주로 담으면 대체로 안전해요."
+    image: "/games/scenes/low-tip.jpg"
     emotion: "think"
     chapter: "⑤ 고르는 법"
   - text: "사양보다 **취향이 먼저**예요. 인디 명작이나 내 게임 취향 찾기 편도 같이 보면 딱이에요!"
+    image: "/games/scenes/low-outro.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

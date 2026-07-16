@@ -13,9 +13,11 @@ imageCredit:
   url: "https://store.steampowered.com/"
 scenes:
   - text: "안녕하세요, 로지예요! 오늘은 지갑 안 열어도 되는 **무료 PC 게임**만 골라왔어요."
+    image: "/games/scenes/fpc-open.jpg"
     emotion: "happy"
     chapter: "오프닝"
   - text: "무료 게임은 결국 과금 유도 아니냐고요? 절반만 맞아요. 오늘은 **무료인 게 미안할 정도**인 것만 뽑았어요."
+    image: "/games/scenes/fpc-criteria.jpg"
     emotion: "idle"
     chapter: "선정 기준"
   - text: "1번, **워프레임**! 우주 닌자가 되는 루터 슈터인데, 10년 넘게 쌓인 콘텐츠가 전부 **무료**예요."
@@ -40,6 +42,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 파판14 체험판"
   - text: "오늘의 결론! 무료라고 얕보지 마세요. 설치는 꼭 **공식 채널**로, 초반 과금은 참기. 다음 편에서 또 만나요!"
+    image: "/games/scenes/fpc-outro.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

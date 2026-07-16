@@ -9,6 +9,7 @@ host: "rosie"
 views: 0
 scenes:
   - text: "오늘 밤 친구랑 뭐 하지? 둘이서, 여럿이 바로 재밌는 **협동(코옵) 게임**을 모았어요."
+    image: "/games/scenes/coop-open.jpg"
     emotion: "happy"
     chapter: "오프닝"
   - text: "협동의 교과서, **잇 테이크 투**! '프렌즈 패스'로 한 명만 사도 둘이 함께 즐겨요. **스토리와 연출**이 최고예요."
@@ -32,6 +33,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 스타듀밸리"
   - text: "입문은 '**프렌즈 패스**' 되는 게임부터가 편해요. 무료로 같이 할 게임도 많으니 그 편도 참고하세요!"
+    image: "/games/scenes/coop-outro.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000
