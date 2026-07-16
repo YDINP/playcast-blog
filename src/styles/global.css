@@ -1430,6 +1430,26 @@ body::after {
   backdrop-filter: none;
   border-bottom: 0;
 }
+/* 상단 마스크: 플로팅 캡슐 위/옆 10px 틈으로 스크롤 본문이 비쳐 "겹쳐" 보이던 것을
+   차단. 상단은 배경색으로 덮고 캡슐 아래로 페이드시켜 떠 있는 느낌은 유지. */
+.pc-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: calc(100% + 20px);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--bg) 0%,
+    rgba(15, 15, 17, 0.86) 46%,
+    transparent 100%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 .pc-bar {
   max-width: var(--maxw);
   margin: 0 auto;
