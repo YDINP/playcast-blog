@@ -167,5 +167,49 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
 
     <script src="/js/scene-player.js" defer is:inline></script>
     <slot name="tail" />
+
+    <!-- Pageview tracking (VIP → 공용 analytics, ai-revenue 대시보드 집계) -->
+    <script is:inline>
+      (function () {
+        var ANALYTICS_URL = 'https://xyprbsmagtlzebxyxsvj.supabase.co/functions/v1/analytics-ingest';
+        var NOTRACK_KEY = '__notrack';
+        // 관리자 opt-out: ?admin=1 한 번 접속 시 이 브라우저는 이후 집계 제외 (?admin=0 해제)
+        try {
+          var q = new URLSearchParams(window.location.search).get('admin');
+          if (q === '1') localStorage.setItem(NOTRACK_KEY, '1');
+          else if (q === '0') localStorage.removeItem(NOTRACK_KEY);
+        } catch (e) {}
+        // 1) 로컬/사설망(dev·미리보기)은 집계 제외
+        var host = window.location.hostname;
+        var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '0.0.0.0'
+          || /^192\.168\./.test(host) || /^10\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host);
+        if (isLocal) return;
+        // 2) 봇/헤드리스/크롤러(yeti·daumoa·google 크롤러 포함) 제외. naver/yandex/baidu 넓은 토큰 금지(인앱 실유저 오분류)
+        var ua = navigator.userAgent || '';
+        if (navigator.webdriver || /bot|crawl|spider|headless|lighthouse|playwright|puppeteer|slurp|petalbot|bytespider|yeti|daumoa|googleother|google-inspection/i.test(ua)) return;
+        // 3) 관리자 플래그면 제외
+        try { if (localStorage.getItem(NOTRACK_KEY) === '1') return; } catch (e) {}
+        var slug = window.location.pathname.replace(/^\/watch\//, '').replace(/\/$/, '') || 'home';
+        var qs = new URLSearchParams(window.location.search);
+        fetch(ANALYTICS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_type: 'pageview',
+            source: 'vip',
+            metadata: {
+              slug: slug,
+              title: document.title,
+              path: window.location.pathname,
+              referrer: document.referrer || 'direct',
+              user_agent: navigator.userAgent,
+              utm_source: qs.get('utm_source') || undefined,
+              utm_medium: qs.get('utm_medium') || undefined,
+              utm_campaign: qs.get('utm_campaign') || undefined
+            }
+          })
+        }).catch(function () {});
+      })();
+    </script>
   </body>
 </html>
