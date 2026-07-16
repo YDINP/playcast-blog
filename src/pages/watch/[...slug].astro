@@ -46,7 +46,7 @@ const related = all
   .slice(0, 6);
 
 const dur = durationLabel(scenes, data.durationLabel);
-const site = Astro.site || new URL('https://playcast.vercel.app');
+const site = Astro.site || new URL('https://virtual-in-playing.vercel.app');
 const ogImage = new URL(`/open-graph/${video.id}.png`, site).href;
 const poster = posterOf(data);
 const imgAbs = poster ? new URL(poster, site).href : ogImage;

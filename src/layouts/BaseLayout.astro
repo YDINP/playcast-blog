@@ -5,6 +5,7 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  imageAlt?: string;
   canonicalUrl?: string;
   ogType?: string;
   keywords?: string;
@@ -20,6 +21,7 @@ const {
   title,
   description,
   image,
+  imageAlt,
   canonicalUrl,
   ogType = 'website',
   keywords,
@@ -28,8 +30,9 @@ const {
 } = Astro.props;
 const siteTitle = 'Virtual in Playing (VIP) — 게임 소개 방송 채널';
 const fullTitle = title === siteTitle ? title : `${title} | VIP`;
-const site = Astro.site || new URL('https://playcast.vercel.app');
+const site = Astro.site || new URL('https://virtual-in-playing.vercel.app');
 const ogImage = image || new URL('/og-default.png', site).href;
+const ogImageAlt = imageAlt || title;
 const canonical = canonicalUrl || Astro.url.href;
 
 const websiteSchema = {
@@ -46,7 +49,21 @@ const websiteSchema = {
     'query-input': 'required name=q',
   },
 };
-const allSchemas = [websiteSchema, ...schemas];
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Virtual in Playing',
+  alternateName: 'VIP',
+  url: site.href,
+  logo: {
+    '@type': 'ImageObject',
+    url: new URL('/og-default.png', site).href,
+    width: 1200,
+    height: 630,
+  },
+  description: '버츄얼 호스트 로지가 게임·최신작·버추얼 아이돌을 영상처럼 소개하는 채널',
+};
+const allSchemas = [websiteSchema, organizationSchema, ...schemas];
 ---
 
 <!doctype html>
@@ -55,6 +72,7 @@ const allSchemas = [websiteSchema, ...schemas];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="naver-site-verification" content="c0454e4fce1924ac696fde9e9c789bc4e9abb44f" />
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -70,6 +88,7 @@ const allSchemas = [websiteSchema, ...schemas];
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content={canonical} />
@@ -83,8 +102,12 @@ const allSchemas = [websiteSchema, ...schemas];
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Pretendard 웹폰트 (외부 CDN preconnect로 폰트 로드 지연 완화) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <!-- Pretendard 웹폰트 -->
     <link
       rel="stylesheet"

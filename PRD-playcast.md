@@ -20,7 +20,7 @@
 | 영상 방식 | 합성 씬플레이어(가짜 영상) |
 | 호스트 | 단일 마스코트 "로지(Rosie)" — 채널 얼굴 |
 | 나레이션 | 무음 자막(입모양 토글) · TTS는 후속 |
-| 레포명 | `playcast` (playcast.vercel.app) |
+| 레포명 | `playcast` (virtual-in-playing.vercel.app) |
 | 호스트 렌더 | 인라인 SVG(표정/입모양 CSS 토글) — 외부 이미지 의존 0 |
 
 ## 아키텍처
