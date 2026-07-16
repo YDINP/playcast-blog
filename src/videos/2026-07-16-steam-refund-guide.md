@@ -4,10 +4,12 @@ description: "산 게임이 별로였다면 환불받으세요. 스팀 환불의
 pubDate: 2026-07-16
 category: "Guide"
 tags: ["스팀환불", "스팀", "게임환불", "환불방법", "게임팁"]
+thumbnail: "/games/scenes/steam-refund.png"
 host: "rosie"
 views: 0
 scenes:
   - text: "산 게임이 기대와 다르다면? 스팀은 환불이 돼요. 조건만 맞으면 몇 분이면 끝나요."
+    image: "/games/scenes/steam-refund.png"
     emotion: "happy"
     chapter: "오프닝"
   - text: "핵심은 딱 두 가지예요. 구매 후 2주(14일) 이내, 그리고 플레이 2시간 미만이면 대부분 자동으로 승인돼요."
