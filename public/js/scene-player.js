@@ -30,6 +30,37 @@
     return m + ':' + String(s % 60).padStart(2, '0');
   }
 
+  // ── 자막 강조(**키워드**) ──────────────────────────────────
+  // 씬 text의 **...**를 민트 강조 span으로 렌더. 마커는 표시 길이에서 제외.
+  function parseEm(text) {
+    var out = [], re = /\*\*([^*]+)\*\*/g, last = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) out.push({ s: text.slice(last, m.index), em: false });
+      out.push({ s: m[1], em: true });
+      last = re.lastIndex;
+    }
+    if (last < text.length) out.push({ s: text.slice(last), em: false });
+    return out;
+  }
+  function plainText(text) {
+    return (text || '').replace(/\*\*([^*]+)\*\*/g, '$1');
+  }
+  function escHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  // 앞에서부터 n글자(표시 기준)만 노출. 강조 세그먼트는 <span class="sp-em">로 감싼다.
+  function revealHTML(text, n) {
+    var segs = parseEm(text), html = '', left = n;
+    for (var i = 0; i < segs.length && left > 0; i++) {
+      var take = segs[i].s.slice(0, left);
+      left -= take.length;
+      html += segs[i].em
+        ? '<span class="sp-em">' + escHtml(take) + '</span>'
+        : escHtml(take);
+    }
+    return html;
+  }
+
   function Player(stage) {
     this.stage = stage;
     var dataEl = stage.querySelector('.sp-data');
@@ -90,7 +121,7 @@
   Player.prototype._precompute = function () {
     // 무음 경로 씬 지속시간 (진행바/시간표시용). voice 있으면 로드 후 보정.
     this.durations = this.scenes.map(function (sc) {
-      var typing = Math.max(TYPE_MIN, (sc.text || '').length * PER_CHAR);
+      var typing = Math.max(TYPE_MIN, plainText(sc.text).length * PER_CHAR);
       var hold = typeof sc.holdMs === 'number' ? sc.holdMs : HOLD_DEFAULT;
       return typing + hold;
     });
@@ -125,7 +156,7 @@
       // 음성이 있으면 자막을 음성 길이의 92%에 걸쳐 노출
       return this.audio.duration * 1000 * 0.92;
     }
-    return Math.max(TYPE_MIN, (sc.text || '').length * PER_CHAR);
+    return Math.max(TYPE_MIN, plainText(sc.text).length * PER_CHAR);
   };
   Player.prototype._sceneDuration = function () {
     if (this.audio && this.audio.duration) return this.audio.duration * 1000;
@@ -167,8 +198,8 @@
 
     // 자막 초기화
     if (staticOnly) {
-      // 재생 전 미리보기: 첫 줄 살짝 노출(정지)
-      this.textEl.textContent = sc.text || '';
+      // 재생 전 미리보기: 첫 줄 전체 노출(정지) — 강조 포함
+      this.textEl.innerHTML = revealHTML(sc.text || '', plainText(sc.text).length);
       this.captionBox.parentNode.classList.remove('is-typing');
     } else {
       this.textEl.textContent = '';
@@ -204,22 +235,24 @@
     var typingDur = this._typingDuration();
     var sceneDur = this._sceneDuration();
     var text = sc.text || '';
+    var plain = plainText(text);
+    var plen = plain.length;
 
-    // 자막 타이핑
+    // 자막 타이핑 (표시 글자 수 기준, 강조 마커 제외)
     var reveal = Math.min(
-      text.length,
-      Math.floor((text.length * elapsed) / Math.max(1, typingDur))
+      plen,
+      Math.floor((plen * elapsed) / Math.max(1, typingDur))
     );
     if (this.textEl.textContent.length !== reveal) {
-      this.textEl.textContent = text.slice(0, reveal);
+      this.textEl.innerHTML = revealHTML(text, reveal);
       // 립싱크: 글자가 하나 찍힐 때마다 입 벌어짐을 새로 뽑는다(공백은 다물기).
       // 고정 주기 애니메이션과 달리 실제 대사 리듬을 따라간다.
-      var ch = text.charAt(reveal - 1);
+      var ch = plain.charAt(reveal - 1);
       var open = /\s/.test(ch) ? 0.12 : 0.5 + Math.random() * 0.75;
       this.host.style.setProperty('--mouth', open.toFixed(2));
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
-    var isTyping = elapsed < typingDur && reveal < text.length;
+    var isTyping = elapsed < typingDur && reveal < plen;
     this.stage.classList.toggle('is-typing', isTyping);
 
     // 말하는 중: 호스트 끄덕임(정적 포트레이트라 입모양 대신)

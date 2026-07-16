@@ -10,6 +10,7 @@ import {
   formatViews,
   timeAgo,
   posterOf,
+  stripEmphasis,
 } from '../../lib/video';
 
 export async function getStaticPaths() {
@@ -32,7 +33,7 @@ function fmt(s: number) {
 }
 const chapters = scenes.map((s, i) => ({
   time: fmt(estimateSeconds(scenes.slice(0, i))),
-  label: s.chapter || s.text,
+  label: s.chapter || stripEmphasis(s.text),
 }));
 
 // 추천 (같은 카테고리 우선 → 나머지)
@@ -76,7 +77,7 @@ const blogPostingSchema = {
   articleSection: data.category,
   keywords: data.tags.join(', '),
   inLanguage: 'ko-KR',
-  articleBody: scenes.map((s) => s.text).join('\n'),
+  articleBody: scenes.map((s) => stripEmphasis(s.text)).join('\n'),
 };
 const breadcrumbSchema = {
   '@context': 'https://schema.org',

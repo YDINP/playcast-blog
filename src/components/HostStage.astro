@@ -1,6 +1,7 @@
 ---
 // 씬플레이어 스테이지 DOM 뼈대. scene-player.js가 .sp-data(JSON)를 읽어 구동.
 import HostRig from './HostRig.astro';
+import { parseEmphasis } from '../lib/video';
 
 interface Scene {
   image?: string;
@@ -42,9 +43,9 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
     )
   }
 
-  <!-- 자막 -->
+  <!-- 자막 (첫 씬: 강조 세그먼트 SSR 렌더) -->
   <div class="sp-caption">
-    <div class="box"><span class="sp-text">{first.text}</span><span class="cursor"></span></div>
+    <div class="box"><span class="sp-text">{parseEmphasis(first.text).map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
   </div>
 
   <!-- 중앙 큰 재생 버튼 -->

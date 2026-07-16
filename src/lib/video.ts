@@ -12,11 +12,38 @@ export interface Scene {
   voice?: string;
 }
 
+/** 자막 강조 세그먼트 (**...** 한 조각) */
+export interface EmSeg {
+  s: string;
+  em: boolean;
+}
+
+/** 자막 `**키워드**` 구문 → [{s, em}] 세그먼트. 마커는 표시 길이에서 제외. */
+export function parseEmphasis(text: string): EmSeg[] {
+  const out: EmSeg[] = [];
+  const re = /\*\*([^*]+)\*\*/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    if (m.index > last) out.push({ s: text.slice(last, m.index), em: false });
+    out.push({ s: m[1], em: true });
+    last = re.lastIndex;
+  }
+  if (last < text.length) out.push({ s: text.slice(last), em: false });
+  return out;
+}
+
+/** `**` 마커를 제거한 순수 텍스트(길이 계산·SEO·og용). */
+export function stripEmphasis(text: string): string {
+  return (text || '').replace(/\*\*([^*]+)\*\*/g, '$1');
+}
+
 /** 씬 배열 → 예상 총 재생시간(초). scene-player.js와 동일 공식. */
 export function estimateSeconds(scenes: Scene[]): number {
   let ms = 0;
   for (const s of scenes) {
-    const typing = Math.max(TYPE_MIN, (s.text || '').length * PER_CHAR);
+    // 타이핑 시간은 강조 마커를 제외한 실제 표시 글자 수 기준
+    const typing = Math.max(TYPE_MIN, stripEmphasis(s.text || '').length * PER_CHAR);
     const hold = typeof s.holdMs === 'number' ? s.holdMs : HOLD_DEFAULT;
     ms += typing + hold;
   }

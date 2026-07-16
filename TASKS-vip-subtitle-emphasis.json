@@ -1,0 +1,15 @@
+{
+  "task": "vip-subtitle-emphasis",
+  "prd": "PRD-vip-subtitle-emphasis.md",
+  "status": "done",
+  "items": [
+    { "id": 1, "desc": "video.ts: parseEmphasis/stripEmphasis + estimateSeconds 길이 보정", "status": "done" },
+    { "id": 2, "desc": "HostStage.astro: 첫 씬 강조 세그먼트 SSR 렌더", "status": "done" },
+    { "id": 3, "desc": "watch/[...slug].astro: articleBody/chapter label 마커 제거", "status": "done" },
+    { "id": 4, "desc": "scene-player.js: ** 파서 + innerHTML 리빌, plain 길이 타이밍", "status": "done" },
+    { "id": 5, "desc": "global.css: .sp-em 민트 강조 스타일", "status": "done" },
+    { "id": 6, "desc": "digimon 포스트 씬 핵심어에 ** 적용(시연)", "status": "done" }
+  ],
+  "verify": "dev(8008) digimon watch: 자막 타이핑 중 '7월 15일' 민트 강조 렌더 확인, 별표 미노출, 0:47/9장면 유지, 홈·타 포스트 회귀 없음",
+  "followup": "타 포스팅 씬 핵심어 ** 일괄 적용은 요청 시 후속 배치"
+}

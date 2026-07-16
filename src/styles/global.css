@@ -411,6 +411,15 @@ button {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 5px rgba(0, 0, 0, 0.85),
     0 2px 12px rgba(0, 0, 0, 0.7);
 }
+/* 자막 핵심어 강조: AI스러운 검정 볼드 대신 브랜드 민트로 편집 강조 */
+.sp-em {
+  color: var(--host);
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 8px rgba(87, 230, 195, 0.45);
+}
+.sp-stage.cap-safe .sp-caption .box .sp-em {
+  text-shadow: none; /* 어두운 전용 띠 위에서는 글로우 불필요 */
+}
 .sp-caption .cursor {
   display: inline-block;
   width: 2px;
