@@ -36,6 +36,7 @@ scenes:
     emotion: "idle"
     chapter: "③ 리그 오브 레전드"
   - text: "4번, **원신**. 오픈월드를 통째로 무료로 즐길 수 있어요. 다만 수집형이라 뽑기 유혹은 조심!"
+    image: "/games/scenes/genshin.jpg"
     emotion: "think"
     chapter: "④ 원신"
   - text: "5번, **파이널판타지14** 무료 체험판. 레벨 60까지, 스토리 두 편을 시간 제한 없이 즐겨요."
