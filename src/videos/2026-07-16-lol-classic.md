@@ -4,16 +4,22 @@ description: "리그 오브 레전드 클래식이 7월 29일(한국 7월 30일)
 pubDate: 2026-07-16
 category: "New"
 tags: ["롤클래식", "리그오브레전드", "롤", "LoL", "시즌3", "라이엇"]
+thumbnail: "/games/scenes/lol-classic.png"
+imageCredit:
+  text: "© Riot Games (League of Legends Classic 공식)"
+  url: "https://www.leagueoflegends.com/en-us/classic/"
 host: "rosie"
 views: 0
 scenes:
   - text: "롤 유저 주목! '리그 오브 레전드 클래식'이 드디어 열려요. 2013년 시즌3, 그 시절 감성 그대로예요."
+    image: "/games/scenes/lol-classic.png"
     emotion: "surprised"
     chapter: "오프닝"
   - text: "출시는 7월 29일, 한국은 7월 30일이에요. 26.15 패치로 열리고, 별도 다운로드 없이 지금 쓰는 클라이언트에서 바로 즐겨요."
     emotion: "happy"
     chapter: "① 언제·어떻게"
   - text: "무대는 옛 소환사의 협곡이에요. 구 룬·특성 시스템, 그 시절 아이템, 리메이크 전 챔프 스킬까지 되살렸어요."
+    image: "/games/scenes/lol-classic-runes.png"
     emotion: "idle"
     chapter: "② 시즌3 복각"
   - text: "정확히 한 패치를 재현한 건 아니래요. 2013 시즌3를 뼈대로 초창기 '명장면'들을 모은 컬렉션에 가까워요."
