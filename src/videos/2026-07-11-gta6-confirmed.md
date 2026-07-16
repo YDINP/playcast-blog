@@ -34,6 +34,7 @@ scenes:
     emotion: "idle"
     chapter: "④ 가격·예약"
   - text: "PC 버전은 이번에도 콘솔보다 **늦을 가능성**이 커요. PC 유저라면 조금 더 기다릴 마음의 준비!"
+    image: "/games/scenes/gta6-vice-city.jpg"
     emotion: "think"
     chapter: "⑤ PC는?"
   - text: "여기까지가 **공식 확정**. 나머지는 다 추측이니 걸러 들으세요. 정보 업데이트되면 또 정리해올게요!"

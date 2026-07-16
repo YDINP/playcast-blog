@@ -23,6 +23,7 @@ scenes:
     emotion: "surprised"
     chapter: "① 워프레임"
   - text: "과금 재화도 유저 거래로 벌 수 있어서 과금 압박이 정말 낮아요. 첫 **10시간**만 버티면 신세계!"
+    image: "/games/scenes/warframe-2.jpg"
     emotion: "idle"
   - text: "2번, **패스 오브 엑자일**. 디아블로 좋아하면 무조건이에요. 빌드 짜는 게 본편이라는 말이 있죠."
     image: "/games/scenes/path-of-exile.jpg"

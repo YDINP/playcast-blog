@@ -32,6 +32,7 @@ scenes:
     emotion: "happy"
     chapter: "④ 1500만 장"
   - text: "가격은 **6천 원대**. 프롭헌트 좋아했다면, 친구랑 하기 딱 좋은 요즘 대세 파티게임이에요."
+    image: "/games/scenes/meccha-chameleon-2.jpg"
     emotion: "idle"
     chapter: "⑤ 추천 포인트"
   - text: "비싼 대작만 재밌는 게 아니죠. **아이디어 하나**로 터진 좋은 예예요. 다음 신작도 물어올게요!"
