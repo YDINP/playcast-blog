@@ -1419,6 +1419,10 @@ body::after {
 .pc-header {
   position: sticky;
   top: 10px;
+  /* 위 그룹 규칙(.pc-header,.pc-main,.pc-footer{z-index:1})이 헤더 z-index를
+     main과 같은 1로 낮춰, DOM 뒤인 본문이 스크롤 시 sticky 헤더를 덮었다.
+     헤더를 본문 위로 되돌린다. */
+  z-index: 50;
   height: auto;
   display: block;
   padding: 10px 16px 0;
