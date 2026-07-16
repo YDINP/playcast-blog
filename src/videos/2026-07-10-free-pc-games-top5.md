@@ -32,6 +32,7 @@ scenes:
     emotion: "happy"
     chapter: "② 패스 오브 엑자일"
   - text: "3번, **리그 오브 레전드**. 과금은 스킨뿐, 승패엔 영향 없어요. 무료 게임 공정성의 기준이죠."
+    image: "/games/scenes/lol-fpc.jpg"
     emotion: "idle"
     chapter: "③ 리그 오브 레전드"
   - text: "4번, **원신**. 오픈월드를 통째로 무료로 즐길 수 있어요. 다만 수집형이라 뽑기 유혹은 조심!"
