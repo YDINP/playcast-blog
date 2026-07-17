@@ -33,23 +33,9 @@ const used = [...new Set(emotions)].filter((e) => FACE[e]);
 
   <!-- 얼굴 파츠 레이어: 포인터 시차(parallax)용으로 한 겹 묶는다. scene-player가 transform 조작 -->
   <div class="rig-parts">
-    <!-- 눈: 흰자 패치(눈 안쪽 전체)를 깔고 그 위에서 홍채만 움직인다.
-         ⚠️ 눈 소켓(span)에 흰자 alpha를 마스크로 걸어, 홍채가 이동해도 눈꺼풀 밖으로 삐져나오지 않는다.
-         base(rosie.png)에서 오려낸 파츠 — 표정 파츠가 눈을 다시 그리므로 idle에서만 노출. -->
-    <span
-      class="rig-part rig-eye"
-      style="left:33.50%;top:35.24%;width:10.50%;height:8.12%;-webkit-mask-image:url(/host/eye/sclera-l.png);mask-image:url(/host/eye/sclera-l.png)"
-    >
-      <img class="eye-bg" src="/host/eye/sclera-l.png" alt="" />
-      <img class="rig-pupil" src="/host/eye/pupil-l.png" alt="" />
-    </span>
-    <span
-      class="rig-part rig-eye"
-      style="left:54.17%;top:35.35%;width:10.67%;height:8.01%;-webkit-mask-image:url(/host/eye/sclera-r.png);mask-image:url(/host/eye/sclera-r.png)"
-    >
-      <img class="eye-bg" src="/host/eye/sclera-r.png" alt="" />
-      <img class="rig-pupil" src="/host/eye/pupil-r.png" alt="" />
-    </span>
+    <!-- 눈동자 시선추적(홍채 파츠) 원복(2026-07-17): 흰자 패치+움직이는 홍채(rig-eye)
+         오버레이를 제거 → base(rosie.png)의 원래 정지 눈이 그대로 노출. 홍채 이동 없음.
+         (scene-player의 .rig-pupil 조작은 대상 요소가 없으면 자동 무시) -->
 
     {
       used.map((emo) => (
