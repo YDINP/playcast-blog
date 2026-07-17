@@ -1,9 +1,9 @@
 ---
-title: "EA FC26 월드컵 모드 «더 월즈 게임», 지금 즐기는 법"
+title: "EA FC26 월드컵 모드 즐기는 법 (더 월즈 게임)"
 description: "실제 2026 월드컵 결승을 앞두고, EA SPORTS FC26에 '더 월즈 게임' 모드가 무료로 추가됐어요. FIFA 라이선스 없이 자체 구현한 48개국 토너먼트, 즐기는 법까지 정리했어요."
 pubDate: 2026-07-17
 category: "New"
-tags: ["EAFC26", "더월즈게임", "월드컵모드", "FC26", "축구게임"]
+tags: ["FC26 월드컵모드", "월드컵2026", "FC26", "축구게임", "EA스포츠"]
 host: "rosie"
 thumbnail: "/games/fc26-worldcup.webp"
 views: 8400
