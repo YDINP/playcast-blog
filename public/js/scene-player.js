@@ -20,6 +20,18 @@
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 650; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
+
+  // 한글/라틴 문자 → 입모양(비셈). 한글은 중성(모음) 추출.
+  var JUNG_VIS = ['a','e','a','e','e','e','e','e','o','a','e','e','o','u','o','e','i','u','i','i','i'];
+  function visemeOf(ch) {
+    if (!ch || /\s/.test(ch)) return 'closed';
+    var c = ch.charCodeAt(0);
+    if (c >= 0xac00 && c <= 0xd7a3) { var j = Math.floor(((c - 0xac00) % 588) / 28); return JUNG_VIS[j] || 'a'; }
+    if (/[aeiou]/i.test(ch)) return ch.toLowerCase();
+    if (/[a-z]/i.test(ch)) return 'e';
+    return 'closed';
+  }
+
   var reduceMotion =
     window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -46,7 +58,11 @@
     return (text || '').replace(/\*\*([^*]+)\*\*/g, '$1');
   }
   function escHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br>'); // 대사 내 명시적 줄바꿈
   }
   // 앞에서부터 n글자(표시 기준)만 노출. 강조 세그먼트는 <span class="sp-em">로 감싼다.
   function revealHTML(text, n) {
@@ -83,9 +99,12 @@
     this.textEl = stage.querySelector('.sp-text');
     this.captionBox = stage.querySelector('.sp-caption .box');
     this.capWrap = stage.querySelector('.sp-caption');
+    this.cardEl = stage.querySelector('.sp-card'); // 씬 타이포 카드 오버레이
+    this.pointerEl = stage.querySelector('.sp-pointer'); // 손가락 포인터
     this.capBtn = stage.querySelector('.sp-cap');
     // 자막 위치 모드: 'overlay'(이미지 위 스크림) | 'safe'(이미지 아래 전용 띠)
-    this.capMode = 'overlay';
+    // 기본값 safe: 이미지를 안 가리는 CC 띠가 기본. localStorage에 저장된 선택이 있으면 그걸 우선.
+    this.capMode = 'safe';
     try {
       var savedCap = localStorage.getItem('sp-cap-mode');
       if (savedCap === 'safe' || savedCap === 'overlay') this.capMode = savedCap;
@@ -184,6 +203,11 @@
     cur.classList.remove('is-on');
     this.activeBg = this.activeBg === 'a' ? 'b' : 'a';
 
+    // 씬 타이포 카드(핵심 수치·문구를 이미지 위에 얹음)
+    this._renderCard(sc.card);
+    // 손가락 포인터(이미지 속 중요 지점 강조)
+    this._renderPointer(sc.point);
+
     // 표정
     // 표정 클래스 전체 제거 (emo-* 는 계속 늘어난다: shy/wink/laugh/sad/cry ...)
     // classList는 라이브 컬렉션이라 순회 중 제거하면 항목을 건너뛴다 → 스냅샷 후 제거
@@ -207,6 +231,81 @@
     // 대사 없는 씬/전환: 자막 영역 숨겨 이미지 100% 노출
     if (this.capWrap)
       this.capWrap.classList.toggle('is-empty', !this.textEl.textContent);
+  };
+
+  // 씬 카드 렌더 — kind: stat(큰 수치) | title(큰 문구) | points(핵심 목록)
+  Player.prototype._renderCard = function (card) {
+    var el = this.cardEl;
+    if (!el) return;
+    if (!card) { el.className = 'sp-card'; el.innerHTML = ''; return; }
+    var kind = card.kind || 'stat', inner = '';
+    if (kind === 'points') {
+      var items = (card.items || [])
+        .map(function (it) { return '<li>' + escHtml(String(it)) + '</li>'; })
+        .join('');
+      inner =
+        (card.head ? '<div class="spc-head">' + escHtml(String(card.head)) + '</div>' : '') +
+        '<ul>' + items + '</ul>';
+    } else {
+      inner =
+        (card.big ? '<div class="spc-big">' + escHtml(String(card.big)) + '</div>' : '') +
+        (card.label ? '<div class="spc-label">' + escHtml(String(card.label)) + '</div>' : '') +
+        (card.sub ? '<div class="spc-sub">' + escHtml(String(card.sub)) + '</div>' : '');
+    }
+    el.innerHTML = '<div class="spc-inner">' + inner + '</div>';
+    var extra = (card.pos ? ' pos-' + card.pos : '') + (card.size ? ' size-' + card.size : '');
+    // 등장 애니메이션 리트리거
+    el.className = 'sp-card';
+    void el.offsetWidth;
+    el.className = 'sp-card is-show spc-' + kind + extra;
+  };
+
+  // 동물의숲식 웅얼거림 — 글자마다 음정 다른 짧은 블립(Web Audio, 파일 없음)
+  Player.prototype._blip = function (ch) {
+    if (this.muted || !ch || /\s/.test(ch)) return;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!this._ac) this._ac = new AC();
+      var ac = this._ac;
+      if (ac.state === 'suspended') ac.resume();
+      var t = ac.currentTime;
+      var code = ch.charCodeAt(0);
+      var base = 230 + (code % 13) * 16; // 230~420Hz, 글자별로 흩뿌려진 음정
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'square';
+      o.frequency.setValueAtTime(base, t);
+      o.frequency.exponentialRampToValueAtTime(base * 1.14, t + 0.05);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.055, t + 0.007);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+      o.connect(g);
+      g.connect(ac.destination);
+      o.start(t);
+      o.stop(t + 0.11);
+    } catch (e) {}
+  };
+
+  // 손가락 포인터 — 이미지 속 (x,y)% 지점을 가리키고, from이 있으면 그 지점에서 이동
+  Player.prototype._renderPointer = function (point) {
+    var el = this.pointerEl;
+    if (!el) return;
+    if (!point) { el.className = 'sp-pointer'; el.innerHTML = ''; return; }
+    var emoji = point.emoji || '👆'; // 👆
+    var label = point.label ? '<span class="pt-label">' + escHtml(String(point.label)) + '</span>' : '';
+    el.innerHTML = '<span class="pt-ring"></span><span class="pt-hand">' + escHtml(emoji) + '</span>' + label;
+    var fromX = point.from ? point.from[0] : point.x;
+    var fromY = point.from ? point.from[1] : point.y;
+    // 시작 위치 배치 후 목표로 트랜지션(이동)
+    el.className = 'sp-pointer';
+    el.style.left = fromX + '%';
+    el.style.top = fromY + '%';
+    void el.offsetWidth;
+    el.className = 'sp-pointer is-show';
+    var tx = point.x, ty = point.y;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.style.left = tx + '%'; el.style.top = ty + '%'; });
+    });
   };
 
   Player.prototype._enterScene = function (idx) {
@@ -247,9 +346,11 @@
       this.textEl.innerHTML = revealHTML(text, reveal);
       // 립싱크: 글자가 하나 찍힐 때마다 입 벌어짐을 새로 뽑는다(공백은 다물기).
       // 고정 주기 애니메이션과 달리 실제 대사 리듬을 따라간다.
+      // 립싱크: 글자마다 열림/닫힘을 교대시켜 "말하는" 개폐 리듬을 만든다.
+      // (한글은 단어 내 공백이 없어 예전엔 계속 열려만 있었다 → 짝/홀 글자로 여닫음)
       var ch = plain.charAt(reveal - 1);
-      var open = /\s/.test(ch) ? 0.12 : 0.5 + Math.random() * 0.75;
-      this.host.style.setProperty('--mouth', open.toFixed(2));
+      this.host.setAttribute('data-viseme', visemeOf(ch)); // 립싱크 입모양
+      this._blip(ch); // 동물의숲식 웅얼거림
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
@@ -531,11 +632,10 @@
   function startRig(host) {
     if (host.__rig) return;
     host.__rig = true;
-    var parts = host.querySelector('.rig-parts');
-    if (!parts) return;
+    // 정적 리그(파츠 분리 없음)도 상체 모핑을 위해 등록. parts/pupils는 있으면 사용.
     rigs.push({
       host: host,
-      parts: parts,
+      parts: host.querySelector('.rig-parts'),
       pupils: host.querySelectorAll('.rig-pupil'),
       cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0, px: 0, py: 0 },
     });
@@ -554,15 +654,15 @@
       var pose = poseOf(host);
       var talking = host.classList.contains('is-talking');
 
-      // 목표값: 아이들 흔들림 + 포인터 + 표정 몸짓 + 말할 때 끄덕임
+      // 목표값: 마우스 방향 상체 기울임(가슴 위쪽만 — transform-origin 하단 피벗이라 상체가 크게,
+      // 책상/손 밑단은 거의 고정) + 아이들 흔들림 + 말할 때 끄덕임. 호흡은 .rig가 담당하므로 bob 생략.
       var sway = Math.sin(t * 0.55) * 0.5 + Math.sin(t * 0.23) * 0.3; // deg
-      var bob = Math.sin(t * 0.8) * 1.6; // px
-      var nodY = talking ? Math.sin(t * 7.5) * 1.4 : 0;
+      var nodY = talking ? Math.sin(t * 7.5) * 1.0 : 0;
       var nodR = talking ? Math.sin(t * 3.6) * 0.3 : 0;
 
-      var tx = ptr.x * 7;
-      var ty = ptr.y * 4 + bob + nodY + pose.dy;
-      var rot = ptr.x * 2.2 + sway + nodR + pose.rot;
+      var tx = ptr.x * 3;                          // 좌우 이동은 작게(하단 고정감)
+      var ty = ptr.y * 1.5 + nodY + pose.dy;
+      var rot = ptr.x * 4.5 + sway + nodR + pose.rot; // 회전 위주 → 하단 피벗으로 상체가 마우스로 기욺
       var sc = pose.scale;
       // 얼굴 레이어는 몸보다 조금 더 움직여 깊이감을 만든다
       var fx = ptr.x * 3.5;
@@ -579,8 +679,10 @@
       host.style.transform =
         'translate(' + c.x.toFixed(2) + 'px,' + c.y.toFixed(2) + 'px) rotate(' +
         c.rot.toFixed(2) + 'deg) scale(' + c.scale.toFixed(4) + ')';
-      r.parts.style.transform =
-        'translate(' + c.fx.toFixed(2) + 'px,' + c.fy.toFixed(2) + 'px)';
+      if (r.parts) {
+        r.parts.style.transform =
+          'translate(' + c.fx.toFixed(2) + 'px,' + c.fy.toFixed(2) + 'px)';
+      }
 
       // 눈동자: 커서를 따라 이동. 파츠 좌표는 base(600px 폭) 기준이라 렌더 크기에 맞춰 환산.
       if (r.pupils.length) {

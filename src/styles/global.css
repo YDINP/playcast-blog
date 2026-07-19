@@ -362,15 +362,125 @@ button {
     linear-gradient(135deg, #1a1830, #0e0e18);
 }
 
+/* ── 씬 타이포 카드(핵심 수치·문구 오버레이) ─────────────────────
+   호스트(우측)·자막(하단)을 피해 좌측 상단 영역에 얹는다. */
+.sp-card {
+  position: absolute;
+  left: 0; top: 0; right: 29%; bottom: 22%;
+  z-index: 2;
+  display: flex;
+  align-items: center;          /* 기본 세로 중앙 */
+  justify-content: flex-start;  /* 기본 좌측 */
+  padding: 3% 3% 3% 5%;
+  pointer-events: none;
+  --spc-scale: 1;
+}
+/* 위치 다양화 */
+.sp-card.pos-tl { align-items: flex-start; justify-content: flex-start; }
+.sp-card.pos-tr { align-items: flex-start; justify-content: flex-end; }
+.sp-card.pos-bl { align-items: flex-end; justify-content: flex-start; }
+.sp-card.pos-br { align-items: flex-end; justify-content: flex-end; }
+.sp-card.pos-cl { align-items: center; justify-content: flex-start; }
+.sp-card.pos-cr { align-items: center; justify-content: flex-end; }
+.sp-card.pos-c { align-items: center; justify-content: center; }
+/* 크기 다양화 */
+.sp-card.size-sm { --spc-scale: 0.72; }
+.sp-card.size-md { --spc-scale: 0.88; }
+.sp-card.size-lg { --spc-scale: 1.15; }
+.sp-card .spc-inner {
+  max-width: 100%;
+  padding: clamp(0.7em, 2vw, 1.15em) clamp(1em, 2.6vw, 1.5em);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(10, 12, 20, 0.66), rgba(10, 12, 20, 0.3));
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transform: translateY(18px) scale(0.98);
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sp-card.is-show .spc-inner { opacity: 1; transform: none; }
+.spc-big { font-weight: 800; line-height: 1.02; letter-spacing: -0.02em; }
+.spc-stat .spc-big { font-size: calc(clamp(2.6rem, 7vw, 5rem) * var(--spc-scale)); color: #57e6c3; }
+.spc-stat .spc-label { font-size: calc(clamp(1rem, 2.4vw, 1.5rem) * var(--spc-scale)); font-weight: 700; margin-top: 0.12em; }
+.spc-sub { font-size: calc(clamp(0.78rem, 1.7vw, 1.05rem) * var(--spc-scale)); color: #d3d3e0; margin-top: 0.4em; font-weight: 500; }
+.spc-title .spc-big {
+  font-size: calc(clamp(1.5rem, 4.6vw, 3rem) * var(--spc-scale));
+  background: linear-gradient(90deg, #7fe9d0, #b7a8ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.spc-points .spc-head { font-size: calc(clamp(1.05rem, 2.8vw, 1.6rem) * var(--spc-scale)); font-weight: 800; color: #57e6c3; margin-bottom: 0.5em; }
+.spc-points ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.42em; }
+.spc-points li { font-size: calc(clamp(0.9rem, 2vw, 1.2rem) * var(--spc-scale)); font-weight: 600; padding-left: 1.15em; position: relative; }
+.spc-points li::before { content: "›"; position: absolute; left: 0; color: #57e6c3; font-weight: 800; }
+.sp-card.is-show.spc-points li { animation: spc-li 0.5s both; }
+.sp-card.is-show.spc-points li:nth-child(2) { animation-delay: 0.07s; }
+.sp-card.is-show.spc-points li:nth-child(3) { animation-delay: 0.14s; }
+.sp-card.is-show.spc-points li:nth-child(4) { animation-delay: 0.21s; }
+.sp-card.is-show.spc-points li:nth-child(5) { animation-delay: 0.28s; }
+@keyframes spc-li { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .sp-card .spc-inner { transition: none; }
+  .sp-card.is-show.spc-points li { animation: none; }
+}
+
+/* ── 손가락 포인터(중요 지점 강조·이동) ───────────────────────── */
+.sp-pointer {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: left 0.9s cubic-bezier(0.4, 0, 0.2, 1), top 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+.sp-pointer.is-show { opacity: 1; }
+.pt-ring {
+  position: absolute; left: 0; top: 0;
+  width: clamp(34px, 6vw, 64px); height: clamp(34px, 6vw, 64px);
+  transform: translate(-50%, -50%);
+  border: 3px solid #57e6c3; border-radius: 50%;
+  box-shadow: 0 0 18px rgba(87, 230, 195, 0.6);
+  animation: pt-pulse 1.3s ease-out infinite;
+}
+.pt-hand {
+  position: absolute; left: 0; top: clamp(16px, 3vw, 30px);
+  transform: translateX(-50%);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));
+  animation: pt-bob 1s ease-in-out infinite;
+}
+.pt-label {
+  position: absolute; left: 0; top: clamp(3.2rem, 7vw, 4.6rem);
+  transform: translateX(-50%); white-space: nowrap;
+  background: rgba(10, 12, 20, 0.74); color: #fff; font-weight: 700;
+  font-size: clamp(0.72rem, 1.6vw, 1rem); padding: 0.22em 0.6em; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+@keyframes pt-pulse {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.9; }
+  70% { opacity: 0.15; }
+  100% { transform: translate(-50%, -50%) scale(1.55); opacity: 0; }
+}
+@keyframes pt-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-pointer { transition: none; }
+  .pt-ring, .pt-hand { animation: none; }
+}
+
 /* host overlay */
 .sp-host {
   position: absolute;
   right: 1%;
   bottom: 0;
-  width: 27%;
-  max-width: 300px;
-  min-width: 150px;
-  aspect-ratio: 600 / 911; /* = rosie.png. 어긋나면 눈/입 오버레이가 얼굴에서 밀린다 */
+  width: 34%;
+  max-width: 370px;
+  min-width: 170px;
+  aspect-ratio: 1 / 1; /* = final_assets 정사각 프레임(1254²) */
   z-index: 3;
   transform-origin: bottom center;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
@@ -378,6 +488,16 @@ button {
 }
 .sp-host.is-hidden {
   display: none;
+}
+/* 시청 페이지 우하단 캠 — 부스 패널 대신 영상 내 큰 오버레이 */
+.sp-host--cam {
+  width: 40%;
+  max-width: 500px;
+  min-width: 260px;
+  right: 1.5%;
+}
+@media (max-width: 640px) {
+  .sp-host--cam { width: 46%; min-width: 150px; }
 }
 
 /* subtitle bar */
@@ -438,9 +558,14 @@ button {
   animation: none;
 }
 
-/* ── 자막 위치 토글(cap-safe) ──────────────────────────────
-   overlay(기본): 이미지 위 하단, 스크림+외곽선 텍스트(최소 가림)
-   safe: 이미지를 위로 올리고 하단 전용 띠에 자막 → 이미지 0% 가림 */
+/* ── 자막 위치 토글(cap-safe, 기본값) ──────────────────────
+   overlay: 이미지 위 하단, 스크림+외곽선 텍스트(최소 가림)
+   safe(기본): 스테이지 자체를 세로로 늘려 상단 80%를 정확히 16:9 이미지 영역으로,
+   하단 20%를 전용 CC 띠로 분리 → cover여도 크롭 없이 이미지 원본 프레임이 그대로 보인다.
+   (16:9 스테이지의 80% 높이가 다시 16:9가 되도록 역산한 비율 = 16/11.25) */
+.sp-stage.cap-safe {
+  aspect-ratio: 64 / 45; /* = 16 / 11.25 */
+}
 .sp-stage.cap-safe .sp-bg {
   bottom: 20%;
 }
@@ -912,6 +1037,34 @@ button {
   will-change: transform, opacity;
   -webkit-user-drag: none;
 }
+/* 표정 풀 포트레이트 스왑 — base(idle) 위에 얹고 emo-* 로 노출 (정렬돼 있어 튐 없음) */
+/* 표정·립싱크 풀 이미지 오버레이 (final_assets, 정렬돼 있어 left/top 0, width 100%) */
+.rig-emo,
+.rig-lip {
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+/* 립싱크 오버레이는 입 영역만 보이게 클립 → 말할 때 눈/표정이 바뀌지 않고 입만 교체됨.
+   (각 lip-*.webp가 전체 얼굴 이미지라, 클립 없이 얹으면 그 이미지의 눈이 표정 눈을 덮음) */
+.rig-lip { clip-path: inset(37% 36% 48% 36%); }
+.sp-host.emo-happy .rig-emo.f-happy,
+.sp-host.emo-surprised .rig-emo.f-surprised,
+.sp-host.emo-think .rig-emo.f-think,
+.sp-host.emo-sad .rig-emo.f-sad,
+.sp-host.emo-shy .rig-emo.f-shy {
+  opacity: 1;
+}
+/* 립싱크: 말하는 중 data-viseme 일치 시 해당 입모양(아에이오우) 노출 */
+.sp-host.is-talking[data-viseme="a"] .rig-lip.l-a,
+.sp-host.is-talking[data-viseme="e"] .rig-lip.l-e,
+.sp-host.is-talking[data-viseme="i"] .rig-lip.l-i,
+.sp-host.is-talking[data-viseme="o"] .rig-lip.l-o,
+.sp-host.is-talking[data-viseme="u"] .rig-lip.l-u {
+  opacity: 1;
+}
 /* 호흡 */
 @keyframes rig-breathe {
   0%, 100% { transform: translateY(0) scale(1); }
@@ -921,6 +1074,9 @@ button {
    타이밍은 scene-player.js의 스케줄러가 랜덤으로 준다(CSS 애니메이션은 주기가 고정이라
    매번 같은 리듬으로 두 번씩 깜빡이는 게 티가 났음). */
 .rig-blink {
+  left: 0;
+  top: 0;
+  width: 100%;
   opacity: 0;
 }
 .rig-blink.is-blink {
@@ -936,11 +1092,19 @@ button {
    고정 주기 애니메이션보다 실제 말하는 리듬에 가깝다. */
 .rig-mouth-open {
   opacity: 0;
-  transform-origin: 50% 12%;
+  transform-origin: 50% 49.5%; /* 새 캐릭터 입 위치(프레임 기준) */
   transform: scaleY(calc(var(--mouth, 0.4) * var(--mScale, 1)));
   transition: opacity 0.1s, transform 0.07s linear;
 }
 .sp-host.is-talking .rig-mouth-open {
+  opacity: 1;
+}
+/* 입 커버: 평소 숨김, 말하는 중에만 base 다문 입을 가림 → 벌린 입 1개만 보임 */
+.rig-mouth-cover {
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.sp-host.is-talking .rig-mouth-cover {
   opacity: 1;
 }
 /* 놀람 씬에서 입 더 크게 */
@@ -1053,7 +1217,7 @@ button {
   bottom: auto;
   z-index: 1;
   flex: none;
-  width: 100%;
+  width: 132%; /* 부스 칸보다 크게 → 얼굴 확대, 양옆(투명 여백·어깨)은 overflow로 크롭 */
   height: auto;
   max-width: none;
   min-width: 0;

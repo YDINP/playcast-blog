@@ -35,6 +35,30 @@ const videos = defineCollection({
           chapter: z.string().optional(), // 챕터 라벨(트랜스크립트/스크럽 표시)
           // TTS-ready: 씬 음성 오디오 URL. 현재 미사용(무음). 채우면 타임라인이 오디오 길이에 동기화.
           voice: z.string().optional(),
+          // 타이포 카드: 핵심 수치·문구를 이미지 위에 슬라이드로 얹는다.
+          card: z
+            .object({
+              kind: z.enum(['stat', 'title', 'points']).default('stat'),
+              big: z.string().optional(),
+              label: z.string().optional(),
+              sub: z.string().optional(),
+              head: z.string().optional(),
+              items: z.array(z.string()).optional(),
+              // 위치(tl/tr/bl/br/cl/cr/c)·크기(sm/md/lg) — 씬마다 다르게 배치해 단조로움 방지
+              pos: z.enum(['tl', 'tr', 'bl', 'br', 'cl', 'cr', 'c']).optional(),
+              size: z.enum(['sm', 'md', 'lg']).optional(),
+            })
+            .optional(),
+          // 손가락 포인터: 이미지 속 중요 지점을 👆로 가리키며(이동) 강조
+          point: z
+            .object({
+              x: z.number(), // 목표 X (% 0~100)
+              y: z.number(), // 목표 Y (%)
+              emoji: z.string().optional(), // 기본 👆
+              from: z.tuple([z.number(), z.number()]).optional(), // 시작 위치 [x,y]에서 이동
+              label: z.string().optional(), // 포인터 옆 라벨
+            })
+            .optional(),
         })
       )
       .min(1),
