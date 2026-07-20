@@ -13,8 +13,8 @@ const poster = posterOf(data);
 const dur = durationLabel(data.scenes, data.durationLabel);
 const href = watchHref(video.id);
 
-// 썸네일에 얹는 미니 로지 — video.id 시드로 위치/크기/좌우반전/표정을 결정론적 랜덤화
-// (빌드마다 동일, 카드마다 다름). expr 파일명 기준, 'idle'은 기본 얼굴(밴드 없음).
+// 썸네일에 얹는 미니 로지 — video.id 시드로 위치/크기/좌우반전을 결정론적 랜덤화
+// (빌드마다 동일, 카드마다 다름). 캐릭터는 새 방송호스트(char2 반신) 단일 이미지.
 function seeded(str: string) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -30,12 +30,10 @@ function seeded(str: string) {
   };
 }
 const rnd = seeded(video.id);
-const rojiEmos = ['idle', 'smile', 'surprised', 'pout', 'wink', 'laugh', 'shy'];
 const rojiSide = rnd() < 0.5 ? 'left' : 'right';
 const rojiOff = (rnd() * 5).toFixed(1); // 가장자리 0~5%
 const rojiH = (56 + rnd() * 32).toFixed(0); // 높이 56~88%
 const rojiFlip = rnd() < 0.5;
-const rojiEmo = rojiEmos[Math.floor(rnd() * rojiEmos.length)];
 const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transform:scaleX(-1);' : ''}`;
 ---
 
@@ -47,9 +45,6 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
         {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
         <span class="card-roji" style={rojiStyle} aria-hidden="true">
           <img class="roji-base" src="/host/rosie.png" alt="" loading="lazy" />
-          {rojiEmo !== 'idle' && (
-            <img class="roji-face" src={`/host/expr/${rojiEmo}.png`} alt="" loading="lazy" />
-          )}
         </span>
         <span class="vcard-cat">{data.category}</span>
         <span class="vcard-dur">{dur}</span>

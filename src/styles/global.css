@@ -1038,15 +1038,24 @@ button {
   -webkit-user-drag: none;
 }
 /* 표정 풀 포트레이트 스왑 — base(idle) 위에 얹고 emo-* 로 노출 (정렬돼 있어 튐 없음) */
-/* 표정·립싱크 풀 이미지 오버레이 (final_assets, 정렬돼 있어 left/top 0, width 100%) */
+/* 기본 다문 입 — base(입 없음) 위에 항상 표시. 표정/립싱크가 활성이면 그 풀이미지가 덮음 */
+.rig-mouth-rest {
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 1;
+}
+/* 표정·립싱크 풀 이미지 오버레이 (final_assets, 정렬돼 left/top 0, width 100%).
+   전환 즉시(no fade) → base와 겹쳐 눈썹이 이중으로 비치는 고스팅 제거 */
 .rig-emo,
 .rig-lip {
   left: 0;
   top: 0;
   width: 100%;
   opacity: 0;
-  transition: opacity 0.16s ease;
 }
+.rig-emo { transition: opacity 0.05s linear; }
+/* 립싱크는 즉시 스왑(빠른 입모양 변화) */
 /* 립싱크 오버레이는 입 영역만 보이게 클립 → 말할 때 눈/표정이 바뀌지 않고 입만 교체됨.
    (각 lip-*.webp가 전체 얼굴 이미지라, 클립 없이 얹으면 그 이미지의 눈이 표정 눈을 덮음) */
 .rig-lip { clip-path: inset(37% 36% 48% 36%); }
@@ -1842,8 +1851,8 @@ body::after {
   position: absolute;
   bottom: 0;
   z-index: 2; /* 포스터(z:1) 위, 배지(z:2, DOM 뒤라 위에 그려짐) 아래 */
-  height: 70%;
-  aspect-ratio: 600 / 911;
+  height: 78%;
+  aspect-ratio: 1 / 1; /* 새 방송호스트: 정사각 반신 */
   pointer-events: none;
   filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.45));
 }
