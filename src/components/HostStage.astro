@@ -133,8 +133,9 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
         const j = await (await fetch(url)).json();
         const c = j.current, d = j.daily;
         const now = new Date();
+        const timeStr = now.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' });
         const seg = [
-          `📺 VIP 뉴스 · ${now.getMonth() + 1}월 ${now.getDate()}일 서울 날씨`,
+          `📺 VIP 뉴스 · ${now.getMonth() + 1}월 ${now.getDate()}일 ${timeStr} 기준 서울 날씨`,
           `${icon(c.weather_code)} ${WMO[c.weather_code] ?? ''} ${Math.round(c.temperature_2m)}°`,
           `최고 ${Math.round(d.temperature_2m_max[0])}° / 최저 ${Math.round(d.temperature_2m_min[0])}°`,
           `강수확률 ${d.precipitation_probability_max?.[0] ?? 0}%`,
@@ -150,6 +151,8 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
       }
     }
     fillWeather();
+    setInterval(fillWeather, 15 * 60 * 1000); // 15분마다 최신 날씨로 갱신
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) fillWeather(); }); // 탭 복귀 시 갱신
   </script>
   </Fragment>
 ) : (

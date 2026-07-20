@@ -260,31 +260,7 @@
     el.className = 'sp-card is-show spc-' + kind + extra;
   };
 
-  // 동물의숲식 웅얼거림 — 글자마다 음정 다른 짧은 블립(Web Audio, 파일 없음)
-  Player.prototype._blip = function (ch) {
-    if (this.muted || !ch || /\s/.test(ch)) return;
-    try {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      if (!this._ac) this._ac = new AC();
-      var ac = this._ac;
-      if (ac.state === 'suspended') ac.resume();
-      var t = ac.currentTime;
-      var code = ch.charCodeAt(0);
-      var base = 230 + (code % 13) * 16; // 230~420Hz, 글자별로 흩뿌려진 음정
-      var o = ac.createOscillator(), g = ac.createGain();
-      o.type = 'square';
-      o.frequency.setValueAtTime(base, t);
-      o.frequency.exponentialRampToValueAtTime(base * 1.14, t + 0.05);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.055, t + 0.007);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
-      o.connect(g);
-      g.connect(ac.destination);
-      o.start(t);
-      o.stop(t + 0.11);
-    } catch (e) {}
-  };
+  // (말소리 블립 제거됨 — 립싱크는 시각 전용, 사운드 없음)
 
   // 손가락 포인터 — 이미지 속 (x,y)% 지점을 가리키고, from이 있으면 그 지점에서 이동
   Player.prototype._renderPointer = function (point) {
