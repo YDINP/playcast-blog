@@ -651,6 +651,11 @@ button {
   width: 46%; max-width: 600px; min-width: 220px; /* 0.8 → 1.25배 */
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5));
 }
+/* 모바일: min-width가 좁은 화면에서 캐릭터를 못 줄이게 막으므로 해제 → 46%로 비례 축소 */
+@media (max-width: 700px) {
+  .sp-stage.is-newsroom .sp-host,
+  .sp-stage.is-newsroom.cap-safe .sp-host { min-width: 0; }
+}
 
 /* 하단 기상 박스(한 줄 티커) — 절반 높이. 호스트 하단이 이 박스 윗변에 맞닿음 */
 .is-newsroom .sp-desk {
@@ -688,26 +693,50 @@ button {
 }
 
 /* 뉴스 하단 자막(로어서드/카이런) — 모니터 아래 좌측 */
+/* 트렌디 로어서드 — 프로스트 글래스 카드 + 플로팅 이름 필 + 민트 액센트 */
 .sp-stage.is-newsroom .sp-caption.sp-chyron,
 .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-  left: 3.5%; right: auto; bottom: 15%; width: 48%; z-index: 6;
-  padding: 0; justify-content: flex-start; align-items: center; gap: 8px; background: none;
+  left: 3.5%; right: auto; bottom: 15%; width: 50%; z-index: 6;
+  padding: 0; display: block; background: none;
 }
-/* 자막영역 고정: 텍스트 길이와 무관하게 항상 3줄 높이(가변 리사이즈 방지) */
 .is-newsroom .sp-chyron.is-empty { opacity: 1; } /* 빈 씬에도 영역 유지 */
+/* 이름 필: 박스 상단에 걸치는 플로팅 칩 + 말하기 펄스 닷 */
 .is-newsroom .sp-chyron .chyron-tag {
-  flex: 0 0 auto; align-self: center; display: flex; align-items: center;
-  padding: 7px 12px; /* 자막 높이와 무관한 컴팩트 배지 */
-  font: 800 clamp(11px, 1.6vw, 15px)/1 system-ui, sans-serif; color: #04121f;
-  background: linear-gradient(180deg, #6ff0d0, #38c9a8); border-radius: 7px;
-  white-space: nowrap;
+  position: absolute; top: -21px; left: 14px; z-index: 2; /* 박스 위로 올려 텍스트와 겹침 방지 */
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 15px 5px 11px; border-radius: 999px; letter-spacing: 0.02em;
+  font: 800 clamp(12px, 1.5vw, 15px)/1 system-ui, sans-serif; color: #06231c;
+  background: linear-gradient(135deg, #7df3d6 0%, #37c9a8 100%);
+  box-shadow: 0 6px 16px rgba(55, 201, 168, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
+.is-newsroom .chyron-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #06231c;
+  animation: chyron-pulse 1.6s ease-out infinite;
+}
+@keyframes chyron-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(6, 35, 28, 0.45); }
+  70% { box-shadow: 0 0 0 6px rgba(6, 35, 28, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(6, 35, 28, 0); }
+}
+/* 자막 본문: 프로스트 글래스 카드(고정 높이) */
 .is-newsroom .sp-chyron .box {
-  flex: 1 1 auto; max-width: none; text-align: left;
-  display: flex; align-items: center; padding: 10px 14px; border-radius: 0 6px 6px 0;
-  background: rgba(8, 14, 28, 0.85); color: #fff;
-  font-size: clamp(0.9rem, 1.6vw, 1.12rem); line-height: 1.4;
-  text-shadow: none; height: 4.7em; overflow: hidden; border-radius: 8px; /* 3줄 고정 — 리사이즈 방지 */
+  position: relative; max-width: none; text-align: left;
+  display: flex; align-items: center; /* 3줄 고정 영역, 세로 중앙 */
+  height: 3.9em; padding: 14px 18px 14px 26px; overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(14, 22, 42, 0.72), rgba(8, 13, 26, 0.84));
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
+  border: 1px solid rgba(120, 170, 255, 0.14);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #eaf1ff; font-size: clamp(0.82rem, 1.35vw, 1.02rem); line-height: 1.4;
+  font-weight: 600; text-shadow: none;
+}
+/* 좌측 민트 그라디언트 액센트 바 */
+.is-newsroom .sp-chyron .box::before {
+  content: ''; position: absolute; left: 10px; top: 14px; bottom: 14px; width: 4px;
+  border-radius: 4px; background: linear-gradient(180deg, #7df3d6, #37c9a8);
+  box-shadow: 0 0 12px rgba(55, 201, 168, 0.6);
 }
 .is-newsroom .sp-chyron.is-empty { opacity: 0; }
 
@@ -1179,7 +1208,8 @@ button {
 /* 립싱크는 즉시 스왑(빠른 입모양 변화) */
 /* 립싱크 오버레이는 입 영역만 보이게 클립 → 말할 때 눈/표정이 바뀌지 않고 입만 교체됨.
    (각 lip-*.webp가 전체 얼굴 이미지라, 클립 없이 얹으면 그 이미지의 눈이 표정 눈을 덮음) */
-.rig-lip { clip-path: inset(37% 36% 48% 36%); }
+/* 표정(입) 영역을 위쪽으로 더 잡아 오려 씀 — 열린 입(아/오) 윗부분이 잘리지 않게 */
+.rig-lip { clip-path: inset(33% 35% 47% 35%); }
 .sp-host.emo-happy .rig-emo.f-happy,
 .sp-host.emo-surprised .rig-emo.f-surprised,
 .sp-host.emo-think .rig-emo.f-think,

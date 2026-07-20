@@ -349,8 +349,7 @@
       // 립싱크: 글자마다 열림/닫힘을 교대시켜 "말하는" 개폐 리듬을 만든다.
       // (한글은 단어 내 공백이 없어 예전엔 계속 열려만 있었다 → 짝/홀 글자로 여닫음)
       var ch = plain.charAt(reveal - 1);
-      this.host.setAttribute('data-viseme', visemeOf(ch)); // 립싱크 입모양
-      this._blip(ch); // 동물의숲식 웅얼거림
+      this.host.setAttribute('data-viseme', visemeOf(ch)); // 립싱크 입모양 (사운드 없음)
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
@@ -533,7 +532,10 @@
     };
     Object.keys(map).forEach(function (sel) {
       var el = self.stage.querySelector(sel);
-      if (el) el.addEventListener('click', map[sel]);
+      if (el) el.addEventListener('click', function (e) {
+        e.stopPropagation(); // 컨트롤 클릭이 스테이지 토글(재생/정지)로 번지지 않게 → 사운드 토글해도 재생 유지
+        map[sel]();
+      });
     });
     // 진행바 클릭 시크
     if (this.progress) {

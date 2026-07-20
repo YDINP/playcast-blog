@@ -77,7 +77,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
 
       <!-- 뉴스 하단 자막(카이런) -->
       <div class="sp-caption sp-chyron">
-        <span class="chyron-tag">로지 · VIP</span>
+        <span class="chyron-tag"><i class="chyron-dot"></i>로지</span>
         <div class="box"><span class="sp-text">{firstSegs.map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
       </div>
 
