@@ -147,6 +147,24 @@ const breadcrumbSchema = {
       }
     </div>
 
+    <!-- 관련 상품(쿠팡 파트너스). coupang 프론트매터 있을 때만 -->
+    {
+      data.coupang && data.coupang.length > 0 && (
+        <section class="vw-sec vw-shop">
+          <h2>🎮 관련 상품</h2>
+          <div class="vw-shop-row">
+            {data.coupang.map((c) => (
+              <a class="vw-shop-item" href={c.url} target="_blank" rel="noopener nofollow sponsored">
+                <span class="vw-shop-t">{c.title}</span>
+                <span class="vw-shop-go">쿠팡에서 보기 →</span>
+              </a>
+            ))}
+          </div>
+          <p class="vw-shop-note">쿠팡 파트너스 활동의 일환으로, 일정액의 수수료를 제공받을 수 있습니다.</p>
+        </section>
+      )
+    }
+
     <!-- 대본 = 챕터 타임라인 (클릭 시 해당 장면으로 점프 / SEO상 대사 전문 노출) -->
     <section class="vw-sec vw-script">
       <h2>대본 타임라인</h2>
@@ -197,3 +215,21 @@ const breadcrumbSchema = {
     })();
   </script>
 </BaseLayout>
+
+<style>
+  /* 관련 상품(쿠팡) — 다크 유튜브 톤. 클래스에 ad/banner 미포함(광고차단 회피) */
+  .vw-shop-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .vw-shop-item {
+    flex: 1 1 220px;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  }
+  .vw-shop-item:hover { background: var(--card-hover); border-color: var(--host); transform: translateY(-2px); }
+  .vw-shop-t { font-weight: 700; font-size: 0.96rem; color: var(--text); }
+  .vw-shop-go { font-size: 0.82rem; color: var(--host); font-weight: 600; }
+  .vw-shop-note { margin: 10px 0 0; font-size: 0.74rem; color: var(--text-muted); }
+</style>

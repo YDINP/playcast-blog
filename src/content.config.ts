@@ -21,6 +21,10 @@ const videos = defineCollection({
         url: z.string().optional(), // 출처 링크
       })
       .optional(),
+    // 관련 상품(쿠팡 파트너스). 게임 기프트카드·게임기·게이밍 기어 등. 시청페이지 '관련 상품' 섹션에 렌더.
+    coupang: z
+      .array(z.object({ title: z.string(), url: z.string() }))
+      .optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드
     // 광고 표시 여부. 공식 게임 이미지를 쓰는 글은 인용 근거 강화를 위해 false 권장.
