@@ -57,7 +57,7 @@ const durationISO = `PT${Math.floor(totalSec / 60)}M${totalSec % 60}S`;
 const published = data.pubDate.toISOString();
 const modified = (data.updatedDate ?? data.pubDate).toISOString();
 
-// 구조화 데이터 (실제 동영상 파일은 없으므로 VideoObject 대신 BlogPosting 사용)
+// 구조화 데이터: BlogPosting(대본 전문 기반 아티클) + VideoObject(영상 카드) + BreadcrumbList
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -87,6 +87,29 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 2, name: data.title, item: pageUrl },
   ],
 };
+// VideoObject — 실제 영상 파일(contentUrl/embedUrl)은 없으므로 생략(가짜 URL 금지).
+// duration은 scene-player.js와 동일 공식으로 계산한 실제 재생시간(estimateSeconds)이라 허구가 아님.
+const videoSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: data.title,
+  description: data.description,
+  thumbnailUrl: [imgAbs],
+  uploadDate: published,
+  ...(data.updatedDate ? { dateModified: modified } : {}),
+  duration: durationISO,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Virtual in Playing',
+    alternateName: 'VIP',
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL('/og-default.png', site).href,
+      width: 1200,
+      height: 630,
+    },
+  },
+};
 ---
 
 <BaseLayout
@@ -96,7 +119,7 @@ const breadcrumbSchema = {
   ogType="article"
   keywords={data.tags.join(', ')}
   article={{ published, modified, section: data.category, tags: data.tags }}
-  schemas={[blogPostingSchema, breadcrumbSchema]}
+  schemas={[blogPostingSchema, videoSchema, breadcrumbSchema]}
 >
   <article class="vw">
     <!-- 헤더: 제목·리드를 플레이어 위로 올려 "무엇에 관한 방송인지" 먼저 읽히게 -->

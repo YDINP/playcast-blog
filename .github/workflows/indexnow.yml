@@ -1,0 +1,47 @@
+name: IndexNow ping
+
+# 영상(watch) 글이 추가/수정될 때만 IndexNow(빙·야후·얀덱스 등)에 즉시 색인 요청.
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'src/videos/**'
+
+concurrency:
+  group: indexnow-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Collect changed watch URLs and submit to IndexNow
+        run: |
+          set -euo pipefail
+          KEY=c35215b7a57806accdc3775204221bf6
+          HOST=virtual-in-playing.vercel.app
+
+          # 이번 푸시에서 추가/수정된 영상(.md) → 공개 watch URL (src/videos/<slug>.md → /watch/<slug>/)
+          mapfile -t urls < <(git diff --name-only --diff-filter=ACM HEAD~1 HEAD -- 'src/videos/*.md' \
+            | sed -E "s#src/videos/(.*)\.md#https://${HOST}/watch/\1/#")
+          # 홈도 함께 갱신 알림
+          urls+=("https://${HOST}/")
+
+          if [ ${#urls[@]} -eq 0 ]; then echo "변경된 URL 없음"; exit 0; fi
+
+          # JSON urlList 구성
+          list=$(printf '%s\n' "${urls[@]}" | sed '/^$/d' | sort -u \
+            | awk 'BEGIN{ORS=""} {printf "%s\"%s\"", (NR>1?",":""), $0}')
+          payload=$(printf '{"host":"%s","key":"%s","keyLocation":"https://%s/%s.txt","urlList":[%s]}' \
+            "$HOST" "$KEY" "$HOST" "$KEY" "$list")
+          echo "Payload: $payload"
+
+          # Vercel 배포가 라이브가 되도록 잠시 대기 후 제출
+          sleep 90
+          curl -sS -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "$payload" -w '\nHTTP %{http_code}\n'
