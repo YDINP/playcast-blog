@@ -2,6 +2,7 @@
 import HostMascot from './HostMascot.astro';
 import { durationLabel, formatViews, timeAgo, watchHref, posterOf } from '../lib/video';
 import type { CollectionEntry } from 'astro:content';
+import hostSide from '../data/host-side.json';
 
 interface Props {
   video: CollectionEntry<'videos'>;
@@ -13,8 +14,10 @@ const poster = posterOf(data);
 const dur = durationLabel(data.scenes, data.durationLabel);
 const href = watchHref(video.id);
 
-// 썸네일에 얹는 미니 로지 — video.id 시드로 위치/크기/좌우반전을 결정론적 랜덤화
-// (빌드마다 동일, 카드마다 다름). 캐릭터는 새 방송호스트(char2 반신) 단일 이미지.
+// 썸네일에 얹는 미니 호스트 — video.id 시드로 표정/크기/좌우반전을 결정론적 랜덤화.
+// 표정은 char2 풀 이미지 7종에서 시드 선택(카드마다 다르게).
+// 배치 쪽(side)은 썸네일별 하단 코너 복잡도 분석(host-side.json)으로 빈 쪽에 놓아
+// 포스터의 캐릭터·타이틀 로고를 최대한 피한다.
 function seeded(str: string) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -30,10 +33,13 @@ function seeded(str: string) {
   };
 }
 const rnd = seeded(video.id);
-const rojiSide = rnd() < 0.5 ? 'left' : 'right';
-const rojiOff = (rnd() * 5).toFixed(1); // 가장자리 0~5%
-const rojiH = (56 + rnd() * 32).toFixed(0); // 높이 56~88%
-const rojiFlip = rnd() < 0.5;
+const rojiExprs = ['base', 'happy', 'shy', 'sad', 'blink', 'talk', 'talk-o'];
+const rojiExpr = rojiExprs[Math.floor(rnd() * rojiExprs.length)];
+// 빈 하단 코너(캐릭터·로고 회피). 맵에 없으면 시드 폴백.
+const rojiSide = (hostSide as Record<string, string>)[poster ?? ''] ?? (rnd() < 0.5 ? 'left' : 'right');
+const rojiOff = (rnd() * 3).toFixed(1); // 가장자리 0~3%
+const rojiH = (46 + rnd() * 12).toFixed(0); // 높이 46~58% (컴팩트)
+const rojiFlip = rojiSide === 'right'; // 오른쪽이면 반전 → 항상 화면 안쪽을 향함
 const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transform:scaleX(-1);' : ''}`;
 ---
 
@@ -44,7 +50,7 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
         <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
         {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
         <span class="card-roji" style={rojiStyle} aria-hidden="true">
-          <img class="roji-base" src="/host/rosie.png" alt="" loading="lazy" />
+          <img class="roji-base" src={`/host/roji/${rojiExpr}.png`} alt="" loading="lazy" />
         </span>
         <span class="vcard-cat">{data.category}</span>
         <span class="vcard-dur">{dur}</span>
