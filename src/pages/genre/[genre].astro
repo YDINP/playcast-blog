@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { getCollection } from 'astro:content';
+
+// 카테고리(코너/장르) → 한글 라벨·설명. 맵에 없으면 원문 폴백.
+const GENRES: Record<string, { label: string; desc: string }> = {
+  new: { label: '최신 방송', desc: '최근 올라온 게임 소개 방송을 모았습니다.' },
+  guide: { label: '게임 가이드', desc: '입문·추천·꿀팁까지, 게임을 더 잘 즐기는 가이드 방송.' },
+  free: { label: '무료 게임', desc: '지갑 걱정 없이 즐기는 무료 PC 게임 소개.' },
+  indie: { label: '인디 게임', desc: '숨은 인디 명작을 골라 소개합니다.' },
+  vtuber: { label: '버추얼·VTuber', desc: '버추얼 아이돌·호스트 관련 방송.' },
+  review: { label: '리뷰', desc: '게임을 직접 뜯어보는 리뷰 방송.' },
+};
+
+export async function getStaticPaths() {
+  const videos = await getCollection('videos', ({ data }) => !data.draft);
+  const cats = [...new Set(videos.map((v) => v.data.category.toLowerCase()))];
+  return cats.map((cat) => ({
+    params: { genre: cat },
+    props: {
+      cat,
+      videos: videos
+        .filter((v) => v.data.category.toLowerCase() === cat)
+        .sort((a, b) => +b.data.pubDate - +a.data.pubDate),
+    },
+  }));
+}
+
+const { cat, videos } = Astro.props;
+const meta = GENRES[cat] ?? { label: cat, desc: `${cat} 방송 모음.` };
+const site = Astro.site ?? new URL('https://virtual-in-playing.vercel.app');
+const title = `${meta.label} — VIP 게임 소개 방송`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: title,
+      description: meta.desc,
+      url: new URL(`/genre/${cat}/`, site).href,
+    },
+    {
+      '@type': 'ItemList',
+      itemListElement: videos.map((v, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: new URL(`/watch/${v.id}/`, site).href,
+        name: v.data.title,
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={meta.desc}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <div class="genre-page">
+    <nav class="genre-crumb" aria-label="breadcrumb">
+      <a href="/">홈</a> <span>›</span> <a href="/genre/">장르</a> <span>›</span>
+      <span aria-current="page">{meta.label}</span>
+    </nav>
+
+    <header class="genre-head">
+      <h1>{meta.label}</h1>
+      <p>{meta.desc}</p>
+      <span class="genre-count">{videos.length}개 방송</span>
+    </header>
+
+    <div class="pc-grid genre-grid">
+      {videos.map((v) => <VideoCard video={v} />)}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .genre-page { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .genre-crumb { font-size: 0.78rem; color: var(--text-2, #9aa); margin-bottom: 1rem; }
+  .genre-crumb a { color: var(--text-2, #9aa); text-decoration: none; }
+  .genre-crumb a:hover { color: var(--host, #57e6c3); }
+  .genre-crumb span { margin: 0 0.15rem; }
+  .genre-head h1 { font-size: 1.8rem; margin: 0 0 0.4rem; }
+  .genre-head p { color: var(--text-2, #9aa); line-height: 1.6; margin: 0 0 0.5rem; }
+  .genre-count { font-size: 0.75rem; color: var(--host, #57e6c3); font-weight: 700; }
+  .genre-grid { margin-top: 1.5rem; }
+  /* pc-grid 가 전역에 없을 때의 폴백 */
+  .genre-grid:not(.pc-grid-ok) { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+</style>

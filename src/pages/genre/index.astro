@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const GENRES: Record<string, { label: string; desc: string; emoji: string }> = {
+  new: { label: '최신 방송', desc: '최근 올라온 게임 소개 방송', emoji: '🆕' },
+  guide: { label: '게임 가이드', desc: '입문·추천·꿀팁 가이드', emoji: '🎯' },
+  free: { label: '무료 게임', desc: '무료로 즐기는 PC 게임', emoji: '🆓' },
+  indie: { label: '인디 게임', desc: '숨은 인디 명작', emoji: '💎' },
+  vtuber: { label: '버추얼·VTuber', desc: '버추얼 아이돌·호스트', emoji: '🎤' },
+  review: { label: '리뷰', desc: '게임 직접 리뷰', emoji: '🔍' },
+};
+
+const videos = await getCollection('videos', ({ data }) => !data.draft);
+const counts: Record<string, number> = {};
+for (const v of videos) {
+  const c = v.data.category.toLowerCase();
+  counts[c] = (counts[c] ?? 0) + 1;
+}
+const genres = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+
+const title = '장르별 둘러보기 — VIP 게임 소개 방송';
+const description = '최신·인디·무료·가이드 등 장르별로 게임 소개 방송을 둘러보세요.';
+const site = Astro.site ?? new URL('https://virtual-in-playing.vercel.app');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'CollectionPage', name: title, description, url: new URL('/genre/', site).href },
+    {
+      '@type': 'ItemList',
+      itemListElement: genres.map((g, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: new URL(`/genre/${g}/`, site).href,
+        name: GENRES[g]?.label ?? g,
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <div class="gx">
+    <header class="gx-head">
+      <h1>장르별 둘러보기</h1>
+      <p>보고 싶은 게임의 결을 골라보세요.</p>
+    </header>
+
+    <div class="gx-grid">
+      {genres.map((g) => {
+        const m = GENRES[g] ?? { label: g, desc: '', emoji: '🎮' };
+        return (
+          <a class="gx-card" href={`/genre/${g}/`}>
+            <span class="gx-emoji">{m.emoji}</span>
+            <span class="gx-label">{m.label}</span>
+            <span class="gx-desc">{m.desc}</span>
+            <span class="gx-count">{counts[g]}개 방송 →</span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .gx { max-width: 1000px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+  .gx-head h1 { font-size: 2rem; margin: 0 0 0.4rem; }
+  .gx-head p { color: var(--text-2, #9aa); }
+  .gx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .gx-card { display: flex; flex-direction: column; gap: 0.3rem; padding: 1.25rem; border: 1px solid var(--border, #2a2f3a); border-radius: 14px; background: var(--card, #171a21); text-decoration: none; color: inherit; transition: transform 0.15s, border-color 0.15s; }
+  .gx-card:hover { transform: translateY(-3px); border-color: var(--host, #57e6c3); }
+  .gx-emoji { font-size: 1.6rem; }
+  .gx-label { font-size: 1.1rem; font-weight: 800; }
+  .gx-desc { font-size: 0.8rem; color: var(--text-2, #9aa); }
+  .gx-count { font-size: 0.78rem; font-weight: 700; color: var(--host, #57e6c3); margin-top: 0.4rem; }
+</style>
