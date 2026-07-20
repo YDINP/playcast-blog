@@ -25,7 +25,8 @@ export async function getStaticPaths() {
   const vids = await getCollection('videos');
   return vids.map((v) => ({
     params: { slug: v.id },
-    props: { scene: v.data.scenes?.[0]?.image || v.data.thumbnail || '' },
+    // 모니터엔 대표(캐릭터) 썸네일 우선 — scenes[0]은 오프닝 배경이라 캐릭터가 안 나옴
+    props: { scene: v.data.thumbnail || v.data.scenes?.[0]?.image || '' },
   }));
 }
 
