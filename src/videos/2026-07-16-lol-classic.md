@@ -10,6 +10,13 @@ imageCredit:
   url: "https://www.leagueoflegends.com/en-us/classic/"
 host: "rosie"
 views: 0
+coupang:
+  - title: "게이밍 마우스"
+    desc: "정확한 조작엔 게이밍 마우스"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4"
+  - title: "게이밍 기계식 키보드"
+    desc: "빠른 입력·손맛"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C"
 scenes:
   - text: "롤 유저 주목! '**리그 오브 레전드 클래식**'이 드디어 열려요. **2013년 시즌3**, 그 시절 감성 그대로예요."
     image: "/games/scenes/lol-classic.png"

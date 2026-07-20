@@ -11,6 +11,13 @@ ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 
 imageCredit:
   text: "각 게임 공식 스팀 상점 페이지 스크린샷 (© 각 개발사)"
   url: "https://store.steampowered.com/"
+coupang:
+  - title: "스팀 기프트카드"
+    desc: "신작·할인 게임 바로 구매"
+    url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+  - title: "게이밍 기계식 키보드"
+    desc: "빠른 입력·손맛"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C"
 scenes:
   - text: "로지의 인디 코너! 오늘은 인디 입문자가 실패 없이 시작할 **명작**만 데려왔어요."
     image: "/games/scenes/indie-open.jpg"

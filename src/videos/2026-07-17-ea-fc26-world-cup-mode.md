@@ -8,6 +8,13 @@ host: "rosie"
 thumbnail: "/games/fc26-worldcup.webp"
 views: 8400
 ads: false
+coupang:
+  - title: "게임 컨트롤러"
+    desc: "축구 게임은 패드가 유리"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+  - title: "게이밍 헤드셋"
+    desc: "발소리까지 잡는 몰입감"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B"
 scenes:
   - text: "로지의 신작 코너!\n실제 **2026 월드컵 결승**이 코앞인데,\n게임에서는 벌써 우승할 수 있다는 사실, 아셨나요?"
     emotion: "surprised"

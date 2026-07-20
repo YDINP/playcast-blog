@@ -7,6 +7,13 @@ tags: ["스팀환불", "스팀", "게임환불", "환불방법", "게임팁"]
 thumbnail: "/games/scenes/steam-refund.png"
 host: "rosie"
 views: 0
+coupang:
+  - title: "스팀 기프트카드"
+    desc: "신작·할인 게임 바로 구매"
+    url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+  - title: "게이밍 헤드셋"
+    desc: "발소리까지 잡는 몰입감"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B"
 scenes:
   - text: "산 게임이 기대와 다르다면? 스팀은 **환불**이 돼요. 조건만 맞으면 몇 분이면 끝나요."
     image: "/games/scenes/steam-refund.png"

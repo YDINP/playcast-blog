@@ -10,8 +10,10 @@ views: 7200
 ads: false
 coupang:
   - title: "구글플레이 기프트카드"
+    desc: "가챠·인앱 결제 충전에"
     url: "https://www.coupang.com/np/search?q=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
   - title: "게이밍 블루투스 이어폰"
+    desc: "모바일 게임 사운드 몰입"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0"
 scenes:
   - text: "로지의 신작 코너!\n요즘 앱스토어 매출 순위,\n갑자기 역주행한 게임이 하나 있다는 사실 아셨나요?"

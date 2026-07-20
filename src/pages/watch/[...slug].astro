@@ -156,6 +156,7 @@ const breadcrumbSchema = {
             {data.coupang.map((c) => (
               <a class="vw-shop-item" href={c.url} target="_blank" rel="noopener nofollow sponsored">
                 <span class="vw-shop-t">{c.title}</span>
+                {c.desc && <span class="vw-shop-d">{c.desc}</span>}
                 <span class="vw-shop-go">쿠팡에서 보기 →</span>
               </a>
             ))}
@@ -230,6 +231,7 @@ const breadcrumbSchema = {
   }
   .vw-shop-item:hover { background: var(--card-hover); border-color: var(--host); transform: translateY(-2px); }
   .vw-shop-t { font-weight: 700; font-size: 0.96rem; color: var(--text); }
-  .vw-shop-go { font-size: 0.82rem; color: var(--host); font-weight: 600; }
+  .vw-shop-d { font-size: 0.8rem; color: var(--text-2); line-height: 1.4; }
+  .vw-shop-go { font-size: 0.82rem; color: var(--host); font-weight: 600; margin-top: 2px; }
   .vw-shop-note { margin: 10px 0 0; font-size: 0.74rem; color: var(--text-muted); }
 </style>

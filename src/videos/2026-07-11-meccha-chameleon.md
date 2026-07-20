@@ -12,6 +12,13 @@ thumbnail: "/games/meccha-chameleon.jpg"
 imageCredit:
   text: "© 개발사 / Steam 상점 페이지"
   url: "https://store.steampowered.com/app/4704690/MECCHA_CHAMELEON/"
+coupang:
+  - title: "스팀 기프트카드"
+    desc: "신작·할인 게임 바로 구매"
+    url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+  - title: "게이밍 마우스"
+    desc: "정확한 조작엔 게이밍 마우스"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4"
 scenes:
   - text: "요즘 스팀에서 갑자기 난리난 게임! '**메챠 카멜레온**'인데요, 한마디로 **색칠하는 숨바꼭질**이에요."
     image: "/games/scenes/meccha-chameleon.jpg"

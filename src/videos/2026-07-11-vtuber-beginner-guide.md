@@ -7,6 +7,13 @@ tags: ["버추얼스트리머", "버튜버", "버튜버입문", "스트리밍", 
 draft: true
 host: "rosie"
 views: 4100
+coupang:
+  - title: "콘덴서 마이크"
+    desc: "방송 목소리 퀄리티 UP"
+    url: "https://www.coupang.com/np/search?q=%EC%BD%98%EB%8D%B4%EC%84%9C%20%EB%A7%88%EC%9D%B4%ED%81%AC&src=1139000&spec=10799999&addtag=200&ctag=%EC%BD%98%EB%8D%B4%EC%84%9C%20%EB%A7%88%EC%9D%B4%ED%81%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%BD%98%EB%8D%B4%EC%84%9C%20%EB%A7%88%EC%9D%B4%ED%81%AC"
+  - title: "캡처보드"
+    desc: "콘솔 화면 방송·녹화"
+    url: "https://www.coupang.com/np/search?q=%EC%BA%A1%EC%B2%98%EB%B3%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%BA%A1%EC%B2%98%EB%B3%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%BA%A1%EC%B2%98%EB%B3%B4%EB%93%9C"
 scenes:
   - text: "안녕하세요, 버추얼 호스트 로지예요! 오늘은 저 같은 **버추얼 스트리머** 입문 가이드예요."
     image: "/games/scenes/vt-open.jpg"

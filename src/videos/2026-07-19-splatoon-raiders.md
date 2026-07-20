@@ -8,6 +8,13 @@ host: "rosie"
 thumbnail: "/games/splatoon-raiders.webp"
 views: 5700
 ads: false
+coupang:
+  - title: "닌텐도 스위치2 프로 컨트롤러"
+    desc: "장시간 플레이 편하게"
+    url: "https://www.coupang.com/np/search?q=%EB%8B%8C%ED%85%90%EB%8F%84%20%EC%8A%A4%EC%9C%84%EC%B9%982%20%ED%94%84%EB%A1%9C%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EB%8B%8C%ED%85%90%EB%8F%84%20%EC%8A%A4%EC%9C%84%EC%B9%982%20%ED%94%84%EB%A1%9C%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EB%8B%8C%ED%85%90%EB%8F%84%20%EC%8A%A4%EC%9C%84%EC%B9%982%20%ED%94%84%EB%A1%9C%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+  - title: "닌텐도 기프트카드"
+    desc: "e숍 게임 구매에"
+    url: "https://www.coupang.com/np/search?q=%EB%8B%8C%ED%85%90%EB%8F%84%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EB%8B%8C%ED%85%90%EB%8F%84%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EB%8B%8C%ED%85%90%EB%8F%84%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
 scenes:
   - text: "로지의 신작 코너!\n**스플래툰 시리즈 첫 스핀오프**가\n드디어 **스위치2**로 찾아온대요!"
     emotion: "surprised"

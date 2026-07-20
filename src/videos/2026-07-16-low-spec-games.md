@@ -7,6 +7,13 @@ tags: ["저사양게임", "노트북게임", "내장그래픽", "가벼운게임
 thumbnail: "/games/scenes/stardew-valley.jpg"
 host: "rosie"
 views: 0
+coupang:
+  - title: "가성비 게이밍 마우스"
+    desc: "저사양에도 부담 없는 가성비"
+    url: "https://www.coupang.com/np/search?q=%EA%B0%80%EC%84%B1%EB%B9%84%20%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&src=1139000&spec=10799999&addtag=200&ctag=%EA%B0%80%EC%84%B1%EB%B9%84%20%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B0%80%EC%84%B1%EB%B9%84%20%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4"
+  - title: "노트북 쿨러"
+    desc: "노트북 발열 잡기"
+    url: "https://www.coupang.com/np/search?q=%EB%85%B8%ED%8A%B8%EB%B6%81%20%EC%BF%A8%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EB%85%B8%ED%8A%B8%EB%B6%81%20%EC%BF%A8%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EB%85%B8%ED%8A%B8%EB%B6%81%20%EC%BF%A8%EB%9F%AC"
 scenes:
   - text: "'내 노트북으로도 될까?' 걱정 마세요. 사양 낮아도 **몇백 시간** 녹아드는 명작만 골랐어요."
     image: "/games/scenes/low-open.jpg"

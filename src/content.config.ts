@@ -22,8 +22,9 @@ const videos = defineCollection({
       })
       .optional(),
     // 관련 상품(쿠팡 파트너스). 게임 기프트카드·게임기·게이밍 기어 등. 시청페이지 '관련 상품' 섹션에 렌더.
+    // desc = 아이템 추천 설명(왜 이 글 독자에게 좋은지).
     coupang: z
-      .array(z.object({ title: z.string(), url: z.string() }))
+      .array(z.object({ title: z.string(), desc: z.string().optional(), url: z.string() }))
       .optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드

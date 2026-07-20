@@ -8,6 +8,13 @@ host: "rosie"
 thumbnail: "/games/pro-baseball-spirits.webp"
 views: 5800
 ads: false
+coupang:
+  - title: "PS5 듀얼센스 컨트롤러"
+    desc: "콘솔 플레이 필수템"
+    url: "https://www.coupang.com/np/search?q=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+  - title: "스팀 기프트카드"
+    desc: "신작·할인 게임 바로 구매"
+    url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
 scenes:
   - text: "로지의 신작 코너!\n이틀 전 출시된 **프로야구스피리츠 2026**,\n그런데 이번엔 진짜 놀라운 소식이 있어요!"
     emotion: "surprised"

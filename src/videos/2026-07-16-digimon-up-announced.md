@@ -10,6 +10,13 @@ imageCredit:
   url: "https://dgup.bn-ent.net/"
 host: "rosie"
 views: 0
+coupang:
+  - title: "구글플레이 기프트카드"
+    desc: "가챠·인앱 결제 충전에"
+    url: "https://www.coupang.com/np/search?q=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+  - title: "모바일 게임 컨트롤러"
+    desc: "모바일도 패드로 쾌적하게"
+    url: "https://www.coupang.com/np/search?q=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
 scenes:
   - text: "드디어 나왔어요! 반다이남코 디지몬 신작 'DIGIMON UP'이 **7월 15일** 전 세계 동시 **출시**됐어요. 사전등록만 **100만 명** 넘긴 화제작이에요."
     image: "/games/scenes/digimon-up.webp"

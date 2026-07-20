@@ -8,6 +8,13 @@ host: "rosie"
 thumbnail: "/games/ragnarok-m-classic.webp"
 views: 7200
 ads: false
+coupang:
+  - title: "구글플레이 기프트카드"
+    desc: "가챠·인앱 결제 충전에"
+    url: "https://www.coupang.com/np/search?q=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B5%AC%EA%B8%80%ED%94%8C%EB%A0%88%EC%9D%B4%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+  - title: "모바일 게임 컨트롤러"
+    desc: "모바일도 패드로 쾌적하게"
+    url: "https://www.coupang.com/np/search?q=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B2%8C%EC%9E%84%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
 scenes:
   - text: "로지의 신작 코너!\n그 시절 **라그나로크M** 추억, 다들 있으시죠?\n그 감성이 '**클래식**'으로 돌아왔어요."
     emotion: "surprised"

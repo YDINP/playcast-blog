@@ -12,6 +12,13 @@ thumbnail: "/games/gta6.jpg"  # Rockstar 공식 키아트 (수동 수급)
 imageCredit:
   text: "© Rockstar Games (공식 뉴스와이어)"
   url: "https://www.rockstargames.com/newswire"
+coupang:
+  - title: "PS5 듀얼센스 컨트롤러"
+    desc: "콘솔 플레이 필수템"
+    url: "https://www.coupang.com/np/search?q=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+  - title: "게이밍 헤드셋"
+    desc: "발소리까지 잡는 몰입감"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B"
 scenes:
   - text: "로지의 신작 코너, 오늘은 그 게임! 네, **GTA 6**예요. 루머 말고 공식 확정된 것만 정리했어요."
     image: "/games/scenes/gta6.jpg"
