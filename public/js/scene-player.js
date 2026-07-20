@@ -656,29 +656,34 @@
 
       // 목표값: 마우스 방향 상체 기울임(가슴 위쪽만 — transform-origin 하단 피벗이라 상체가 크게,
       // 책상/손 밑단은 거의 고정) + 아이들 흔들림 + 말할 때 끄덕임. 호흡은 .rig가 담당하므로 bob 생략.
-      var sway = Math.sin(t * 0.55) * 0.5 + Math.sin(t * 0.23) * 0.3; // deg
-      var nodY = talking ? Math.sin(t * 7.5) * 1.0 : 0;
-      var nodR = talking ? Math.sin(t * 3.6) * 0.3 : 0;
-
-      var tx = ptr.x * 3;                          // 좌우 이동은 작게(하단 고정감)
-      var ty = ptr.y * 1.5 + nodY + pose.dy;
-      var rot = ptr.x * 4.5 + sway + nodR + pose.rot; // 회전 위주 → 하단 피벗으로 상체가 마우스로 기욺
-      var sc = pose.scale;
-      // 얼굴 레이어는 몸보다 조금 더 움직여 깊이감을 만든다
-      var fx = ptr.x * 3.5;
-      var fy = ptr.y * 2;
+      // 마우스 추적/기울임 전면 제거 — 호스트는 하단에 완전 고정. 호흡 모핑만 유지.
+      var tx = 0;
+      var ty = 0;
+      var lean = 0; // skew/rotate 없음(고정)
+      var sc = pose.scale; // 감정별 미세 스케일만(마우스 무관)
+      var fx = 0;
+      var fy = 0;
 
       var k = 0.12; // 감쇠(lerp) — 뚝뚝 끊기지 않게
       c.x += (tx - c.x) * k;
       c.y += (ty - c.y) * k;
-      c.rot += (rot - c.rot) * k;
+      c.rot += (lean - c.rot) * k; // c.rot = skewX 각도(상체 기울임)
       c.scale += (sc - c.scale) * k;
       c.fx += (fx - c.fx) * k;
       c.fy += (fy - c.fy) * k;
 
+      // 호흡 모핑: transform-origin 하단이라 세로 스케일↑ = 하단 고정·가슴/상체가 부풀어 오름.
+      // 말할 때 조금 더 빠르고 크게(생동감).
+      var bAmp = talking ? 0.005 : 0.003; // 숨쉬기 진폭 축소(과하지 않게)
+      var bSpd = talking ? 1.6 : 0.9;
+      var breath = Math.sin(t * bSpd) * bAmp;
+      var sy = c.scale * (1 + breath);
+      var sx = c.scale * (1 - breath * 0.45);
+
+      // skewX 부호: 마우스 오른쪽(ptr.x>0)일 때 상체가 오른쪽으로 기울도록 음수 적용.
       host.style.transform =
-        'translate(' + c.x.toFixed(2) + 'px,' + c.y.toFixed(2) + 'px) rotate(' +
-        c.rot.toFixed(2) + 'deg) scale(' + c.scale.toFixed(4) + ')';
+        'translate(' + c.x.toFixed(2) + 'px,' + c.y.toFixed(2) + 'px) skewX(' +
+        (-c.rot).toFixed(2) + 'deg) scale(' + sx.toFixed(4) + ',' + sy.toFixed(4) + ')';
       if (r.parts) {
         r.parts.style.transform =
           'translate(' + c.fx.toFixed(2) + 'px,' + c.fy.toFixed(2) + 'px)';

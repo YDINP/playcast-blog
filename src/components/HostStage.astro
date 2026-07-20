@@ -1,5 +1,7 @@
 ---
 // 씬플레이어 스테이지 DOM 뼈대. scene-player.js가 .sp-data(JSON)를 읽어 구동.
+// booth=true(시청 페이지): 뉴스룸 레이아웃 — 좌상단 직사각형 영상 모니터 + 우측 앵커 호스트.
+// booth=false(홈 히어로): 기존 풀프레임 배경 + 영상 내 오버레이 호스트.
 import HostRig from './HostRig.astro';
 import { parseEmphasis } from '../lib/video';
 
@@ -26,74 +28,169 @@ interface Props {
   scenes: Scene[];
   playerId: string;
   host?: string;
-  /** true면 호스트를 영상 밖 전용 부스 패널로 분리 (시청 페이지). false면 영상 내 오버레이 (홈 히어로). */
+  /** true면 뉴스룸 레이아웃(시청 페이지). false면 영상 내 오버레이(홈 히어로). */
   booth?: boolean;
 }
 const { scenes, playerId, host = 'rosie', booth = false } = Astro.props;
 const first = scenes[0] || { text: '' };
-// 이 영상이 쓰는 표정만 로드 (파츠 8개 전부 얹으면 ~880KB)
+const firstSegs = parseEmphasis(first.text);
 const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as string[];
 ---
 
-<div class="sp-shell">
-<div class="sp-stage is-paused" data-player={playerId} data-host={host}>
-  <!-- 배경 크로스페이드 2레이어 (첫 씬 미리 노출) -->
-  <div
-    class:list={['sp-bg', 'sp-bg-a', 'is-on', { 'is-grad': !first.image }]}
-    style={first.image ? `background-image:url("${first.image}")` : ''}
-  >
-  </div>
-  <div class="sp-bg sp-bg-b"></div>
+{booth ? (
+  <Fragment>
+  <div class="sp-shell has-newsroom">
+    <div class="sp-stage is-newsroom is-paused" data-player={playerId} data-host={host}>
+      <!-- 뉴스룸 스튜디오 배경 -->
+      <div class="sp-newsroom-bg" aria-hidden="true">
+        <span class="nr-panel nr-panel-a"></span>
+        <span class="nr-panel nr-panel-b"></span>
+        <span class="nr-glow"></span>
+      </div>
 
-  <!-- 씬 타이포 카드(핵심 수치·문구 오버레이) — scene-player가 채운다 -->
-  <div class="sp-card" aria-hidden="true"></div>
+      <!-- 좌상단 직사각형 영상 모니터 -->
+      <div class="sp-screen">
+        <div
+          class:list={['sp-bg', 'sp-bg-a', 'is-on', { 'is-grad': !first.image }]}
+          style={first.image ? `background-image:url("${first.image}")` : ''}
+        ></div>
+        <div class="sp-bg sp-bg-b"></div>
+        <div class="sp-card" aria-hidden="true"></div>
+        <div class="sp-pointer" aria-hidden="true"></div>
+        <span class="sp-screen-tag"><i></i>LIVE</span>
+      </div>
 
-  <!-- 손가락 포인터(이미지 속 중요 지점 강조·이동) -->
-  <div class="sp-pointer" aria-hidden="true"></div>
+      <!-- 우측 앵커 호스트 -->
+      <div class="sp-anchor" aria-hidden="true">
+        <div class="sp-host sp-host--anchor">
+          <HostRig emotions={emotions} />
+        </div>
+      </div>
 
-  <!-- 호스트 (파츠 재조립 리그) — 항상 영상 내 오버레이. booth=시청 페이지용 큰 우하단 캠. -->
-  <div class:list={['sp-host', { 'sp-host--cam': booth }]}>
-    <HostRig emotions={emotions} />
-  </div>
+      <!-- 앵커 데스크 + 오늘의 서울 날씨 뉴스 티커(무한 슬라이드) -->
+      <div class="sp-desk" aria-hidden="true">
+        <div class="sp-ticker">
+          <div class="sp-ticker-track" data-weather>🌤️ 오늘의 서울 날씨를 불러오는 중…</div>
+        </div>
+        <span class="sp-desk-logo">VIP</span>
+      </div>
 
-  <!-- 자막 (첫 씬: 강조 세그먼트 SSR 렌더) -->
-  <div class="sp-caption">
-    <div class="box"><span class="sp-text">{parseEmphasis(first.text).map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
-  </div>
+      <!-- 뉴스 하단 자막(카이런) -->
+      <div class="sp-caption sp-chyron">
+        <span class="chyron-tag">로지 · VIP</span>
+        <div class="box"><span class="sp-text">{firstSegs.map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
+      </div>
 
-  <!-- 중앙 큰 재생 버튼 -->
-  <div class="sp-bigplay">
-    <button type="button" aria-label="재생">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
-    </button>
-  </div>
+      <div class="sp-bigplay">
+        <button type="button" aria-label="재생">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+        </button>
+      </div>
 
-  <!-- 컨트롤바 -->
-  <div class="sp-controls">
-    <div class="sp-progress">
-      <div class="sp-ticks"></div>
-      <div class="sp-progress-fill"></div>
+      <div class="sp-controls">
+        <div class="sp-progress">
+          <div class="sp-ticks"></div>
+          <div class="sp-progress-fill"></div>
+        </div>
+        <div class="sp-btnrow">
+          <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
+          <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
+          <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
+          <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+          <span class="sp-time">0:00 / 0:00</span>
+          <span class="sp-spacer"></span>
+          <span class="sp-live">LIVE</span>
+          <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
+          <button class="sp-mute" type="button" aria-label="음소거"></button>
+        </div>
+      </div>
+
+      <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
     </div>
-    <div class="sp-btnrow">
-      <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
-      <button class="sp-prev" type="button" aria-label="이전 장면">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg>
-      </button>
-      <button class="sp-next" type="button" aria-label="다음 장면">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg>
-      </button>
-      <button class="sp-replay" type="button" aria-label="처음부터">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
-      </button>
-      <span class="sp-time">0:00 / 0:00</span>
-      <span class="sp-spacer"></span>
-      <span class="sp-live">LIVE</span>
-      <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
-      <button class="sp-mute" type="button" aria-label="음소거"></button>
-    </div>
   </div>
 
-  <!-- 씬 데이터 (인라인 JSON, 작은 페이로드) -->
-  <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
-</div>
-</div>
+  <!-- 데스크 날씨 티커: 서울 실시간 날씨(open-meteo, 키 불필요) -->
+  <script>
+    const WMO: Record<number, string> = {
+      0: '맑음', 1: '대체로 맑음', 2: '구름 조금', 3: '흐림', 45: '안개', 48: '서리안개',
+      51: '약한 이슬비', 53: '이슬비', 55: '강한 이슬비', 56: '어는 이슬비', 57: '강한 어는 이슬비',
+      61: '약한 비', 63: '비', 65: '강한 비', 66: '어는 비', 67: '강한 어는 비',
+      71: '약한 눈', 73: '눈', 75: '강한 눈', 77: '싸락눈',
+      80: '약한 소나기', 81: '소나기', 82: '강한 소나기', 85: '약한 눈소나기', 86: '눈소나기',
+      95: '뇌우', 96: '뇌우·우박', 99: '강한 뇌우·우박',
+    };
+    const icon = (c: number) =>
+      c === 0 ? '☀️' : c <= 2 ? '🌤️' : c === 3 ? '☁️' : c <= 48 ? '🌫️'
+      : c <= 67 ? '🌧️' : c <= 77 ? '❄️' : c <= 86 ? '🌦️' : '⛈️';
+    async function fillWeather() {
+      const els = document.querySelectorAll<HTMLElement>('.sp-ticker-track[data-weather]');
+      if (!els.length) return;
+      try {
+        const url =
+          'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.978' +
+          '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m' +
+          '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul';
+        const j = await (await fetch(url)).json();
+        const c = j.current, d = j.daily;
+        const now = new Date();
+        const seg = [
+          `📺 VIP 뉴스 · ${now.getMonth() + 1}월 ${now.getDate()}일 서울 날씨`,
+          `${icon(c.weather_code)} ${WMO[c.weather_code] ?? ''} ${Math.round(c.temperature_2m)}°`,
+          `최고 ${Math.round(d.temperature_2m_max[0])}° / 최저 ${Math.round(d.temperature_2m_min[0])}°`,
+          `강수확률 ${d.precipitation_probability_max?.[0] ?? 0}%`,
+          `습도 ${c.relative_humidity_2m}%`,
+          `바람 ${Math.round(c.wind_speed_10m)}m/s`,
+        ].join(' · ') + ' · ';
+        els.forEach((el) => {
+          el.innerHTML = `<span>${seg}</span><span>${seg}</span>`; // 2회 반복 → 무한 루프 이음매 제거
+          el.classList.add('is-ready');
+        });
+      } catch {
+        els.forEach((el) => (el.textContent = '📺 VIP 뉴스 — 시청해 주셔서 감사합니다'));
+      }
+    }
+    fillWeather();
+  </script>
+  </Fragment>
+) : (
+  <div class="sp-shell">
+    <div class="sp-stage is-paused" data-player={playerId} data-host={host}>
+      <div
+        class:list={['sp-bg', 'sp-bg-a', 'is-on', { 'is-grad': !first.image }]}
+        style={first.image ? `background-image:url("${first.image}")` : ''}
+      ></div>
+      <div class="sp-bg sp-bg-b"></div>
+      <div class="sp-card" aria-hidden="true"></div>
+      <div class="sp-pointer" aria-hidden="true"></div>
+      <div class="sp-host">
+        <HostRig emotions={emotions} />
+      </div>
+      <div class="sp-caption">
+        <div class="box"><span class="sp-text">{firstSegs.map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
+      </div>
+      <div class="sp-bigplay">
+        <button type="button" aria-label="재생">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+        </button>
+      </div>
+      <div class="sp-controls">
+        <div class="sp-progress">
+          <div class="sp-ticks"></div>
+          <div class="sp-progress-fill"></div>
+        </div>
+        <div class="sp-btnrow">
+          <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
+          <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
+          <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
+          <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+          <span class="sp-time">0:00 / 0:00</span>
+          <span class="sp-spacer"></span>
+          <span class="sp-live">LIVE</span>
+          <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
+          <button class="sp-mute" type="button" aria-label="음소거"></button>
+        </div>
+      </div>
+      <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
+    </div>
+  </div>
+)}

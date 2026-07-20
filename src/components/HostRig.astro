@@ -1,9 +1,9 @@
 ---
-// 호스트 리그 = 새 캐릭터(final_assets). 2026-07-19 전면 교체:
-//   1254² 정렬 풀 이미지들을 스택 오버레이로 쌓아 상태별 opacity 전환.
-//   · base(idle) 고정  · 표정 emo-*  · 립싱크 data-viseme(아에이오우)  · 눈감기 is-blink
-//   마우스 추적 제거 → .rig-parts 래퍼 없음(rigLoop 미동작). 호흡(.rig)만 유지.
-//   레이어 순서(뒤→앞): base < 표정 < 립싱크 < 블링크 (뒤가 위 → 우선순위).
+// 호스트 리그 = 새 캐릭터(final_assets). 2026-07-19:
+//   1254² 정렬 풀 이미지 스택. base < 기본입(다문) < 표정 < 립싱크 < 블링크.
+//   · base(입 없음) 위에 mouth-rest(다문 입) 항상 표시 → 말없을 때 입 유지
+//   · 표정 emo-*  · 립싱크 data-viseme(아에이오우)  · 눈감기 is-blink
+//   · 마우스추적: .rig-parts 래퍼 → rigLoop. transform-origin 하단(가슴)으로 상체만 움직임.
 interface Props { emotions?: string[]; }
 const _props = Astro.props as Props;
 void _props;
@@ -11,13 +11,16 @@ const VIS = ['a', 'e', 'i', 'o', 'u'];
 const EMO = ['happy', 'surprised', 'think', 'sad', 'shy'];
 ---
 
-<div class="rig rig-static">
-  <img class="rig-base" src="/host/char2/base.webp" alt="채널 호스트" draggable="false" />
-  {EMO.map((e) => (
-    <img class={`rig-part rig-emo f-${e}`} src={`/host/char2/${e}.webp`} alt="" draggable="false" />
-  ))}
-  {VIS.map((v) => (
-    <img class={`rig-part rig-lip l-${v}`} src={`/host/char2/lip-${v}.webp`} alt="" draggable="false" />
-  ))}
-  <img class="rig-part rig-blink" src="/host/char2/blink.webp" alt="" draggable="false" />
+<div class="rig">
+  <div class="rig-parts">
+    <img class="rig-base" src="/host/char2/base.webp" alt="채널 호스트" draggable="false" />
+    <img class="rig-part rig-mouth-rest" src="/host/char2/mouth-rest.webp" alt="" draggable="false" />
+    {EMO.map((e) => (
+      <img class={`rig-part rig-emo f-${e}`} src={`/host/char2/${e}.webp`} alt="" draggable="false" />
+    ))}
+    {VIS.map((v) => (
+      <img class={`rig-part rig-lip l-${v}`} src={`/host/char2/lip-${v}.webp`} alt="" draggable="false" />
+    ))}
+    <img class="rig-part rig-blink" src="/host/char2/blink.webp" alt="" draggable="false" />
+  </div>
 </div>

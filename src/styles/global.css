@@ -590,6 +590,127 @@ button {
   background: rgba(255, 255, 255, 0.15);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   뉴스룸 레이아웃 (시청 페이지 booth) — 좌상단 영상 모니터 + 우측 앵커
+   전부 .is-newsroom 스코프라 홈 히어로(booth=false)엔 영향 없음.
+   ═══════════════════════════════════════════════════════════════ */
+.sp-stage.is-newsroom { background: #080d1a; }
+/* cap-safe 무력화(뉴스룸은 자체 레이아웃) */
+.sp-stage.is-newsroom.cap-safe { aspect-ratio: 16 / 9; }
+.sp-stage.is-newsroom.cap-safe .sp-bg { bottom: 0; }
+.is-newsroom .sp-cap,
+.is-newsroom .sp-pointer { display: none; }
+
+/* 스튜디오 배경 — 서브컬쳐 뉴스룸 일러스트(호스트풍 애니 스태프 포함) */
+.sp-newsroom-bg {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  background: #080d1a url('/host/newsroom-bg.webp') center / cover no-repeat;
+}
+/* 전경(모니터·앵커·자막) 가독성: 상·하단 어둡게 + 중앙 비네트 */
+.sp-newsroom-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 20, 0.32) 0%, rgba(6, 10, 20, 0.10) 42%, rgba(6, 10, 20, 0.82) 100%),
+    radial-gradient(130% 100% at 50% 28%, transparent 45%, rgba(6, 10, 20, 0.45));
+}
+.sp-newsroom-bg .nr-panel,
+.sp-newsroom-bg .nr-glow { display: none; }
+
+/* 좌상단 영상 모니터 (배경 크로스페이드 2레이어를 여기 담는다) */
+/* 16:9 스테이지에선 width%=height%가 곧 16:9 → 씬 이미지(16:9) 크롭 없이 딱 맞음 */
+.is-newsroom .sp-screen {
+  position: absolute; left: 3.5%; top: 5%; width: 55%; height: 55%;
+  z-index: 2; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 2px rgba(130, 175, 255, 0.30), 0 0 0 7px rgba(18, 28, 52, 0.70);
+}
+.is-newsroom .sp-screen::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.10), transparent 38%);
+}
+.is-newsroom .sp-screen-tag {
+  position: absolute; left: 10px; top: 10px; z-index: 5;
+  display: flex; align-items: center; gap: 6px;
+  font: 700 12px/1 system-ui, sans-serif; color: #fff; letter-spacing: 0.08em;
+  background: rgba(214, 42, 64, 0.94); padding: 5px 9px; border-radius: 5px;
+}
+.is-newsroom .sp-screen-tag i {
+  width: 7px; height: 7px; border-radius: 50%; background: #fff;
+  animation: booth-blink 1.4s ease-in-out infinite;
+}
+/* 모니터 안 타이포 카드: 화면 채우고 살짝 축소 */
+.is-newsroom .sp-card { right: 0; bottom: 0; padding: 5%; }
+.is-newsroom .sp-card:not([class*='size-']) { --spc-scale: 0.8; }
+
+/* 우측 앵커 호스트 */
+.is-newsroom .sp-anchor { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+/* 우선순위를 cap-safe(.sp-stage.cap-safe .sp-host)보다 높게 → bottom:0 유지 */
+.sp-stage.is-newsroom .sp-host,
+.sp-stage.is-newsroom.cap-safe .sp-host {
+  left: auto; right: 0%; bottom: 12%; /* 하단이 기상 박스(높이 12%) 윗변에 딱 맞닿음 */
+  width: 46%; max-width: 600px; min-width: 220px; /* 0.8 → 1.25배 */
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5));
+}
+
+/* 하단 기상 박스(한 줄 티커) — 절반 높이. 호스트 하단이 이 박스 윗변에 맞닿음 */
+.is-newsroom .sp-desk {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 12%; z-index: 4;
+  background: linear-gradient(180deg, #1a2c56 0%, #10203f 55%, #0a1428 100%);
+  border-top: 2px solid rgba(130, 175, 255, 0.40);
+  box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.45);
+}
+/* 데스크 상단 하이라이트 라인 */
+.is-newsroom .sp-desk::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 2px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(150, 190, 255, 0.5), transparent);
+}
+.is-newsroom .sp-desk-logo {
+  position: absolute; right: 3%; top: 50%; transform: translateY(-50%);
+  font: 800 clamp(15px, 2.4vw, 28px)/1 system-ui, sans-serif;
+  letter-spacing: 0.12em; color: rgba(160, 195, 255, 0.6);
+}
+/* 오늘의 서울 날씨 뉴스 티커(무한 슬라이드) */
+.is-newsroom .sp-ticker {
+  position: absolute; left: 3%; right: 12%; top: 50%; transform: translateY(-50%);
+  height: 50%; overflow: hidden; display: flex; align-items: center;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 94%, transparent);
+}
+.is-newsroom .sp-ticker-track {
+  display: inline-flex; white-space: nowrap; flex: none;
+  color: rgba(214, 228, 255, 0.92);
+  font: 600 clamp(12px, 1.7vw, 17px)/1 system-ui, sans-serif;
+}
+.is-newsroom .sp-ticker-track.is-ready { animation: sp-ticker 26s linear infinite; }
+@keyframes sp-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .is-newsroom .sp-ticker-track.is-ready { animation: none; }
+}
+
+/* 뉴스 하단 자막(로어서드/카이런) — 모니터 아래 좌측 */
+.sp-stage.is-newsroom .sp-caption.sp-chyron,
+.sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
+  left: 3.5%; right: auto; bottom: 15%; width: 48%; z-index: 6;
+  padding: 0; justify-content: flex-start; align-items: center; gap: 8px; background: none;
+}
+/* 자막영역 고정: 텍스트 길이와 무관하게 항상 3줄 높이(가변 리사이즈 방지) */
+.is-newsroom .sp-chyron.is-empty { opacity: 1; } /* 빈 씬에도 영역 유지 */
+.is-newsroom .sp-chyron .chyron-tag {
+  flex: 0 0 auto; align-self: center; display: flex; align-items: center;
+  padding: 7px 12px; /* 자막 높이와 무관한 컴팩트 배지 */
+  font: 800 clamp(11px, 1.6vw, 15px)/1 system-ui, sans-serif; color: #04121f;
+  background: linear-gradient(180deg, #6ff0d0, #38c9a8); border-radius: 7px;
+  white-space: nowrap;
+}
+.is-newsroom .sp-chyron .box {
+  flex: 1 1 auto; max-width: none; text-align: left;
+  display: flex; align-items: center; padding: 10px 14px; border-radius: 0 6px 6px 0;
+  background: rgba(8, 14, 28, 0.85); color: #fff;
+  font-size: clamp(0.9rem, 1.6vw, 1.12rem); line-height: 1.4;
+  text-shadow: none; height: 4.7em; overflow: hidden; border-radius: 8px; /* 3줄 고정 — 리사이즈 방지 */
+}
+.is-newsroom .sp-chyron.is-empty { opacity: 0; }
+
 /* big center play (before start / paused) */
 .sp-bigplay {
   position: absolute;
