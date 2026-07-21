@@ -51,6 +51,9 @@ const site = Astro.site || new URL('https://virtual-in-playing.vercel.app');
 const ogImage = new URL(`/open-graph/${video.id}.png`, site).href;
 const poster = posterOf(data);
 const imgAbs = poster ? new URL(poster, site).href : ogImage;
+// 동영상(VideoObject) 썸네일은 Google 동영상 색인 호환을 위해 WebP 대신 JPG 사용.
+// (WebP 썸네일은 "제공된 썸네일 URL 없음"으로 색인 실패하는 사례가 있음 → 동일 이미지 JPG 버전으로 대체)
+const thumbForVideo = /\.webp$/i.test(imgAbs) ? imgAbs.replace(/\.webp$/i, '.jpg') : imgAbs;
 const pageUrl = new URL(`/watch/${video.id}/`, site).href;
 const totalSec = estimateSeconds(scenes);
 const durationISO = `PT${Math.floor(totalSec / 60)}M${totalSec % 60}S`;
@@ -94,7 +97,7 @@ const videoSchema = {
   '@type': 'VideoObject',
   name: data.title,
   description: data.description,
-  thumbnailUrl: [imgAbs],
+  thumbnailUrl: [thumbForVideo],
   uploadDate: published,
   ...(data.updatedDate ? { dateModified: modified } : {}),
   duration: durationISO,
