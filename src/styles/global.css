@@ -696,7 +696,7 @@ button {
 /* 트렌디 로어서드 — 프로스트 글래스 카드 + 플로팅 이름 필 + 민트 액센트 */
 .sp-stage.is-newsroom .sp-caption.sp-chyron,
 .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-  left: 3.5%; right: auto; bottom: 15%; width: 50%; z-index: 6;
+  left: 3.5%; right: auto; bottom: 13%; width: 50%; z-index: 6; /* 데스크 위까지 아래로 확장 */
   padding: 0; display: block; background: none;
 }
 .is-newsroom .sp-chyron.is-empty { opacity: 1; } /* 빈 씬에도 영역 유지 */
@@ -722,14 +722,14 @@ button {
 .is-newsroom .sp-chyron .box {
   position: relative; max-width: none; text-align: left;
   display: flex; align-items: center; /* 3줄 고정 영역, 세로 중앙 */
-  height: 3.9em; padding: 14px 18px 14px 26px; overflow: hidden;
+  height: 5.4em; padding: 16px 18px 16px 26px; overflow: hidden; /* 기본 자막 영역 확대(아래로) */
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(14, 22, 42, 0.72), rgba(8, 13, 26, 0.84));
   -webkit-backdrop-filter: blur(12px) saturate(1.3);
   backdrop-filter: blur(12px) saturate(1.3);
   border: 1px solid rgba(120, 170, 255, 0.14);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  color: #eaf1ff; font-size: clamp(0.82rem, 1.35vw, 1.02rem); line-height: 1.4;
+  color: #eaf1ff; font-size: clamp(0.86rem, 1.4vw, 1.06rem); line-height: 1.45;
   font-weight: 600; text-shadow: none;
 }
 /* 좌측 민트 그라디언트 액센트 바 */
@@ -1222,11 +1222,12 @@ button {
   opacity: 0;
 }
 .rig-emo { transition: opacity 0.05s linear; }
-/* 립싱크는 즉시 스왑(빠른 입모양 변화) */
-/* 립싱크 오버레이는 입 영역만 보이게 클립 → 말할 때 눈/표정이 바뀌지 않고 입만 교체됨.
-   (각 lip-*.webp가 전체 얼굴 이미지라, 클립 없이 얹으면 그 이미지의 눈이 표정 눈을 덮음) */
-/* 표정(입) 영역을 위쪽으로 더 잡아 오려 씀 — 열린 입(아/오) 윗부분이 잘리지 않게 */
-.rig-lip { clip-path: inset(33% 35% 47% 35%); }
+/* 표정 변화는 얼굴 영역만 클립(머리카락 스왑 방지). 상단을 눈 기준 위로 더 잡아
+   (눈 cy~29% − 30px − 추가 50px ≈ 16%p = 13%)로 이마·눈썹까지 넉넉히 덮음. */
+.rig-emo { clip-path: inset(13% 20% 38% 20%); }
+/* 말할 때 입(립싱크)은 입 중심(cx50%, cy~40%) 기준 작은 박스로만 오려 씀
+   → 말할 때 눈/볼은 그대로, 입만 교체. 너비 6%, 세로도 위아래로 더 좁힘. */
+.rig-lip { clip-path: inset(36% 47% 56% 47%); }
 .sp-host.emo-happy .rig-emo.f-happy,
 .sp-host.emo-surprised .rig-emo.f-surprised,
 .sp-host.emo-think .rig-emo.f-think,

@@ -8,16 +8,13 @@ interface Props { emotions?: string[]; }
 const _props = Astro.props as Props;
 void _props;
 const VIS = ['a', 'e', 'i', 'o', 'u'];
-const EMO = ['happy', 'surprised', 'think', 'sad', 'shy'];
 ---
 
 <div class="rig">
   <div class="rig-parts">
     <img class="rig-base" src="/host/char2/base.webp" alt="채널 호스트" draggable="false" />
     <img class="rig-part rig-mouth-rest" src="/host/char2/mouth-rest.webp" alt="" draggable="false" />
-    {EMO.map((e) => (
-      <img class={`rig-part rig-emo f-${e}`} src={`/host/char2/${e}.webp`} alt="" draggable="false" />
-    ))}
+    {/* 표정 변화 제거 — reference에 새로 생성한 애셋(base·blink·lip)만 사용 */}
     {VIS.map((v) => (
       <img class={`rig-part rig-lip l-${v}`} src={`/host/char2/lip-${v}.webp`} alt="" draggable="false" />
     ))}

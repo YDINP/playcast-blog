@@ -33,7 +33,7 @@ function seeded(str: string) {
   };
 }
 const rnd = seeded(video.id);
-const rojiExprs = ['base', 'happy', 'shy', 'sad', 'blink', 'talk', 'talk-o'];
+const rojiExprs = ['base', 'mouth-a', 'mouth-e', 'mouth-i']; // 기본 얼굴 + 입모양만 변화(표정 X)
 const rojiExpr = rojiExprs[Math.floor(rnd() * rojiExprs.length)];
 // 빈 하단 코너(캐릭터·로고 회피). 맵에 없으면 시드 폴백.
 const rojiSide = (hostSide as Record<string, string>)[poster ?? ''] ?? (rnd() < 0.5 ? 'left' : 'right');

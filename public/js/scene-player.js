@@ -652,8 +652,8 @@
 
       // 호흡 모핑: transform-origin 하단이라 세로 스케일↑ = 하단 고정·가슴/상체가 부풀어 오름.
       // 말할 때 조금 더 빠르고 크게(생동감).
-      var bAmp = talking ? 0.005 : 0.003; // 숨쉬기 진폭 축소(과하지 않게)
-      var bSpd = talking ? 1.6 : 0.9;
+      var bAmp = talking ? 0.005 : 0.0035; // 숨쉬기 모핑 스케일 축소
+      var bSpd = talking ? 1.6 : 0.85;
       var breath = Math.sin(t * bSpd) * bAmp;
       var sy = c.scale * (1 + breath);
       var sx = c.scale * (1 - breath * 0.45);
