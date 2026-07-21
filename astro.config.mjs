@@ -5,7 +5,7 @@ export default defineConfig({
   site: 'https://virtual-in-playing.vercel.app',
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/dashboard'),
+      filter: (page) => !page.includes('/dashboard') && !page.includes('/embed/'),
     }),
   ],
   output: 'static',

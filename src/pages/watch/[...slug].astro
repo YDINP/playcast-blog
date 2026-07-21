@@ -54,6 +54,8 @@ const imgAbs = poster ? new URL(poster, site).href : ogImage;
 // 동영상(VideoObject) 썸네일은 Google 동영상 색인 호환을 위해 WebP 대신 JPG 사용.
 // (WebP 썸네일은 "제공된 썸네일 URL 없음"으로 색인 실패하는 사례가 있음 → 동일 이미지 JPG 버전으로 대체)
 const thumbForVideo = /\.webp$/i.test(imgAbs) ? imgAbs.replace(/\.webp$/i, '.jpg') : imgAbs;
+// 전용 임베드 플레이어 URL (VideoObject 자격 강화: 실제 재생 가능한 player 페이지)
+const embedUrl = new URL(`/embed/${video.id}/`, site).href;
 const pageUrl = new URL(`/watch/${video.id}/`, site).href;
 const totalSec = estimateSeconds(scenes);
 const durationISO = `PT${Math.floor(totalSec / 60)}M${totalSec % 60}S`;
@@ -98,6 +100,7 @@ const videoSchema = {
   name: data.title,
   description: data.description,
   thumbnailUrl: [thumbForVideo],
+  embedUrl,
   uploadDate: published,
   ...(data.updatedDate ? { dateModified: modified } : {}),
   duration: durationISO,
