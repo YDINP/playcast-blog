@@ -71,7 +71,7 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
           <div class="sub">
             <div class="ch">로지 · VIP</div>
             <div>
-              {formatViews(data.views)} · {timeAgo(data.pubDate)}
+              <span class="vw-n" data-vw-slug={video.id} data-vw-seed={data.views}>{formatViews(data.views)}</span> · {timeAgo(data.pubDate)}
             </div>
           </div>
         </div>

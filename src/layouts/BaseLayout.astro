@@ -220,5 +220,43 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
         }).catch(function () {});
       })();
     </script>
+
+    <!-- 조회수 DB화: 정적 시드 + 실제 pageview(analytics, source=vip)를 합산해 표시.
+         [data-vw-slug] span을 슬러그별 count=exact로 갱신(서버 변경 없이 anon REST). -->
+    <script is:inline>
+      (function () {
+        var els = document.querySelectorAll('[data-vw-slug]');
+        if (!els.length) return;
+        var SB = 'https://xyprbsmagtlzebxyxsvj.supabase.co/rest/v1/analytics';
+        var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cHJic21hZ3RsemVieHl4c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjY4NTQsImV4cCI6MjA4NjA0Mjg1NH0.dajN0n0IWzOgYOSCglxVLzddg7jJFRHNCHwTWMG62uU';
+        function fmt(n) {
+          if (n >= 10000) return '조회수 ' + (n / 10000).toFixed(1).replace(/\.0$/, '') + '만회';
+          if (n >= 1000) return '조회수 ' + (n / 1000).toFixed(1).replace(/\.0$/, '') + '천회';
+          return '조회수 ' + n + '회';
+        }
+        var bySlug = {};
+        els.forEach(function (el) {
+          var s = el.getAttribute('data-vw-slug');
+          if (s) (bySlug[s] = bySlug[s] || []).push(el);
+        });
+        Object.keys(bySlug).forEach(function (slug) {
+          var url = SB + '?event_type=eq.pageview&source=eq.vip&metadata->>slug=eq.' +
+            encodeURIComponent(slug) + '&select=id&limit=1';
+          fetch(url, {
+            headers: { apikey: ANON, Authorization: 'Bearer ' + ANON, Prefer: 'count=exact', Range: '0-0' },
+          })
+            .then(function (r) {
+              var cr = r.headers.get('content-range') || '';
+              var m = cr.match(/\/(\d+)\s*$/);
+              var real = m ? parseInt(m[1], 10) : 0;
+              bySlug[slug].forEach(function (el) {
+                var seed = parseInt(el.getAttribute('data-vw-seed'), 10) || 0;
+                el.textContent = fmt(seed + real);
+              });
+            })
+            .catch(function () {});
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -150,7 +150,7 @@ const faqSchema =
       <h1>{data.title}</h1>
       <p class="vw-lead">{data.description}</p>
       <div class="vw-meta">
-        <span>{formatViews(data.views)}</span>
+        <span class="vw-n" data-vw-slug={video.id} data-vw-seed={data.views}>{formatViews(data.views)}</span>
         <span>·</span>
         <span>{timeAgo(data.pubDate)}</span>
         <span>·</span>
