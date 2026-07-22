@@ -116,6 +116,19 @@ const videoSchema = {
     },
   },
 };
+// FAQPage — 인접 쿼리(출시일/시간/다운로드 등) 포획 + 리치결과. faq 있을 때만.
+const faqSchema =
+  data.faq && data.faq.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: data.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
 ---
 
 <BaseLayout
@@ -125,7 +138,7 @@ const videoSchema = {
   ogType="article"
   keywords={data.tags.join(', ')}
   article={{ published, modified, section: data.category, tags: data.tags }}
-  schemas={[blogPostingSchema, videoSchema, breadcrumbSchema]}
+  schemas={[blogPostingSchema, videoSchema, breadcrumbSchema, faqSchema].filter(Boolean)}
 >
   <article class="vw">
     <!-- 헤더: 제목·리드를 플레이어 위로 올려 "무엇에 관한 방송인지" 먼저 읽히게 -->
@@ -191,6 +204,23 @@ const videoSchema = {
             ))}
           </div>
           <p class="vw-shop-note">쿠팡 파트너스 활동의 일환으로, 일정액의 수수료를 제공받을 수 있습니다.</p>
+        </section>
+      )
+    }
+
+    <!-- 자주 묻는 질문(FAQ). faq 프론트매터 있을 때만 · FAQPage 구조화데이터와 연동 -->
+    {
+      data.faq && data.faq.length > 0 && (
+        <section class="vw-sec vw-faq">
+          <h2>❓ 자주 묻는 질문</h2>
+          <div class="vw-faq-list">
+            {data.faq.map((f) => (
+              <details class="vw-faq-item">
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
         </section>
       )
     }
@@ -263,4 +293,24 @@ const videoSchema = {
   .vw-shop-d { font-size: 0.8rem; color: var(--text-2); line-height: 1.4; }
   .vw-shop-go { font-size: 0.82rem; color: var(--host); font-weight: 600; margin-top: 2px; }
   .vw-shop-note { margin: 10px 0 0; font-size: 0.74rem; color: var(--text-muted); }
+  /* FAQ 아코디언 */
+  .vw-faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .vw-faq-item {
+    border: 1px solid var(--border); border-radius: 10px; background: var(--card);
+    padding: 0 14px; overflow: hidden;
+  }
+  .vw-faq-item summary {
+    list-style: none; cursor: pointer; padding: 13px 0; font-weight: 700;
+    font-size: 0.98rem; color: var(--text); position: relative; padding-right: 26px;
+  }
+  .vw-faq-item summary::-webkit-details-marker { display: none; }
+  .vw-faq-item summary::after {
+    content: '+'; position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
+    font-size: 1.2rem; color: var(--host); font-weight: 400; transition: transform 0.2s;
+  }
+  .vw-faq-item[open] summary::after { content: '−'; }
+  .vw-faq-item p {
+    margin: 0 0 14px; color: var(--text-2); font-size: 0.92rem; line-height: 1.6;
+    word-break: keep-all;
+  }
 </style>

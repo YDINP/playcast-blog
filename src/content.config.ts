@@ -26,6 +26,9 @@ const videos = defineCollection({
     coupang: z
       .array(z.object({ title: z.string(), desc: z.string().optional(), url: z.string() }))
       .optional(),
+    // 자주 묻는 질문(FAQ). 시청페이지에 FAQ 섹션 + FAQPage 구조화데이터로 렌더.
+    // 인접 검색쿼리(출시일/시간/다운로드 등) 포획 + 리치결과 노출용.
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드
     // 광고 표시 여부. 공식 게임 이미지를 쓰는 글은 인용 근거 강화를 위해 false 권장.
