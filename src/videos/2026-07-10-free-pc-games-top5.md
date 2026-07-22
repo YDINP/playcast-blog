@@ -6,7 +6,8 @@ category: "Free"
 tags: ["무료게임", "PC게임", "F2P", "스팀무료", "게임추천"]
 host: "rosie"
 views: 18400
-thumbnail: "/games/scenes/warframe.jpg"
+thumbnail: "/games/warframe-thumb.jpg"
+customThumb: true
 ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 광고 미표시
 imageCredit:
   text: "각 게임 공식 스팀 상점 페이지 스크린샷 (© 각 개발사). LoL·원신 장면은 이미지 없음"
@@ -51,7 +52,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 파판14 체험판"
   - text: "오늘의 결론! 무료라고 얕보지 마세요. 설치는 꼭 **공식 채널**로, 초반 과금은 참기. 다음 편에서 또 만나요!"
-    image: "/games/scenes/fpc-outro.jpg"
+    image: "/games/warframe-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

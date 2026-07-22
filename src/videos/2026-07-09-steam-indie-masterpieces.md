@@ -6,7 +6,8 @@ category: "Indie"
 tags: ["인디게임", "스팀", "싱글게임", "명작", "게임추천"]
 host: "rosie"
 views: 9200
-thumbnail: "/games/scenes/hollow-knight.jpg"
+thumbnail: "/games/hollow-thumb.jpg"
+customThumb: true
 ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 광고 미표시
 imageCredit:
   text: "각 게임 공식 스팀 상점 페이지 스크린샷 (© 각 개발사)"
@@ -48,7 +49,7 @@ scenes:
     emotion: "surprised"
     chapter: "⑥ 아우터 와일즈"
   - text: "인디는 예산이 아니라 **아이디어**로 승부해요. 오늘 하나만 골라 시작해보는 건 어때요? 다음 편에서 만나요!"
-    image: "/games/scenes/indie-outro.jpg"
+    image: "/games/hollow-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000
