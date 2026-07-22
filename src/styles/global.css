@@ -1267,8 +1267,9 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
    (눈 cy~29% − 30px − 추가 50px ≈ 16%p = 13%)로 이마·눈썹까지 넉넉히 덮음. */
 .rig-emo { clip-path: inset(13% 20% 38% 20%); }
 /* 말할 때 입(립싱크)은 입 중심(cx50%, cy~40%) 기준 작은 박스로만 오려 씀
-   → 말할 때 눈/볼은 그대로, 입만 교체. 너비 6%, 세로도 위아래로 더 좁힘. */
-.rig-lip { clip-path: inset(36% 47% 56% 47%); }
+   → 말할 때 눈/볼은 그대로, 입만 교체. 세로 스케일 시 아래(턱)가 노출되지 않게
+   박스 높이를 좁힘(y185~210). */
+.rig-lip { clip-path: inset(37% 47% 58% 47%); }
 .sp-host.emo-happy .rig-emo.f-happy,
 .sp-host.emo-surprised .rig-emo.f-surprised,
 .sp-host.emo-think .rig-emo.f-think,
