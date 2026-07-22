@@ -5,7 +5,8 @@ pubDate: 2026-07-22
 category: "New"
 tags: ["패서제닉", "Pathogenesis", "로그라이크", "슈팅게임", "스팀신작"]
 host: "rosie"
-thumbnail: "/games/scenes/patho-00.jpg"
+thumbnail: "/games/pathogenesis-thumb.jpg"
+customThumb: true
 views: 0
 coupang:
   - title: "스팀덱 파우치·거치대"

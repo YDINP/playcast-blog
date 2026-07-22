@@ -14,6 +14,7 @@ const videos = defineCollection({
     tags: z.array(z.string()),
     host: z.string().default('rosie'), // 마스코트 id (public/host/<id> 또는 기본 SVG)
     thumbnail: z.string().optional(), // 채널 홈 카드 썸네일 (미지정 시 첫 씬 image)
+    customThumb: z.boolean().default(false), // true면 카드 자동 로지 합성 끔(썸네일에 로지가 이미 그려진 경우)
     // 대표 이미지 출처(인용 요건: 출처표기). 공식 프레스킷/스팀 등 사용 시 채움.
     imageCredit: z
       .object({

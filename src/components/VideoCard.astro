@@ -49,9 +49,11 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
       <div class:list={['vcard-thumb', { 'is-empty': !poster }]}>
         <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
         {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
-        <span class="card-roji" style={rojiStyle} aria-hidden="true">
-          <img class="roji-base" src={`/host/roji/${rojiExpr}.png`} alt="" loading="lazy" />
-        </span>
+        {!data.customThumb && (
+          <span class="card-roji" style={rojiStyle} aria-hidden="true">
+            <img class="roji-base" src={`/host/roji/${rojiExpr}.png`} alt="" loading="lazy" />
+          </span>
+        )}
         <span class="vcard-cat">{data.category}</span>
         <span class="vcard-dur">{dur}</span>
         <span class="vcard-play">
