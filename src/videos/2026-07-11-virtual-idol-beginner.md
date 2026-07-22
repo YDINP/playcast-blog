@@ -6,6 +6,8 @@ category: "VTuber"
 tags: ["버추얼아이돌", "가상아이돌", "버추얼걸그룹", "K팝", "음악방송"]
 draft: true
 host: "rosie"
+thumbnail: "/games/virtualidol-thumb.jpg"
+customThumb: true
 views: 5600
 coupang:
   - title: "콘덴서 마이크"
@@ -40,7 +42,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 즐기는 법"
   - text: "아바타 뒤엔 노래하고 춤추는 **진짜 사람들**이 있어요. 다음 편에선 그 무대의 비밀을 파볼게요!"
-    image: "/games/scenes/vi-outro.jpg"
+    image: "/games/virtualidol-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

@@ -4,7 +4,8 @@ description: "산 게임이 별로였다면 환불받으세요. 스팀 환불의
 pubDate: 2026-07-16
 category: "Guide"
 tags: ["스팀환불", "스팀", "게임환불", "환불방법", "게임팁"]
-thumbnail: "/games/scenes/steam-refund.png"
+thumbnail: "/games/refund-thumb.jpg"
+customThumb: true
 host: "rosie"
 views: 0
 coupang:
@@ -40,7 +41,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 세일 꿀팁"
   - text: "제일 좋은 건 지르기 전 데모예요. 그래도 아니다 싶으면 **2시간 안에** 결정하세요. 신작 고르는 법도 참고하고요!"
-    image: "/games/scenes/rf-outro.jpg"
+    image: "/games/refund-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000
