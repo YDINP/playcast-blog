@@ -5,7 +5,8 @@ pubDate: 2026-07-20
 category: "New"
 tags: ["니케여름업데이트", "승리의여신니케", "니케신캐", "신데렐라크리스탈웨이브", "마르차나마린스터디"]
 host: "rosie"
-thumbnail: "/games/nikke-summer-2026.webp"
+thumbnail: "/games/nikke-thumb.jpg"
+customThumb: true
 views: 7200
 ads: false
 coupang:
@@ -77,7 +78,7 @@ scenes:
   - text: "수영복 신캐부터 애니메이션까지,\n이번 여름 니케 정말 알차게 돌아왔죠?\n신규 픽업 타이밍, 놓치지 마세요!"
     emotion: "happy"
     chapter: "⑥ 지금 확인하기"
-    image: "/games/scenes/nikke-outro.jpg"
+    image: "/games/nikke-thumb.jpg"
     holdMs: 2000
 ---
 

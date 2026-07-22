@@ -5,7 +5,8 @@ pubDate: 2026-07-20
 category: "New"
 tags: ["원신 6.7", "산드로네", "우인단 집행관", "얼음원소", "원신 신캐릭터"]
 host: "rosie"
-thumbnail: "/games/genshin-67-sandrone.webp"
+thumbnail: "/games/genshin-thumb.jpg"
+customThumb: true
 views: 7200
 ads: false
 coupang:
@@ -71,7 +72,7 @@ scenes:
   - text: "우인단 집행관의 참전, 그리고 새로운 얼음 반응까지.\n원신 6.7, 정말 기대되지 않나요?\n다음 소식도 로지가 빠르게 전해드릴게요!"
     emotion: "happy"
     chapter: "⑥ 마무리"
-    image: "/games/scenes/gsn-outro.jpg"
+    image: "/games/genshin-thumb.jpg"
     holdMs: 2000
 ---
 

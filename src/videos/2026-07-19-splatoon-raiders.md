@@ -5,7 +5,8 @@ pubDate: 2026-07-19
 category: "New"
 tags: ["스플래툰 레이더스", "스위치2 신작", "닌텐도 스위치2", "스플래툰", "7월 신작게임"]
 host: "rosie"
-thumbnail: "/games/splatoon-raiders.webp"
+thumbnail: "/games/splatoon-thumb.jpg"
+customThumb: true
 views: 5700
 ads: false
 coupang:
@@ -75,7 +76,7 @@ scenes:
   - text: "출시는 **7월 23일**, 이제 딱 **나흘** 남았어요!\n스위치2 유저라면 달력에 표시해두세요."
     emotion: "surprised"
     chapter: "⑦ 출시까지 D-4"
-    image: "/games/scenes/splr-launch.jpg"
+    image: "/games/splatoon-thumb.jpg"
     card:
       kind: "title"
       big: "D-4"
