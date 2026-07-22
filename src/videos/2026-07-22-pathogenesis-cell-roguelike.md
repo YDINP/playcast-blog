@@ -96,6 +96,7 @@ scenes:
   - text: "내가 병원체가 돼서 몸속을 헤집는 로그라이크,\n«**패서제닉**» 궁금해지지 않나요?\n다음 영상에서 실제 플레이로 만나요!"
     emotion: "happy"
     chapter: "마무리"
+    image: "/games/scenes/patho-hero.jpg"
     holdMs: 2000
 draft: false
 ---
