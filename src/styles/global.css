@@ -313,6 +313,22 @@ button {
      줄어들도록. watch 2단 레이아웃에서 플레이어가 뷰포트보다 좁을 때도 자막이 안 넘침. */
   container-type: inline-size;
 }
+/* ── 전체화면 (유튜브식): 가로모드 강제(JS orientation.lock) + width fit + 상하 레터박스 ── */
+.sp-btnrow .sp-fs svg { width: 20px; height: 20px; display: block; }
+.sp-btnrow .sp-fs.is-on { color: var(--live); }
+html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: none; }
+.sp-shell:fullscreen, .sp-shell:-webkit-full-screen, .sp-shell.is-fs {
+  position: fixed; inset: 0; z-index: 9999;
+  width: 100vw; height: 100vh; height: 100dvh; max-width: none; margin: 0;
+  background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+/* 폭 100vw 우선, 화면 높이를 넘으면 담기(캡) → 세로 여유 공간에 상하 레터박스 */
+.sp-shell:fullscreen .sp-stage,
+.sp-shell:-webkit-full-screen .sp-stage,
+.sp-shell.is-fs .sp-stage {
+  width: 100vw; height: auto; aspect-ratio: 16 / 9;
+  max-height: 100vh; max-height: 100dvh; margin: auto; border-radius: 0;
+}
 /* background crossfade layers */
 .sp-bg {
   position: absolute;

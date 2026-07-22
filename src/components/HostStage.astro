@@ -105,6 +105,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
           <span class="sp-live">LIVE</span>
           <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
           <button class="sp-mute" type="button" aria-label="음소거"></button>
+          <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
         </div>
       </div>
 
@@ -194,6 +195,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
           <span class="sp-live">LIVE</span>
           <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
           <button class="sp-mute" type="button" aria-label="음소거"></button>
+          <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
         </div>
       </div>
       <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />

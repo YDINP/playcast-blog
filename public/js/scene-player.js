@@ -92,6 +92,7 @@
     this.bgB = stage.querySelector('.sp-bg-b');
     // booth 모드에서는 호스트가 스테이지 밖(.sp-shell > .sp-booth)에 있다
     var shell = stage.closest('.sp-shell');
+    this.shell = shell;
     this.host =
       stage.querySelector('.sp-host') ||
       (shell && shell.querySelector('.sp-host')) ||
@@ -492,6 +493,52 @@
     });
   };
 
+  // ── 전체화면 (유튜브식) — 가로모드 강제 + width fit ──
+  Player.prototype._isFs = function () {
+    var fe = document.fullscreenElement || document.webkitFullscreenElement;
+    return (!!fe && fe === this.shell) || (!!this.shell && this.shell.classList.contains('is-fs'));
+  };
+  Player.prototype._syncFs = function () {
+    var native = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (this.shell && !native) this.shell.classList.remove('is-fs'); // 네이티브 종료 시 폴백 클래스 정리
+    var on = this._isFs();
+    var b = this.stage.querySelector('.sp-fs');
+    if (b) { b.classList.toggle('is-on', on); b.setAttribute('aria-label', on ? '전체화면 종료' : '전체화면'); }
+    if (!on) {
+      document.documentElement.classList.remove('sp-fs-lock');
+      try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+    }
+  };
+  Player.prototype.toggleFullscreen = function () {
+    var shell = this.shell; if (!shell) return;
+    var self = this;
+    var ua = navigator.userAgent || '';
+    var isIOS = /iP(hone|ad|od)/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var lockLandscape = function () {
+      try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {}); } catch (e) {}
+    };
+    if (this._isFs()) {
+      if (document.exitFullscreen) document.exitFullscreen().catch(function () {});
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      shell.classList.remove('is-fs');
+      document.documentElement.classList.remove('sp-fs-lock');
+      try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+      this._syncFs();
+      return;
+    }
+    var req = shell.requestFullscreen || shell.webkitRequestFullscreen;
+    if (req && !isIOS) {
+      req.call(shell).then(function () { lockLandscape(); self._syncFs(); }).catch(function () {
+        shell.classList.add('is-fs'); document.documentElement.classList.add('sp-fs-lock'); self._syncFs();
+      });
+    } else {
+      // iOS 사파리: div 네이티브 전체화면 불가 → CSS 유사 전체화면(가로 회전은 OS가 잠금 못 함, CSS로 안내)
+      shell.classList.add('is-fs');
+      document.documentElement.classList.add('sp-fs-lock');
+      this._syncFs();
+    }
+  };
+
   Player.prototype._bindControls = function () {
     var self = this;
     if (this.bigplay) {
@@ -505,6 +552,7 @@
       '.sp-replay': function () { self.replay(); },
       '.sp-mute': function () { self.setMuted(!self.muted); },
       '.sp-cap': function () { self.toggleCapMode(); },
+      '.sp-fs': function () { self.toggleFullscreen(); },
     };
     Object.keys(map).forEach(function (sel) {
       var el = self.stage.querySelector(sel);
@@ -513,6 +561,10 @@
         map[sel]();
       });
     });
+    // 전체화면: ESC/제스처로 나가도 버튼·클래스 동기화
+    document.addEventListener('fullscreenchange', function () { self._syncFs(); });
+    document.addEventListener('webkitfullscreenchange', function () { self._syncFs(); });
+
     // 진행바 클릭 시크
     if (this.progress) {
       this.progress.addEventListener('click', function (e) {
