@@ -1,0 +1,97 @@
+---
+title: "내가 질병이 된다? 세포 로그라이크 슈팅 '패서제닉' 첫 주 10만 장 대박"
+description: "Aberrant Labs가 만들고 Slug Disco가 퍼블리싱한 '패서제닉(Pathogenesis)'이 출시 첫 주 만에 10만 장 판매를 돌파했어요. 플레이어가 병원체가 되어 인체 내부에서 면역 체계와 싸우는 세포 단위 로그라이크 슈팅, 커뮤니티 핫토픽을 정리했습니다."
+pubDate: 2026-07-22
+category: "New"
+tags: ["패서제닉", "Pathogenesis", "로그라이크", "슈팅게임", "스팀신작"]
+host: "rosie"
+views: 0
+coupang:
+  - title: "스팀덱 파우치·거치대"
+    desc: "패서제닉 스팀덱 검증 완료, 휴대 플레이용"
+    url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%EB%8D%B1%20%ED%8C%8C%EC%9A%B0%EC%B9%98&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%EB%8D%B1%20%ED%8C%8C%EC%9A%B0%EC%B9%98&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%EB%8D%B1%20%ED%8C%8C%EC%9A%B0%EC%B9%98"
+  - title: "게이밍 마우스"
+    desc: "빌드 조합 많은 로그라이크 슈팅에 정밀 조작"
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4"
+scenes:
+  - text: "이번 주 스팀 커뮤니티를 완전히 뒤집어놓은 신작이 있어요.\n**출시 첫 주 만에 10만 장** 판매를 넘겼거든요."
+    emotion: "surprised"
+    chapter: "오프닝"
+  - text: "주인공은 «**패서제닉**(Pathogenesis)»예요.\n**Aberrant Labs**가 개발하고 **Slug Disco**가 퍼블리싱했어요."
+    emotion: "happy"
+    chapter: "① 신작 등장"
+    card:
+      kind: "title"
+      big: "Pathogenesis"
+      sub: "Aberrant Labs 개발 · Slug Disco 퍼블리싱 · 2026.7.16 출시"
+      pos: "c"
+      size: "lg"
+  - text: "장르는 **세포 단위 로그라이크 슈팅**.\n근데 컨셉이 좀 특이해요 — 플레이어가 영웅이 아니라\n**질병 병원체**가 돼서 인체 내부로 침투해요."
+    emotion: "think"
+    chapter: "② 병원체가 되는 게임"
+  - text: "인체 안으로 들어가면\n우리 몸의 **면역 체계**가 곧바로 적으로 등장해요.\n말 그대로 몸속에서 전쟁이 벌어지는 거죠."
+    emotion: "surprised"
+    chapter: "③ 면역 체계와 전투"
+  - text: "핵심 재미는 **빌드 조합**이에요.\n세포 소기관·돌연변이·업그레이드가\n무려 **120종 이상** 준비돼 있어요."
+    emotion: "happy"
+    chapter: "④ 120종+ 조합"
+    card:
+      kind: "stat"
+      big: "120+"
+      label: "세포 소기관·돌연변이·업그레이드"
+      sub: "조합해서 시너지 빌드를 완성"
+      pos: "cl"
+      size: "lg"
+  - text: "이걸 어떻게 조합하느냐에 따라\n완전히 다른 **시너지 빌드**가 나와요.\n한 판 한 판이 달라지는 재미가 크죠."
+    emotion: "happy"
+    chapter: "⑤ 시너지 빌드"
+  - text: "메타 진행 방식도 독특해요.\n**챌린지**를 클리어하면서\n'**플라스미드 조각**'을 모아 다음 판을 준비해요."
+    emotion: "think"
+    chapter: "⑥ 플라스미드 조각 수집"
+  - text: "그래픽·움직임도 인상적이에요.\n**소프트바디 물리** 기반이라\n세포들이 말랑말랑, 진짜 유기체처럼 움직여요."
+    emotion: "surprised"
+    chapter: "⑦ 소프트바디 물리"
+  - text: "그래서 결과가 어땠냐면—\n출시 첫 주에 **10만 장 판매**,\n최고 동시접속자는 **5,800명**까지 찍었어요."
+    emotion: "surprised"
+    chapter: "⑧ 첫 주 10만 장"
+    card:
+      kind: "stat"
+      big: "10만 장"
+      label: "출시 첫 주 판매"
+      sub: "최고 동시접속 5,800명"
+      pos: "cr"
+      size: "lg"
+  - text: "평가도 확실해요.\n스팀 리뷰 **1,200개 중 95%가 긍정** —\n'**압도적으로 긍정적**' 등급을 받았어요."
+    emotion: "happy"
+    chapter: "⑨ 압도적으로 긍정적"
+    card:
+      kind: "points"
+      head: "스팀 리뷰 성적"
+      items:
+        - "리뷰 1,200개 중 95% 긍정"
+        - "종합 등급: 압도적으로 긍정적"
+      pos: "bl"
+      size: "md"
+  - text: "가격은 **10,500원**인데\n**출시 기념 20% 할인**까지 붙어 있어요.\n할인은 **7월 31일**까지예요."
+    emotion: "happy"
+    chapter: "⑩ 가격·할인"
+    card:
+      kind: "stat"
+      big: "20% 할인"
+      label: "10,500원 → 할인가"
+      sub: "~2026.7.31까지 · 스팀(PC)"
+      pos: "c"
+      size: "lg"
+  - text: "플랫폼은 **스팀(PC)** 단독이고,\n**스팀덱 검증**까지 완료됐어요.\n휴대용으로도 문제없이 즐길 수 있어요."
+    emotion: "idle"
+    chapter: "⑪ 스팀덱 검증"
+  - text: "내가 병원체가 돼서 몸속을 헤집는 로그라이크,\n«**패서제닉**» 궁금해지지 않나요?\n다음 영상에서 실제 플레이로 만나요!"
+    emotion: "happy"
+    chapter: "마무리"
+    holdMs: 2000
+draft: false
+---
+
+Aberrant Labs가 개발하고 Slug Disco가 퍼블리싱한 세포 단위 로그라이크 슈팅 '패서제닉(Pathogenesis)'이 2026년 7월 16일 출시 이후 커뮤니티의 핫토픽으로 떠올랐어요. 플레이어가 질병 병원체가 되어 인체 내부에서 면역 체계와 싸우는 독특한 컨셉으로, 세포 소기관·돌연변이·업그레이드 120종 이상을 조합해 시너지 빌드를 완성하고, 챌린지로 '플라스미드 조각'을 모아 메타 진행을 이어가는 방식이에요. 소프트바디 물리 기반의 유기적인 움직임도 특징이죠. 출시 첫 주 판매량 10만 장, 최고 동시접속자 5,800명을 기록했고, 스팀 리뷰 1,200개 중 95%가 긍정적이어서 '압도적으로 긍정적' 평가를 받았어요. 가격은 10,500원이며 7월 31일까지 20% 할인 중이고, 스팀(PC)에서 즐길 수 있고 스팀덱 검증도 완료됐어요.
+
+*이 영상은 공식 스크린샷 없이 텍스트·수치 카드로 구성했습니다.*
