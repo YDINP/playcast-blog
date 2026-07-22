@@ -21,6 +21,7 @@
   var TYPE_MIN = 650; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
   var HALF_MS = 55; // 개폐 중간(half) 프레임 유지 — 닫힘↔개구 경계를 부드럽게
+  var USE_HALF = false; // ⛔ half 중간 프레임 비활성화(위치 검증 후 하나씩 재활성화 예정)
 
   // 한글/라틴 문자 → 입모양(비셈). 한글은 중성(모음) 추출.
   var JUNG_VIS = ['a','e','a','e','e','e','e','e','o','a','e','e','o','u','o','e','i','u','i','i','i'];
@@ -314,6 +315,7 @@
   // 입이 뚝 열리고/닫히는 스냅을 줄인다(모음→모음은 기존 크로스페이드로 충분).
   Player.prototype._setViseme = function (target) {
     var host = this.host, self = this;
+    if (!USE_HALF) { host.setAttribute('data-viseme', target); this._lastVis = target; return; } // 비활성: 기존 5비젬 직접 세팅
     if (this._halfT) { clearTimeout(this._halfT); this._halfT = null; }
     var prev = this._lastVis || 'closed';
     if (isOpenVis(target) && prev === 'closed') {
