@@ -1,0 +1,24 @@
+{
+  "task": "lipsync-halfframe",
+  "title": "립싱크 개폐 중간 프레임(Half-open) 추가 — 옵션 A 단독",
+  "created": "2026-07-22",
+  "constraints": {
+    "resolution": "500x500 동일",
+    "format": "webp VP8X 정사각 알파",
+    "vector": "CSS left0/top0/width100% + clip-path inset(36% 47% 56% 47%) 그대로 재사용",
+    "face_invariant": "입 박스 밖 영역은 base.webp와 픽셀 동일(입 박스만 합성)"
+  },
+  "tasks": [
+    {"id": 1, "title": "PRD/TASKS 저장", "status": "done"},
+    {"id": 2, "title": "half 입 프레임 생성(i2i, lip-a 기준 반개)", "status": "pending", "note": "codex image_gen edit, .tmp/gen/lip-half.png"},
+    {"id": 3, "title": "sharp 정규화 — 500x500 강제 + 입 박스만 base에 합성 → lip-half.webp", "status": "pending"},
+    {"id": 4, "title": "정렬/이음매 검증(base 위 오버레이 스샷, 클립박스 확인)", "status": "pending"},
+    {"id": 5, "title": "HostRig.astro — l-half img 추가", "status": "pending"},
+    {"id": 6, "title": "scene-player.js — 개폐 경계 half 경유 로직(_lastVis + micro-timeout 가드)", "status": "pending"},
+    {"id": 7, "title": "global.css — data-viseme=half 규칙(클립 동일)", "status": "pending"},
+    {"id": 8, "title": "astro build 통과 + 재생 확인", "status": "pending"},
+    {"id": 9, "title": "커밋/푸시", "status": "pending"}
+  ],
+  "fallback": "AI 드리프트 심하면 sharp로 lip-a 입 영역 세로압축 반개 근사(결정론)",
+  "out_of_scope": ["옵션 B 자음 비젬", "모음별 half 5종", "오디오 연동"]
+}

@@ -7,7 +7,8 @@
 interface Props { emotions?: string[]; }
 const _props = Astro.props as Props;
 void _props;
-const VIS = ['a', 'e', 'i', 'o', 'u'];
+// half = 개폐 중간 프레임(닫힘↔개구 경계에서 짧게 경유). 나머지 규격/정렬 동일.
+const VIS = ['a', 'e', 'i', 'o', 'u', 'half'];
 ---
 
 <div class="rig">

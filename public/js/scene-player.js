@@ -20,6 +20,7 @@
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 650; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
+  var HALF_MS = 55; // 개폐 중간(half) 프레임 유지 — 닫힘↔개구 경계를 부드럽게
 
   // 한글/라틴 문자 → 입모양(비셈). 한글은 중성(모음) 추출.
   var JUNG_VIS = ['a','e','a','e','e','e','e','e','o','a','e','e','o','u','o','e','i','u','i','i','i'];
@@ -31,6 +32,8 @@
     if (/[a-z]/i.test(ch)) return 'e';
     return 'closed';
   }
+  // 모음(개구) 여부 — 'closed'/'half' 제외
+  function isOpenVis(v) { return v && v !== 'closed' && v !== 'half'; }
 
   var reduceMotion =
     window.matchMedia &&
@@ -121,6 +124,8 @@
     this.playing = false;
     this.started = false;
     this.autostarted = false;
+    this._lastVis = 'closed'; // 립싱크 직전 입모양(개폐 중간 프레임 경유 판단)
+    this._halfT = null; // half 경유 타이머 핸들
     this.muted = true; // 기본 무음(효과음/음성 공통)
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
@@ -287,6 +292,8 @@
 
   Player.prototype._enterScene = function (idx) {
     this.i = idx;
+    this._lastVis = 'closed'; // 씬 진입 시 입모양 리셋(개폐 경계 재판단)
+    if (this._halfT) { clearTimeout(this._halfT); this._halfT = null; }
     this._paintScene(idx, false);
     // voice 오디오 셋업 (있을 때만)
     if (this.audio) {
@@ -301,6 +308,30 @@
     }
     this.sceneStart = performance.now();
     this._updateActiveChapter(idx);
+  };
+
+  // 립싱크 입모양 세팅. 닫힘↔개구 경계에서만 half 프레임을 짧게 경유해
+  // 입이 뚝 열리고/닫히는 스냅을 줄인다(모음→모음은 기존 크로스페이드로 충분).
+  Player.prototype._setViseme = function (target) {
+    var host = this.host, self = this;
+    if (this._halfT) { clearTimeout(this._halfT); this._halfT = null; }
+    var prev = this._lastVis || 'closed';
+    if (isOpenVis(target) && prev === 'closed') {
+      host.setAttribute('data-viseme', 'half');
+      this._halfT = setTimeout(function () {
+        self._halfT = null;
+        host.setAttribute('data-viseme', target);
+      }, HALF_MS);
+    } else if (target === 'closed' && isOpenVis(prev)) {
+      host.setAttribute('data-viseme', 'half');
+      this._halfT = setTimeout(function () {
+        self._halfT = null;
+        host.setAttribute('data-viseme', 'closed');
+      }, HALF_MS);
+    } else {
+      host.setAttribute('data-viseme', target);
+    }
+    this._lastVis = target;
   };
 
   // ── 메인 루프 ─────────────────────────────────────────────
@@ -326,7 +357,7 @@
       // 립싱크: 글자마다 열림/닫힘을 교대시켜 "말하는" 개폐 리듬을 만든다.
       // (한글은 단어 내 공백이 없어 예전엔 계속 열려만 있었다 → 짝/홀 글자로 여닫음)
       var ch = plain.charAt(reveal - 1);
-      this.host.setAttribute('data-viseme', visemeOf(ch)); // 립싱크 입모양 (사운드 없음)
+      this._setViseme(visemeOf(ch)); // 립싱크 입모양 (half 경유·사운드 없음)
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
@@ -389,6 +420,7 @@
     this.pausedAt = this._sceneElapsed();
     if (this.audio) this.audio.pause();
     cancelAnimationFrame(this.raf);
+    if (this._halfT) { clearTimeout(this._halfT); this._halfT = null; }
     this.stage.classList.add('is-paused');
     this.host.classList.remove('is-talking');
     if (this.bigplay) this.bigplay.classList.add('is-hidden');

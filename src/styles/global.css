@@ -1276,7 +1276,8 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 .sp-host.is-talking[data-viseme="e"] .rig-lip.l-e,
 .sp-host.is-talking[data-viseme="i"] .rig-lip.l-i,
 .sp-host.is-talking[data-viseme="o"] .rig-lip.l-o,
-.sp-host.is-talking[data-viseme="u"] .rig-lip.l-u {
+.sp-host.is-talking[data-viseme="u"] .rig-lip.l-u,
+.sp-host.is-talking[data-viseme="half"] .rig-lip.l-half {
   opacity: 1;
 }
 /* 호흡 */
