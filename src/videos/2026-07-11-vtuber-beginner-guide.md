@@ -6,6 +6,8 @@ category: "VTuber"
 tags: ["버추얼스트리머", "버튜버", "버튜버입문", "스트리밍", "라이브방송"]
 draft: true
 host: "rosie"
+thumbnail: "/games/vtuber-thumb.jpg"
+customThumb: true
 views: 4100
 coupang:
   - title: "콘덴서 마이크"
@@ -40,7 +42,7 @@ scenes:
     emotion: "idle"
     chapter: "⑤ 시청 매너"
   - text: "**버추얼의 세계**, 생각보다 넓고 따뜻해요. 이 채널도 그 일부고요. 다음 편에서 만나요!"
-    image: "/games/scenes/vt-outro.jpg"
+    image: "/games/vtuber-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000
