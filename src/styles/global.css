@@ -1259,17 +1259,16 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
    기본 '으' 닫힘선 위에서 모음이 자라나고 줄어들며 여닫힌다. transform-origin은 입 중심.
    transform엔 transition 없음(매 프레임 JS가 값 갱신하므로 지연 금지). */
 .rig-lip {
-  transition: opacity 0.15s ease-in-out;
-  transform-origin: 50% 40%;
+  transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+  transform-origin: 50% 38%;
   transform: scaleY(var(--mopen, 1));
 }
 /* 표정 변화는 얼굴 영역만 클립(머리카락 스왑 방지). 상단을 눈 기준 위로 더 잡아
    (눈 cy~29% − 30px − 추가 50px ≈ 16%p = 13%)로 이마·눈썹까지 넉넉히 덮음. */
 .rig-emo { clip-path: inset(13% 20% 38% 20%); }
-/* 말할 때 입(립싱크)은 입 중심(cx50%, cy~40%) 기준 작은 박스로만 오려 씀
-   → 말할 때 눈/볼은 그대로, 입만 교체. 세로 스케일 시 아래(턱)가 노출되지 않게
-   박스 높이를 좁힘(y185~210). */
-.rig-lip { clip-path: inset(37% 47% 58% 47%); }
+/* 말할 때 입(립싱크)은 입 중심 기준 작은 박스로만 오려 씀. 세로 스케일 시 아래(턱)
+   노출 방지 + 입 위치를 살짝 위로(y178~203). */
+.rig-lip { clip-path: inset(35.5% 47% 59.5% 47%); }
 .sp-host.emo-happy .rig-emo.f-happy,
 .sp-host.emo-surprised .rig-emo.f-surprised,
 .sp-host.emo-think .rig-emo.f-think,
