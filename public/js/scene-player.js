@@ -121,6 +121,7 @@
     this.playing = false;
     this.started = false;
     this.autostarted = false;
+    this._flap = false; // 개폐 리듬 토글(개구↔반개 교대)
     this.muted = true; // 기본 무음(효과음/음성 공통)
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
@@ -326,7 +327,13 @@
       // 립싱크: 글자마다 열림/닫힘을 교대시켜 "말하는" 개폐 리듬을 만든다.
       // (한글은 단어 내 공백이 없어 예전엔 계속 열려만 있었다 → 짝/홀 글자로 여닫음)
       var ch = plain.charAt(reveal - 1);
-      this.host.setAttribute('data-viseme', visemeOf(ch)); // 립싱크 입모양 (사운드 없음)
+      var vis = visemeOf(ch);
+      if (vis !== 'closed') {
+        // 개폐 리듬: 글자마다 개구(모음)↔반개(half)를 교대 → "말하는" 여닫음(껌뻑 방지).
+        this._flap = !this._flap;
+        if (!this._flap) vis = 'half';
+      }
+      this.host.setAttribute('data-viseme', vis); // 립싱크 입모양 (사운드 없음)
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
