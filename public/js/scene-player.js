@@ -20,7 +20,8 @@
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 650; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
-  var FLAP_MS = 200; // 개폐 리듬 주기(개구/반개 각 유지 시간, ms) — 클수록 천천히 여닫음
+  var MOUTH_PERIOD = 400; // 입 개폐 한 주기(ms) — 클수록 천천히 여닫음
+  var MOUTH_FLOOR = 0.12; // 최소 벌어짐(0=완전히 닫힘, 1=항상 개구)
 
   // 한글/라틴 문자 → 입모양(비셈). 한글은 중성(모음) 추출.
   var JUNG_VIS = ['a','e','a','e','e','e','e','e','o','a','e','e','o','u','o','e','i','u','i','i','i'];
@@ -122,9 +123,7 @@
     this.playing = false;
     this.started = false;
     this.autostarted = false;
-    this._flap = false; // 개폐 리듬 토글(개구↔반개 교대)
-    this._flapAt = 0; // 마지막 flap 시각(ms) — 시간 기준 주기 제어
-    this._curVis = 'closed'; // 현재 글자의 기본 입모양(모음/닫힘)
+    this._curVis = 'closed'; // 현재 글자의 입모양(모음/닫힘)
     this.muted = true; // 기본 무음(효과음/음성 공통)
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
@@ -325,19 +324,14 @@
     );
     if (this.textEl.textContent.length !== reveal) {
       this.textEl.innerHTML = revealHTML(text, reveal);
-      // 현재 글자의 기본 입모양(모음/닫힘)만 갱신. 개폐 리듬은 아래에서 시간 기준으로.
+      // 현재 글자의 입모양(모음/닫힘)만 갱신.
       this._curVis = visemeOf(plain.charAt(reveal - 1));
     }
-    // 개폐 리듬: 개구(모음)↔반개(half)를 '시간 기준' 고정 주기로 교대(타이핑 속도와 무관).
-    // 글자마다 토글하면 타이핑이 빠를 때 입도 너무 빨리 껌뻑여서, FLAP_MS 간격으로만 뒤집는다.
-    var cur = this._curVis || 'closed';
-    if (cur === 'closed') {
-      this.host.setAttribute('data-viseme', 'closed');
-    } else {
-      var nowMs = performance.now();
-      if (nowMs - (this._flapAt || 0) >= FLAP_MS) { this._flap = !this._flap; this._flapAt = nowMs; }
-      this.host.setAttribute('data-viseme', this._flap ? cur : 'half');
-    }
+    this.host.setAttribute('data-viseme', this._curVis || 'closed');
+    // 입 벌어짐: 세로 스케일 0↔1 을 부드럽게 진동(연속). 기본 '으' 닫힘선 위로 모음이
+    // 자라나고(0→1) 줄어들며(1→0) 여닫힌다. 타이핑 속도와 무관한 시간 기준 주기.
+    var op = 0.5 - 0.5 * Math.cos((performance.now() % MOUTH_PERIOD) / MOUTH_PERIOD * 6.2831853);
+    this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (1 - MOUTH_FLOOR) * op).toFixed(3));
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
     this.stage.classList.toggle('is-typing', isTyping);

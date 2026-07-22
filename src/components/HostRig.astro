@@ -7,8 +7,7 @@
 interface Props { emotions?: string[]; }
 const _props = Astro.props as Props;
 void _props;
-// half = 개폐 리듬용 중간입(원작 애셋 blend, seam·드리프트 없음). 말할 때 개구↔반개 교대.
-const VIS = ['a', 'e', 'i', 'o', 'u', 'half'];
+const VIS = ['a', 'e', 'i', 'o', 'u'];
 ---
 
 <div class="rig">
@@ -17,7 +16,7 @@ const VIS = ['a', 'e', 'i', 'o', 'u', 'half'];
     <img class="rig-part rig-mouth-rest" src="/host/char2/mouth-rest.webp" alt="" draggable="false" />
     {/* 표정 변화 제거 — reference에 새로 생성한 애셋(base·blink·lip)만 사용 */}
     {VIS.map((v) => (
-      <img class={`rig-part rig-lip l-${v}`} src={v === 'half' ? '/host/char2/lip-half.webp?v=3' : `/host/char2/lip-${v}.webp`} alt="" draggable="false" />
+      <img class={`rig-part rig-lip l-${v}`} src={`/host/char2/lip-${v}.webp`} alt="" draggable="false" />
     ))}
     <img class="rig-part rig-blink" src="/host/char2/blink.webp" alt="" draggable="false" />
   </div>
