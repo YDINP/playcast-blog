@@ -1256,6 +1256,9 @@ button {
   top: 0;
   width: 100%;
   opacity: 0;
+  /* 눈 밴드만 노출 — blink.webp는 눈만 감은 게 아니라 입·전체가 미세하게 다른 별도 풀 컷이라,
+     통째로 겹치면 립싱크 입까지 바뀐다. 눈 주변 직사각형만 남기고 클립(1254² 정렬 기준). */
+  clip-path: inset(22% 29% 61% 29%);
 }
 .rig-blink.is-blink {
   opacity: 1;
