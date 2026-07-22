@@ -5,7 +5,8 @@ pubDate: 2026-07-20
 category: "New"
 tags: ["라그나로크M클래식", "라그나로크M", "그라비티", "제니경제", "모바일MMORPG"]
 host: "rosie"
-thumbnail: "/games/ragnarok-m-classic.webp"
+thumbnail: "/games/ragnarok-thumb.jpg"
+customThumb: true
 views: 7200
 ads: false
 coupang:

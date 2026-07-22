@@ -5,7 +5,8 @@ pubDate: 2026-07-21
 category: "New"
 tags: ["먀법사", "Meowgic", "협동게임", "음성인식게임", "신작게임"]
 host: "rosie"
-thumbnail: "/games/meowgic-2026.jpg"
+thumbnail: "/games/meowgic-thumb.jpg"
+customThumb: true
 views: 0
 ads: false
 coupang:
