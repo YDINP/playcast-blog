@@ -679,7 +679,7 @@
       host: host,
       parts: host.querySelector('.rig-parts'),
       pupils: host.querySelectorAll('.rig-pupil'),
-      cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0, px: 0, py: 0 },
+      cur: { x: 0, y: 0, rot: 0, scale: 1, fx: 0, fy: 0, px: 0, py: 0, bph: 0, bamp: 0.0035 },
     });
   }
 
@@ -688,9 +688,10 @@
     return { dy: 0, rot: 0, scale: 1 };
   }
 
-  var t0 = performance.now();
+  var lastRigT = performance.now();
   function rigLoop() {
-    var t = (performance.now() - t0) / 1000;
+    var dtR = Math.min(0.05, (performance.now() - lastRigT) / 1000);
+    lastRigT = performance.now();
     for (var i = 0; i < rigs.length; i++) {
       var r = rigs[i], host = r.host, c = r.cur;
       var pose = poseOf(host);
@@ -702,7 +703,7 @@
       var tx = 0;
       var ty = 0;
       var lean = 0; // skew/rotate 없음(고정)
-      var sc = pose.scale; // 감정별 미세 스케일만(마우스 무관)
+      var sc = 1; // 감정별 스케일 제거 — 씬 전환마다 캐릭터 크기 변동(커짐) 방지
       var fx = 0;
       var fy = 0;
 
@@ -716,9 +717,13 @@
 
       // 호흡 모핑: transform-origin 하단이라 세로 스케일↑ = 하단 고정·가슴/상체가 부풀어 오름.
       // 말할 때 조금 더 빠르고 크게(생동감).
-      var bAmp = talking ? 0.005 : 0.0035; // 숨쉬기 모핑 스케일 축소
+      // 호흡 위상을 '누적'해 말할때/아닐때 속도(bSpd)가 바뀌어도 위상이 튀지 않게 한다.
+      // (기존 sin(t*bSpd)는 씬 전환 시 is-talking 토글로 bSpd가 바뀌면 큰 t에 곱해져
+      //  위상이 불연속 점프 → 캐릭터가 갑자기 커지던 버그.) 진폭도 부드럽게 보간.
       var bSpd = talking ? 1.6 : 0.85;
-      var breath = Math.sin(t * bSpd) * bAmp;
+      c.bamp += ((talking ? 0.005 : 0.0035) - c.bamp) * 0.1;
+      c.bph += dtR * bSpd;
+      var breath = Math.sin(c.bph) * c.bamp;
       var sy = c.scale * (1 + breath);
       var sx = c.scale * (1 - breath * 0.45);
 
