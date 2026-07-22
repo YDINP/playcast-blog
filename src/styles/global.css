@@ -688,7 +688,8 @@ button {
   font: 600 clamp(12px, 1.7vw, 17px)/1 system-ui, sans-serif;
 }
 .is-newsroom .sp-ticker-track.is-ready { animation: sp-ticker 26s linear infinite; }
-@keyframes sp-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* 좌→우 진행 (콘텐츠 2벌 복제라 -50%→0 로 이음매 없이 오른쪽으로 흐름) */
+@keyframes sp-ticker { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @media (prefers-reduced-motion: reduce) {
   .is-newsroom .sp-ticker-track.is-ready { animation: none; }
 }
