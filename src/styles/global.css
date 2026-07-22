@@ -1256,8 +1256,9 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 }
 .rig-emo { transition: opacity 0.05s linear; }
 /* 립싱크 입모양은 부드럽게 페이드 — 말 시작/끝(is-talking 토글)에 입이 뚝 끊기지 않고
-   서서히 열리고 닫힌다. 글자마다 바뀌는 비셈 전환도 짧게 크로스페이드돼 튐이 줄어든다. */
-.rig-lip { transition: opacity 0.11s ease; }
+   서서히 열리고 닫힌다. 항상 켜진 mouth-rest(닫힘) 위로 모음이 크로스페이드되며,
+   그 중간 순간이 자연스러운 '반쯤 열린' 개폐를 만든다(별도 half 애셋 불필요). */
+.rig-lip { transition: opacity 0.15s ease-in-out; }
 /* 표정 변화는 얼굴 영역만 클립(머리카락 스왑 방지). 상단을 눈 기준 위로 더 잡아
    (눈 cy~29% − 30px − 추가 50px ≈ 16%p = 13%)로 이마·눈썹까지 넉넉히 덮음. */
 .rig-emo { clip-path: inset(13% 20% 38% 20%); }
@@ -1276,8 +1277,7 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 .sp-host.is-talking[data-viseme="e"] .rig-lip.l-e,
 .sp-host.is-talking[data-viseme="i"] .rig-lip.l-i,
 .sp-host.is-talking[data-viseme="o"] .rig-lip.l-o,
-.sp-host.is-talking[data-viseme="u"] .rig-lip.l-u,
-.sp-host.is-talking[data-viseme="half"] .rig-lip.l-half {
+.sp-host.is-talking[data-viseme="u"] .rig-lip.l-u {
   opacity: 1;
 }
 /* 호흡 */
