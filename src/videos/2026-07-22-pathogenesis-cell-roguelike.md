@@ -22,6 +22,7 @@ scenes:
   - text: "주인공은 «**패서제닉**(Pathogenesis)»예요.\n**Aberrant Labs**가 개발하고 **Slug Disco**가 퍼블리싱했어요."
     emotion: "happy"
     chapter: "① 신작 등장"
+    image: "/games/scenes/patho-07.jpg"
     card:
       kind: "title"
       big: "Pathogenesis"
@@ -39,6 +40,7 @@ scenes:
   - text: "핵심 재미는 **빌드 조합**이에요.\n세포 소기관·돌연변이·업그레이드가\n무려 **120종 이상** 준비돼 있어요."
     emotion: "happy"
     chapter: "④ 120종+ 조합"
+    image: "/games/scenes/patho-08.jpg"
     card:
       kind: "stat"
       big: "120+"
@@ -61,6 +63,7 @@ scenes:
   - text: "그래서 결과가 어땠냐면—\n출시 첫 주에 **10만 장 판매**,\n최고 동시접속자는 **5,800명**까지 찍었어요."
     emotion: "surprised"
     chapter: "⑧ 첫 주 10만 장"
+    image: "/games/scenes/patho-09.jpg"
     card:
       kind: "stat"
       big: "10만 장"
@@ -71,6 +74,7 @@ scenes:
   - text: "평가도 확실해요.\n스팀 리뷰 **1,200개 중 95%가 긍정** —\n'**압도적으로 긍정적**' 등급을 받았어요."
     emotion: "happy"
     chapter: "⑨ 압도적으로 긍정적"
+    image: "/games/scenes/patho-10.jpg"
     card:
       kind: "points"
       head: "스팀 리뷰 성적"
@@ -82,6 +86,7 @@ scenes:
   - text: "가격은 **10,500원**인데\n**출시 기념 20% 할인**까지 붙어 있어요.\n할인은 **7월 31일**까지예요."
     emotion: "happy"
     chapter: "⑩ 가격·할인"
+    image: "/games/scenes/patho-11.jpg"
     card:
       kind: "stat"
       big: "20% 할인"
