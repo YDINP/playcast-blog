@@ -48,6 +48,10 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
         <span class="nr-glow"></span>
       </div>
 
+      <!-- LIVE 태그: 영상 모니터 '위'(바깥 상단)에 배치 — 영상 이미지를 가리지 않음.
+           sp-screen은 overflow:hidden이라 모니터 밖으로 못 나가므로 형제로 분리한다. -->
+      <span class="sp-screen-tag"><i></i>LIVE</span>
+
       <!-- 좌상단 직사각형 영상 모니터 -->
       <div class="sp-screen">
         <div
@@ -57,7 +61,6 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
         <div class="sp-bg sp-bg-b"></div>
         <div class="sp-card" aria-hidden="true"></div>
         <div class="sp-pointer" aria-hidden="true"></div>
-        <span class="sp-screen-tag"><i></i>LIVE</span>
       </div>
 
       <!-- 우측 앵커 호스트 -->

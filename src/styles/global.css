@@ -309,6 +309,9 @@ button {
   overflow: hidden;
   user-select: none;
   isolation: isolate;
+  /* 컨테이너 쿼리 컨텍스트 — 자막 폰트가 뷰포트가 아닌 '플레이어 폭'(cqw) 기준으로
+     줄어들도록. watch 2단 레이아웃에서 플레이어가 뷰포트보다 좁을 때도 자막이 안 넘침. */
+  container-type: inline-size;
 }
 /* background crossfade layers */
 .sp-bg {
@@ -541,13 +544,7 @@ button {
   text-shadow: none; /* 어두운 전용 띠 위에서는 글로우 불필요 */
 }
 .sp-caption .cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--host);
-  margin-left: 2px;
-  vertical-align: -0.15em;
-  animation: sp-blink 0.9s step-end infinite;
+  display: none; /* 타이핑 캐럿(|) 제거 — 타이핑 텍스트 자체(.sp-text)는 유지 */
 }
 @keyframes sp-blink {
   50% {
@@ -628,11 +625,15 @@ button {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
   background: linear-gradient(120deg, rgba(255, 255, 255, 0.10), transparent 38%);
 }
+/* LIVE 태그 — 영상 모니터 바로 '위'(바깥 상단, 좌측 정렬). 모니터는 형제이며 overflow:hidden.
+   top=모니터 상단(5%)에서 자기 높이만큼(-100%) 끌어올려 이미지 위쪽 여백에 얹는다. */
 .is-newsroom .sp-screen-tag {
-  position: absolute; left: 10px; top: 10px; z-index: 5;
-  display: flex; align-items: center; gap: 6px;
+  position: absolute; left: 3.5%; top: calc(5% - 6px); z-index: 5;
+  transform: translateY(-100%);
+  display: inline-flex; align-items: center; gap: 6px;
   font: 700 12px/1 system-ui, sans-serif; color: #fff; letter-spacing: 0.08em;
-  background: rgba(214, 42, 64, 0.94); padding: 5px 9px; border-radius: 5px;
+  background: rgba(214, 42, 64, 0.94); padding: 5px 10px; border-radius: 5px 5px 5px 0;
+  box-shadow: 0 4px 14px rgba(214, 42, 64, 0.4);
 }
 .is-newsroom .sp-screen-tag i {
   width: 7px; height: 7px; border-radius: 50%; background: #fff;
@@ -696,18 +697,28 @@ button {
 /* 트렌디 로어서드 — 프로스트 글래스 카드 + 플로팅 이름 필 + 민트 액센트 */
 .sp-stage.is-newsroom .sp-caption.sp-chyron,
 .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-  left: 3.5%; right: auto; bottom: 13%; width: 50%; z-index: 6; /* 데스크 위까지 아래로 확장 */
+  /* 컨트롤바(데스크 위 12%로 올림)와 겹치지 않게 자막을 모니터 바로 아래로 올림 */
+  left: 3.5%; right: auto; bottom: 22%; width: 50%; z-index: 6;
   padding: 0; display: block; background: none;
+}
+/* 뉴스룸 컨트롤바 — 하단 날씨 데스크(높이 12%) '위'로 올려 날씨 티커를 안 가림.
+   컴팩트 패딩 + 위로 옅어지는 그라디언트로 호스트 위 버튼 가독성 유지. */
+.sp-stage.is-newsroom .sp-controls {
+  bottom: 12%;
+  padding: 9px 12px 7px;
+  background: linear-gradient(0deg, rgba(6, 10, 20, 0.82), rgba(6, 10, 20, 0.18) 72%, transparent);
 }
 .is-newsroom .sp-chyron.is-empty { opacity: 1; } /* 빈 씬에도 영역 유지 */
 /* 이름 필: 박스 상단에 걸치는 플로팅 칩 + 말하기 펄스 닷 */
 .is-newsroom .sp-chyron .chyron-tag {
-  position: absolute; top: -21px; left: 14px; z-index: 2; /* 박스 위로 올려 텍스트와 겹침 방지 */
+  position: absolute; top: -23px; left: 12px; z-index: 2; /* 박스 위로 올려 텍스트와 겹침 방지 */
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 15px 5px 11px; border-radius: 999px; letter-spacing: 0.02em;
-  font: 800 clamp(12px, 1.5vw, 15px)/1 system-ui, sans-serif; color: #06231c;
-  background: linear-gradient(135deg, #7df3d6 0%, #37c9a8 100%);
-  box-shadow: 0 6px 16px rgba(55, 201, 168, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  padding: 6px 16px 6px 12px; border-radius: 999px; letter-spacing: 0.02em;
+  font: 800 clamp(12.5px, 1.6vw, 15.5px)/1 system-ui, sans-serif; color: #06231c;
+  background: linear-gradient(135deg, #8ff7dc 0%, #35d0ab 100%);
+  /* 어두운 링 + 강한 그림자로 자막 글래스 박스와 확실히 분리(가시성↑) */
+  box-shadow: 0 0 0 2px rgba(6, 20, 15, 0.85), 0 7px 18px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 .is-newsroom .chyron-dot {
   width: 7px; height: 7px; border-radius: 50%; background: #06231c;
@@ -729,7 +740,7 @@ button {
   backdrop-filter: blur(12px) saturate(1.3);
   border: 1px solid rgba(120, 170, 255, 0.14);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  color: #eaf1ff; font-size: clamp(0.86rem, 1.4vw, 1.06rem); line-height: 1.45;
+  color: #eaf1ff; font-size: clamp(0.72rem, 2.4cqw, 1.06rem); line-height: 1.45;
   font-weight: 600; text-shadow: none;
 }
 /* 좌측 민트 그라디언트 액센트 바 */
@@ -742,17 +753,22 @@ button {
 
 /* ── 모바일 자막 최적화(base 뒤에 와야 우선순위로 적용됨) ── */
 @media (max-width: 700px) {
-  /* 자막을 전체폭으로 → 좁은 50% 박스의 과한 줄바꿈 방지 */
+  /* 좁은 화면: 호스트를 우측으로 좁혀두고(42%), 자막은 좌측 컬럼(모니터 폭)에만 두어
+     자막이 호스트를 가리지 않게 한다. 세로로는 모니터 하단 자막 위치로 올려
+     하단의 컨트롤바+날씨 데스크와도 겹치지 않는다. */
+  .sp-stage.is-newsroom .sp-host,
+  .sp-stage.is-newsroom.cap-safe .sp-host { width: 42%; }
   .sp-stage.is-newsroom .sp-caption.sp-chyron,
   .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-    left: 3%; right: 3%; width: auto; bottom: 14.5%;
+    left: 3%; right: auto; width: 56%; bottom: 43%;
   }
   .is-newsroom .sp-chyron .box {
-    font-size: 0.72rem; line-height: 1.34; height: 4.3em;
-    padding: 8px 12px 8px 18px; align-items: center; border-radius: 12px;
+    font-size: clamp(0.62rem, 3.1cqw, 0.82rem); line-height: 1.3; height: auto;
+    min-height: 2.7em; max-height: 4em;
+    padding: 6px 10px 6px 16px; align-items: center; border-radius: 12px;
   }
   .is-newsroom .sp-chyron .box::before { top: 9px; bottom: 9px; }
-  .is-newsroom .sp-chyron .chyron-tag { top: -14px; left: 10px; padding: 3px 10px; font-size: 10px; }
+  .is-newsroom .sp-chyron .chyron-tag { top: -13px; left: 8px; padding: 4px 10px; font-size: 10px; }
   .is-newsroom .sp-ticker-track { font-size: 11px; }
   .is-newsroom .sp-desk-logo { font-size: 13px; }
 }
@@ -1222,6 +1238,9 @@ button {
   opacity: 0;
 }
 .rig-emo { transition: opacity 0.05s linear; }
+/* 립싱크 입모양은 부드럽게 페이드 — 말 시작/끝(is-talking 토글)에 입이 뚝 끊기지 않고
+   서서히 열리고 닫힌다. 글자마다 바뀌는 비셈 전환도 짧게 크로스페이드돼 튐이 줄어든다. */
+.rig-lip { transition: opacity 0.11s ease; }
 /* 표정 변화는 얼굴 영역만 클립(머리카락 스왑 방지). 상단을 눈 기준 위로 더 잡아
    (눈 cy~29% − 30px − 추가 50px ≈ 16%p = 13%)로 이마·눈썹까지 넉넉히 덮음. */
 .rig-emo { clip-path: inset(13% 20% 38% 20%); }
