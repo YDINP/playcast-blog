@@ -67,7 +67,7 @@ scenes:
   - text: "지난 5월 15일부터 사전예약도 진행했었는데,\n예약자 전원에게 '**밀리언 스매쉬**' 머리장식 같은 보상도 줬대요.\n지금 바로 접속해볼까요?"
     emotion: "happy"
     chapter: "⑥ 지금 플레이"
-    image: "/games/scenes/ragm-outro.jpg"
+    image: "/games/ragnarok-thumb.jpg"
     card:
       kind: "title"
       big: "지금 접속 가능"

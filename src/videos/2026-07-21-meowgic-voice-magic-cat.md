@@ -75,7 +75,7 @@ scenes:
   - text: "목소리로 마법 쓰는 고양이 마법사,\n방금 출시된 «**먀법사**» 궁금하지 않으세요?\n다음 영상에서 플레이 리뷰로 만나요!"
     emotion: "happy"
     chapter: "마무리"
-    image: "/games/scenes/meowgic-outro.jpg"
+    image: "/games/meowgic-thumb.jpg"
     holdMs: 2000
 draft: false
 ---
