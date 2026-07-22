@@ -8,7 +8,8 @@ host: "rosie"
 views: 24800
 ads: false  # 공식 게임 이미지 사용 → 인용 근거 강화 위해 광고 미표시
 # 대표 이미지: 록스타 공식 프레스킷 이미지를 약관 범위에서 받아 public/games/gta6.jpg 로 저장.
-thumbnail: "/games/gta6.jpg"  # Rockstar 공식 키아트 (수동 수급)
+thumbnail: "/games/gta6-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "© Rockstar Games (공식 뉴스와이어)"
   url: "https://www.rockstargames.com/newswire"
@@ -45,7 +46,7 @@ scenes:
     emotion: "think"
     chapter: "⑤ PC는?"
   - text: "여기까지가 **공식 확정**. 나머지는 다 추측이니 걸러 들으세요. 정보 업데이트되면 또 정리해올게요!"
-    image: "/games/scenes/gta6-postcard.jpg"
+    image: "/games/gta6-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

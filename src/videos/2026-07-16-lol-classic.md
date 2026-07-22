@@ -5,7 +5,8 @@ pubDate: 2026-07-16
 updatedDate: 2026-07-22
 category: "New"
 tags: ["롤클래식", "리그오브레전드", "롤", "LoL", "시즌3", "라이엇"]
-thumbnail: "/games/scenes/lol-classic.png"
+thumbnail: "/games/lol-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "© Riot Games (League of Legends Classic 공식)"
   url: "https://www.leagueoflegends.com/en-us/classic/"
@@ -57,7 +58,7 @@ scenes:
     emotion: "idle"
     chapter: "⑤ 그때 그 시스템"
   - text: "추억 소환할 준비 됐나요? **별도 구독도 없어요**. 열리면 다시 정리해서 물어올게요!"
-    image: "/games/scenes/lol-outro.jpg"
+    image: "/games/lol-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

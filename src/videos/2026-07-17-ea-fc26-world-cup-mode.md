@@ -5,7 +5,8 @@ pubDate: 2026-07-17
 category: "New"
 tags: ["FC26 월드컵모드", "월드컵2026", "FC26", "축구게임", "EA스포츠"]
 host: "rosie"
-thumbnail: "/games/fc26-worldcup.webp"
+thumbnail: "/games/fc26-thumb.jpg"
+customThumb: true
 views: 8400
 ads: false
 coupang:
@@ -86,7 +87,7 @@ scenes:
   - text: "얼티밋 팀 유저라면 보너스도 있어요.\n페스티벌 오브 풋볼 기간 로그인하면 **93 오버롤 펠레 카드**를 무료로!\n지금 바로 시작해볼까요?"
     emotion: "surprised"
     chapter: "⑦ 지금 플레이"
-    image: "/games/scenes/fc26-pele.jpg"
+    image: "/games/fc26-thumb.jpg"
     card:
       kind: "title"
       big: "무료 지급"
