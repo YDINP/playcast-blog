@@ -6,7 +6,7 @@ category: "Indie"
 tags: ["인디게임", "스팀", "싱글게임", "명작", "게임추천"]
 host: "rosie"
 views: 9200
-thumbnail: "/games/hollow-thumb.jpg"
+thumbnail: "/games/indie6-thumb.jpg"
 customThumb: true
 ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 광고 미표시
 imageCredit:
@@ -19,6 +19,15 @@ coupang:
   - title: "게이밍 기계식 키보드"
     desc: "빠른 입력·손맛"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EA%B8%B0%EA%B3%84%EC%8B%9D%20%ED%82%A4%EB%B3%B4%EB%93%9C"
+faq:
+  - q: "어떤 게임들을 소개하나요?"
+    a: "스타듀밸리, 할로우 나이트, 셀레스트, 언더테일, 하데스, 아우터 와일즈 6가지 인디 명작이에요."
+  - q: "인디 입문자에게 어떤 게임이 좋나요?"
+    a: "힐링을 원하면 스타듀밸리, 탐험·성취감은 할로우 나이트, 스토리는 언더테일·아우터 와일즈, 다시 하기 좋은 로그라이크는 하데스가 좋아요."
+  - q: "난이도가 높은 게임도 있나요?"
+    a: "할로우 나이트는 난이도가 있지만 성취감이 크고, 셀레스트도 정밀 점프라 다소 도전적이에요."
+  - q: "아우터 와일즈는 왜 스포를 조심하라고 하나요?"
+    a: "22분마다 반복되는 태양계의 비밀을 파헤치는 탐험 게임이라, 정보를 모르고 시작해야 재미가 커요."
 scenes:
   - text: "로지의 인디 코너! 오늘은 인디 입문자가 실패 없이 시작할 **명작**만 데려왔어요."
     image: "/games/scenes/indie-open.jpg"
@@ -49,7 +58,7 @@ scenes:
     emotion: "surprised"
     chapter: "⑥ 아우터 와일즈"
   - text: "인디는 예산이 아니라 **아이디어**로 승부해요. 오늘 하나만 골라 시작해보는 건 어때요? 다음 편에서 만나요!"
-    image: "/games/hollow-thumb.jpg"
+    image: "/games/indie6-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

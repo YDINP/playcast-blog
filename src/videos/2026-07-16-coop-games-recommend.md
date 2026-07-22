@@ -15,6 +15,15 @@ coupang:
   - title: "스팀 기프트카드"
     desc: "신작·할인 게임 바로 구매"
     url: "https://www.coupang.com/np/search?q=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%ED%8C%80%20%EA%B8%B0%ED%94%84%ED%8A%B8%EC%B9%B4%EB%93%9C"
+faq:
+  - q: "어떤 협동 게임을 추천하나요?"
+    a: "잇 테이크 투, 오버쿡드2, 발헤임, 리썰 컴퍼니, 스타듀밸리 협동 등을 추천해요."
+  - q: "한 명만 사도 둘이 할 수 있나요?"
+    a: "네, 잇 테이크 투는 '프렌즈 패스'로 한 명만 사도 둘이 함께 즐길 수 있어요."
+  - q: "몇 명까지 함께할 수 있나요?"
+    a: "게임마다 달라요. 리썰 컴퍼니는 최대 네 명까지 함께할 수 있어요."
+  - q: "협동 게임 입문에는 뭐가 좋나요?"
+    a: "'프렌즈 패스'가 되는 게임부터 시작하면 편하고, 무료로 같이 할 게임도 많아요."
 scenes:
   - text: "오늘 밤 친구랑 뭐 하지? 둘이서, 여럿이 바로 재밌는 **협동(코옵) 게임**을 모았어요."
     image: "/games/scenes/coop-open.jpg"

@@ -16,6 +16,15 @@ coupang:
   - title: "게이밍 블루투스 이어폰"
     desc: "모바일 게임 사운드 몰입"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%9D%B4%EC%96%B4%ED%8F%B0"
+faq:
+  - q: "무슨 업데이트인가요?"
+    a: "'승리의 여신: 니케'의 여름 업데이트로, 2026년 7월 2일 진행됐어요."
+  - q: "신규 캐릭터는 누구인가요?"
+    a: "수영복 콘셉트의 «신데렐라: 크리스탈 웨이브»와 «마르차나: 마린 스터디»가 신규 픽업에 합류했어요."
+  - q: "애니메이션도 공개됐나요?"
+    a: "네, 일본 스튜디오 A-1 픽처스가 제작한 스페셜 애니메이션이 함께 공개됐어요."
+  - q: "반응은 어땠나요?"
+    a: "업데이트 이후 한국 앱스토어 매출 1위로 역주행했고, 일본·대만에서도 상위권에 올랐어요."
 scenes:
   - text: "로지의 신작 코너!\n요즘 앱스토어 매출 순위,\n갑자기 역주행한 게임이 하나 있다는 사실 아셨나요?"
     emotion: "surprised"

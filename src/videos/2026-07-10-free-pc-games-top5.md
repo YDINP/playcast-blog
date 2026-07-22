@@ -6,7 +6,7 @@ category: "Free"
 tags: ["무료게임", "PC게임", "F2P", "스팀무료", "게임추천"]
 host: "rosie"
 views: 18400
-thumbnail: "/games/warframe-thumb.jpg"
+thumbnail: "/games/freetop5-thumb.jpg"
 customThumb: true
 ads: false  # 공식 스팀 스크린샷 사용 → 인용 근거 강화 위해 광고 미표시
 imageCredit:
@@ -19,6 +19,17 @@ coupang:
   - title: "게이밍 헤드셋"
     desc: "발소리까지 잡는 몰입감"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B"
+faq:
+  - q: "어떤 게임들을 소개하나요?"
+    a: "워프레임, 패스 오브 엑자일, 리그 오브 레전드, 원신, 파이널판타지14 무료 체험판 5가지예요."
+  - q: "정말 무료인가요? 과금 압박은 없나요?"
+    a: "오늘 뽑은 건 무료인 게 미안할 정도인 것들이에요. 예를 들어 워프레임은 10년 넘게 쌓인 콘텐츠가 전부 무료고, 과금 재화도 유저 거래로 벌 수 있어요."
+  - q: "롤은 과금하면 유리한가요?"
+    a: "아니요, 리그 오브 레전드의 과금은 스킨뿐이라 승패엔 영향이 없어요."
+  - q: "파판14 무료 체험판은 어디까지 되나요?"
+    a: "레벨 60까지, 스토리 두 편을 시간 제한 없이 즐길 수 있어요."
+  - q: "주의할 점은 없나요?"
+    a: "설치는 꼭 공식 채널로 하고, 원신처럼 수집형은 초반 뽑기 유혹을 조심하세요."
 scenes:
   - text: "안녕하세요, 로지예요! 오늘은 지갑 안 열어도 되는 **무료 PC 게임**만 골라왔어요."
     image: "/games/scenes/fpc-open.jpg"
@@ -52,7 +63,7 @@ scenes:
     emotion: "happy"
     chapter: "⑤ 파판14 체험판"
   - text: "오늘의 결론! 무료라고 얕보지 마세요. 설치는 꼭 **공식 채널**로, 초반 과금은 참기. 다음 편에서 또 만나요!"
-    image: "/games/warframe-thumb.jpg"
+    image: "/games/freetop5-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

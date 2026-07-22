@@ -16,6 +16,17 @@ coupang:
   - title: "게임용 블루투스 컨트롤러"
     desc: "모바일·PC 겸용 패드"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9E%84%EC%9A%A9%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9E%84%EC%9A%A9%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9E%84%EC%9A%A9%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+faq:
+  - q: "산드로네는 어떤 캐릭터인가요?"
+    a: "우인단(파트루이) 집행관 서열 7위 '꼭두각시'로, 원신 6.7 버전에 참전하는 신규 5성 캐릭터예요."
+  - q: "원소는 무엇인가요?"
+    a: "얼음(Cryo) 원소예요. 집행관치고는 의외라는 반응과 함께 신선한 조합으로 기대를 모으고 있어요."
+  - q: "6.7의 새로운 시스템은 무엇인가요?"
+    a: "산드로네에 맞춰 얼음 원소 중심의 신규 원소 반응 시스템이 예고돼 있어요."
+  - q: "무과금은 몇 뽑기나 모을 수 있나요?"
+    a: "6.7 버전에서 대략 70뽑기 안팎의 원석을 모을 수 있을 것으로 추정돼요."
+  - q: "픽업 배너는 언제 열리나요?"
+    a: "곧 열릴 예정이에요."
 scenes:
   - text: "로지의 신작 코너!\n원신 팬들이 오래 기다려온 그 캐릭터,\n드디어 **6.7 버전**에서 참전 확정됐어요!"
     emotion: "surprised"
