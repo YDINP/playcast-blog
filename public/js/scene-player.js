@@ -16,11 +16,11 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 75; // ms/글자 (무음 타이핑 속도) — 자막·발음 흐름을 천천히
+  var PER_CHAR = 200; // ms/글자 — 자막 진행 = 말하기(입 개폐) 속도. 이 값 하나로 함께 조절
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
-  var STEP_MS = 550; // 입모양 한 스텝 유지(ms) — 각 입을 더 오래 붙잡아 천천히 진행
+  var MOUTH_FLOOR = 0.15; // 최소 벌어짐(글자 사이 닫힘 정도)
   // 각 입모양의 벌어짐(세로 스케일). 스텝마다 이 값으로 부드럽게 스케일 전환.
   var MOUTH_OPEN = { closed: 0.16, i: 0.55, u: 0.6, e: 0.82, o: 0.88, a: 1.0 };
 
@@ -125,8 +125,6 @@
     this.started = false;
     this.autostarted = false;
     this._curVis = 'closed'; // 현재 글자의 입모양(모음/닫힘)
-    this._step = 0; // 발음 플로우 스텝 인덱스
-    this._stepAt = 0; // 마지막 스텝 시각(ms)
     this.muted = true; // 기본 무음(효과음/음성 공통)
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
@@ -330,16 +328,18 @@
       // 현재 글자의 입모양(모음/닫힘)만 갱신.
       this._curVis = visemeOf(plain.charAt(reveal - 1));
     }
-    // 발음 플로우(징검다리): 기본(닫힘)→이→현재모음→이 를 '시간 기준' 스텝으로 진행.
-    // 자막 타이핑 속도와 분리(STEP_MS 고정)해 입이 너무 빨리 지나가지 않게 한다.
-    var peak = (this._curVis && this._curVis !== 'closed') ? this._curVis : 'i';
-    var flow = ['closed', 'i', peak, 'i'];
-    var nowMs = performance.now();
-    if (nowMs - this._stepAt >= STEP_MS) { this._step = (this._step + 1) % flow.length; this._stepAt = nowMs; }
-    var vis = (this._curVis === 'closed') ? 'closed' : flow[this._step];
+    // 입 개폐를 '자막 진행(글자)'에 동기화 — 글자 1개당 한 번 열렸다 닫힌다.
+    // reveal도 typingDur 기준이라 텍스트 진행 속도 = 말하기(입) 속도. 속도는 PER_CHAR로 조절.
+    var vis = this._curVis || 'closed';
     this.host.setAttribute('data-viseme', vis);
-    var mo = MOUTH_OPEN[vis]; if (mo == null) mo = 1;
-    this.host.style.setProperty('--mopen', mo.toFixed(3));
+    if (vis === 'closed') {
+      this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
+    } else {
+      var beatLen = typingDur / Math.max(1, plen);                    // 글자 1개 노출 시간(ms)
+      var env = Math.sin(((elapsed % beatLen) / beatLen) * Math.PI);  // 0→1→0 열림-닫힘(중간 개폐 자연 통과)
+      var peak = MOUTH_OPEN[vis]; if (peak == null) peak = 1;
+      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (peak - MOUTH_FLOOR) * env).toFixed(3));
+    }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
     this.stage.classList.toggle('is-typing', isTyping);

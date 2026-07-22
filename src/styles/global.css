@@ -1259,7 +1259,7 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
    기본 '으' 닫힘선 위에서 모음이 자라나고 줄어들며 여닫힌다. transform-origin은 입 중심.
    transform엔 transition 없음(매 프레임 JS가 값 갱신하므로 지연 금지). */
 .rig-lip {
-  transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+  transition: opacity 0.15s ease-in-out;
   transform-origin: 50% 38%;
   transform: scaleY(var(--mopen, 1));
 }
