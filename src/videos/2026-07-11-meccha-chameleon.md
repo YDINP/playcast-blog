@@ -8,7 +8,8 @@ host: "rosie"
 views: 11200
 ads: false  # 공식 게임 이미지 사용 → 인용 근거 강화 위해 광고 미표시
 # 대표 이미지: 스팀 상점/개발사 프레스킷 이미지를 약관 범위에서 받아 public/games/meccha-chameleon.jpg 로 저장.
-thumbnail: "/games/meccha-chameleon.jpg"
+thumbnail: "/games/meccha-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "© 개발사 / Steam 상점 페이지"
   url: "https://store.steampowered.com/app/4704690/MECCHA_CHAMELEON/"
@@ -45,7 +46,7 @@ scenes:
     emotion: "idle"
     chapter: "⑤ 추천 포인트"
   - text: "비싼 대작만 재밌는 게 아니죠. **아이디어 하나**로 터진 좋은 예예요. 다음 신작도 물어올게요!"
-    image: "/games/scenes/mecha-outro.jpg"
+    image: "/games/meccha-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
     holdMs: 2000

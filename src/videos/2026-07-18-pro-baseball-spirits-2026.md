@@ -5,7 +5,8 @@ pubDate: 2026-07-18
 category: "New"
 tags: ["프로야구스피리츠2026", "WBC모드", "야구게임", "한글화", "코나미"]
 host: "rosie"
-thumbnail: "/games/pro-baseball-spirits.webp"
+thumbnail: "/games/baseball-thumb.jpg"
+customThumb: true
 views: 5800
 ads: false
 coupang:
@@ -86,7 +87,7 @@ scenes:
   - text: "타구 궤적, 선수들의 움직임, 경기장 분위기까지\n**언리얼 엔진**과 **eBaseball 엔진**으로\n한층 사실적으로 구현됐대요."
     emotion: "idle"
     chapter: "⑧ 그래픽도 한 단계 진화"
-    image: "/games/scenes/pbs-engine.jpg"
+    image: "/games/baseball-thumb.jpg"
     holdMs: 2000
 ---
 
