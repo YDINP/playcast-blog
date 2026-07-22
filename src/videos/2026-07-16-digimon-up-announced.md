@@ -4,7 +4,8 @@ description: "디지몬 신작 'DIGIMON UP'이 2026년 7월 15일 전 세계 출
 pubDate: 2026-07-16
 category: "New"
 tags: ["디지몬", "디지몬UP", "DigimonUP", "모바일게임", "반다이남코", "육성RPG", "방치형게임"]
-thumbnail: "/games/scenes/digimon-up.webp"
+thumbnail: "/games/digimon-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "© Bandai Namco Entertainment (DIGIMON UP 공식)"
   url: "https://dgup.bn-ent.net/"
