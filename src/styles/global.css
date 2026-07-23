@@ -789,16 +789,27 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   .is-newsroom .sp-ticker-track { font-size: 11px; }
   .is-newsroom .sp-desk-logo { font-size: 13px; }
 
-  /* 모바일: 플레이어 네비를 영상 '맨 아래'로 빼고, 날씨 데스크는 숨겨 공간 확보.
-     자막은 화면 중앙(기존 43%)이 아니라 네비 바로 위(하단)로 내린다. */
+  /* 모바일: 플레이어 네비를 영상 '맨 아래'로 빼고 '컴팩트'하게(영상 잠식 최소화),
+     날씨 데스크는 숨긴다. 자막은 네비 위로 두되 '폭을 넓혀' 글이 답답하지 않게. */
   .sp-stage.is-newsroom .sp-desk { display: none; }
   .sp-stage.is-newsroom .sp-controls,
-  .sp-stage.is-newsroom.cap-safe .sp-controls { bottom: 0; padding-bottom: 8px; }
+  .sp-stage.is-newsroom.cap-safe .sp-controls { bottom: 0; padding: 5px 8px 7px; }
+  .sp-controls .sp-progress { margin: 0 2px 5px; height: 4px; }
+  .sp-controls .sp-btnrow { gap: 2px; }
+  .sp-controls .sp-btnrow button { width: 28px; height: 28px; }
+  .sp-controls .sp-btnrow svg { width: 17px; height: 17px; }
+  .sp-controls .sp-time { font-size: 0.7rem; margin-left: 2px; }
+  .sp-controls .sp-live { font-size: 0.66rem; padding: 2px 6px; }
   .sp-stage.is-newsroom .sp-host,
-  .sp-stage.is-newsroom.cap-safe .sp-host { bottom: 0; }
+  .sp-stage.is-newsroom.cap-safe .sp-host { bottom: 0; width: 37%; }
   .sp-stage.is-newsroom .sp-caption.sp-chyron,
   .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-    left: 3%; right: auto; width: 62%; bottom: 22%;
+    left: 3%; right: auto; width: 76%; bottom: 28%;
+  }
+  .is-newsroom .sp-chyron .box {
+    min-height: 3em; max-height: 4.8em;
+    font-size: clamp(0.66rem, 3.5cqw, 0.92rem); line-height: 1.34;
+    padding: 7px 11px 7px 16px;
   }
 }
 
