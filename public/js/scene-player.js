@@ -98,6 +98,7 @@
     // booth 모드에서는 호스트가 스테이지 밖(.sp-shell > .sp-booth)에 있다
     var shell = stage.closest('.sp-shell');
     this.shell = shell;
+    this.ctl = shell || stage; // 컨트롤바는 스테이지 밖(shell > .sp-controls)로 이동 — 컨트롤 요소는 여기서 찾는다
     this.host =
       stage.querySelector('.sp-host') ||
       (shell && shell.querySelector('.sp-host')) ||
@@ -107,7 +108,7 @@
     this.capWrap = stage.querySelector('.sp-caption');
     this.cardEl = stage.querySelector('.sp-card'); // 씬 타이포 카드 오버레이
     this.pointerEl = stage.querySelector('.sp-pointer'); // 손가락 포인터
-    this.capBtn = stage.querySelector('.sp-cap');
+    this.capBtn = this.ctl.querySelector('.sp-cap');
     // 자막 위치 모드: 'overlay'(이미지 위 스크림) | 'safe'(이미지 아래 전용 띠)
     // 기본값 safe: 이미지를 안 가리는 CC 띠가 기본. localStorage에 저장된 선택이 있으면 그걸 우선.
     this.capMode = 'safe';
@@ -115,11 +116,11 @@
       var savedCap = localStorage.getItem('sp-cap-mode');
       if (savedCap === 'safe' || savedCap === 'overlay') this.capMode = savedCap;
     } catch (e) {}
-    this.fill = stage.querySelector('.sp-progress-fill');
-    this.ticks = stage.querySelector('.sp-ticks');
-    this.progress = stage.querySelector('.sp-progress');
-    this.timeEl = stage.querySelector('.sp-time');
-    this.bigplay = stage.querySelector('.sp-bigplay');
+    this.fill = this.ctl.querySelector('.sp-progress-fill');
+    this.ticks = this.ctl.querySelector('.sp-ticks');
+    this.progress = this.ctl.querySelector('.sp-progress');
+    this.timeEl = this.ctl.querySelector('.sp-time');
+    this.bigplay = stage.querySelector('.sp-bigplay'); // 센터 재생버튼은 스테이지 내부 유지(영상 위 오버레이)
 
     // state
     this.i = -1;
@@ -471,14 +472,14 @@
 
   // ── 아이콘 ────────────────────────────────────────────────
   Player.prototype._setPlayIcon = function (playing) {
-    var b = this.stage.querySelector('.sp-play');
+    var b = this.ctl.querySelector('.sp-play');
     if (!b) return;
     b.innerHTML = playing
       ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
   };
   Player.prototype._setMuteIcon = function (m) {
-    var b = this.stage.querySelector('.sp-mute');
+    var b = this.ctl.querySelector('.sp-mute');
     if (!b) return;
     b.innerHTML = m
       ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16 9l4 6M20 9l-4 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
@@ -569,7 +570,7 @@
       '.sp-fs': function () { self.toggleFullscreen(); },
     };
     Object.keys(map).forEach(function (sel) {
-      var el = self.stage.querySelector(sel);
+      var el = self.ctl.querySelector(sel);
       if (el) el.addEventListener('click', function (e) {
         e.stopPropagation(); // 컨트롤 클릭이 스테이지 토글(재생/정지)로 번지지 않게 → 사운드 토글해도 재생 유지
         map[sel]();

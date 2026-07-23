@@ -90,26 +90,25 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
         </button>
       </div>
 
-      <div class="sp-controls">
-        <div class="sp-progress">
-          <div class="sp-ticks"></div>
-          <div class="sp-progress-fill"></div>
-        </div>
-        <div class="sp-btnrow">
-          <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
-          <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
-          <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
-          <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
-          <span class="sp-time">0:00 / 0:00</span>
-          <span class="sp-spacer"></span>
-          <span class="sp-live">LIVE</span>
-          <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
-          <button class="sp-mute" type="button" aria-label="음소거"></button>
-          <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
-        </div>
-      </div>
-
       <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
+    </div>
+    <div class="sp-controls">
+      <div class="sp-progress">
+        <div class="sp-ticks"></div>
+        <div class="sp-progress-fill"></div>
+      </div>
+      <div class="sp-btnrow">
+        <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
+        <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
+        <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
+        <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+        <span class="sp-time">0:00 / 0:00</span>
+        <span class="sp-spacer"></span>
+        <span class="sp-live">LIVE</span>
+        <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
+        <button class="sp-mute" type="button" aria-label="음소거"></button>
+        <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
+      </div>
     </div>
   </div>
 
@@ -180,25 +179,25 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
         </button>
       </div>
-      <div class="sp-controls">
-        <div class="sp-progress">
-          <div class="sp-ticks"></div>
-          <div class="sp-progress-fill"></div>
-        </div>
-        <div class="sp-btnrow">
-          <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
-          <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
-          <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
-          <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
-          <span class="sp-time">0:00 / 0:00</span>
-          <span class="sp-spacer"></span>
-          <span class="sp-live">LIVE</span>
-          <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
-          <button class="sp-mute" type="button" aria-label="음소거"></button>
-          <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
-        </div>
-      </div>
       <script class="sp-data" type="application/json" set:html={JSON.stringify({ scenes })} />
+    </div>
+    <div class="sp-controls">
+      <div class="sp-progress">
+        <div class="sp-ticks"></div>
+        <div class="sp-progress-fill"></div>
+      </div>
+      <div class="sp-btnrow">
+        <button class="sp-play" type="button" aria-label="재생/일시정지"></button>
+        <button class="sp-prev" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-9 6 9 6z"></path></svg></button>
+        <button class="sp-next" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l9 6-9 6z"></path></svg></button>
+        <button class="sp-replay" type="button" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+        <span class="sp-time">0:00 / 0:00</span>
+        <span class="sp-spacer"></span>
+        <span class="sp-live">LIVE</span>
+        <button class="sp-cap" type="button" aria-label="자막 위치 전환"></button>
+        <button class="sp-mute" type="button" aria-label="음소거"></button>
+        <button class="sp-fs" type="button" aria-label="전체화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg></button>
+      </div>
     </div>
   </div>
 )}

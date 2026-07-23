@@ -720,7 +720,7 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 }
 /* 뉴스룸 컨트롤바 — 하단 날씨 데스크(높이 12%) '위'로 올려 날씨 티커를 안 가림.
    컴팩트 패딩 + 위로 옅어지는 그라디언트로 호스트 위 버튼 가독성 유지. */
-.sp-stage.is-newsroom .sp-controls {
+.sp-stage.is-newsroom ~ .sp-controls {
   bottom: 12%;
   padding: 9px 12px 7px;
   background: linear-gradient(0deg, rgba(6, 10, 20, 0.82), rgba(6, 10, 20, 0.18) 72%, transparent);
@@ -789,26 +789,30 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   .is-newsroom .sp-ticker-track { font-size: 11px; }
   .is-newsroom .sp-desk-logo { font-size: 13px; }
 
-  /* 모바일: 플레이어 네비를 영상 '맨 아래'로 빼고 '컴팩트'하게(영상 잠식 최소화),
-     날씨 데스크는 숨긴다. 자막은 네비 위로 두되 '폭을 넓혀' 글이 답답하지 않게. */
+  /* 모바일: 컨트롤바를 영상(16:9) '아래' 별도 바로 분리(static 흐름) — 영상을 전혀 안 가림.
+     날씨 데스크는 숨기고, 자막은 폭을 넓혀 답답하지 않게. */
   .sp-stage.is-newsroom .sp-desk { display: none; }
-  .sp-stage.is-newsroom .sp-controls,
-  .sp-stage.is-newsroom.cap-safe .sp-controls { bottom: 0; padding: 5px 8px 7px; }
-  .sp-controls .sp-progress { margin: 0 2px 5px; height: 4px; }
+  .sp-stage { border-radius: var(--radius) var(--radius) 0 0; }
+  .sp-controls {
+    position: static; opacity: 1; bottom: auto;
+    padding: 6px 10px 8px; background: #0b0e16;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .sp-controls .sp-progress { margin: 0 2px 6px; height: 4px; }
   .sp-controls .sp-btnrow { gap: 2px; }
-  .sp-controls .sp-btnrow button { width: 28px; height: 28px; }
-  .sp-controls .sp-btnrow svg { width: 17px; height: 17px; }
-  .sp-controls .sp-time { font-size: 0.7rem; margin-left: 2px; }
-  .sp-controls .sp-live { font-size: 0.66rem; padding: 2px 6px; }
+  .sp-controls .sp-btnrow button { width: 30px; height: 30px; }
+  .sp-controls .sp-btnrow svg { width: 18px; height: 18px; }
+  .sp-controls .sp-time { font-size: 0.72rem; margin-left: 2px; }
+  .sp-controls .sp-live { font-size: 0.68rem; padding: 2px 6px; }
   .sp-stage.is-newsroom .sp-host,
   .sp-stage.is-newsroom.cap-safe .sp-host { bottom: 0; width: 37%; }
   .sp-stage.is-newsroom .sp-caption.sp-chyron,
   .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
-    left: 3%; right: auto; width: 76%; bottom: 28%;
+    left: 3%; right: auto; width: 78%; bottom: 6%;
   }
   .is-newsroom .sp-chyron .box {
-    min-height: 3em; max-height: 4.8em;
-    font-size: clamp(0.66rem, 3.5cqw, 0.92rem); line-height: 1.34;
+    min-height: 3em; max-height: 5em;
+    font-size: clamp(0.68rem, 3.6cqw, 0.94rem); line-height: 1.36;
     padding: 7px 11px 7px 16px;
   }
 }
@@ -847,7 +851,9 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   height: 34px;
 }
 
-/* control bar */
+/* control bar (스테이지 밖 = .sp-shell > .sp-controls: 데스크톱은 영상 위 오버레이,
+   모바일은 영상 아래로 흐름) */
+.sp-shell { position: relative; }
 .sp-controls {
   position: absolute;
   left: 0;
@@ -859,8 +865,8 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   opacity: 0;
   transition: opacity 0.2s;
 }
-.sp-stage:hover .sp-controls,
-.sp-stage.is-paused .sp-controls {
+.sp-shell:hover .sp-controls,
+.sp-stage.is-paused ~ .sp-controls {
   opacity: 1;
 }
 .sp-progress {
