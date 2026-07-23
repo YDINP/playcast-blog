@@ -17,8 +17,9 @@
   'use strict';
 
   var PER_CHAR = 130; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
-  var MOUTH_BEAT = 190; // 뻐끔 한 번(열고닫음) 주기(ms) — 말하는 동안 일정 속도로 개폐
-  var MOUTH_SEQ = ['a', 'e', 'o', 'a', 'i', 'e', 'o', 'u', 'e', 'a']; // 뻐끔마다 순환할 입모양(모음)
+  var MOUTH_BEAT = 240; // 입모양(모음) 유지 시간(ms) — 크로스페이드로 부드럽게 다음 모양으로
+  var MOUTH_OPEN_PERIOD = 560; // 벌어짐 연속 사인 주기(ms) — 은은한 개폐(하드 X)
+  var MOUTH_SEQ = ['a', 'e', 'o', 'a', 'i', 'e', 'o', 'u', 'e', 'a']; // 순환할 입모양(모음)
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
@@ -341,14 +342,13 @@
       : isTyping;
     this.host.classList.toggle('is-talking', speaking);
     if (speaking) {
-      // 뻐끔마다 입모양(모음)을 순환시켜 자연스럽게 — 벌어짐(--mopen)도 그 모음 기준으로.
-      var beatIdx = Math.floor(elapsed / MOUTH_BEAT);
-      var vis = MOUTH_SEQ[beatIdx % MOUTH_SEQ.length];
+      // 입모양(모음)은 천천히 순환 + CSS 크로스페이드로 '부드럽게' 이어지고,
+      // 벌어짐(--mopen)은 '연속 사인'으로 완전히 닫지 않고 은은하게 열렸다 닫혀
+      // 반짝임(하드 개폐)이 없다.
+      var vis = MOUTH_SEQ[Math.floor(elapsed / MOUTH_BEAT) % MOUTH_SEQ.length];
       this.host.setAttribute('data-viseme', vis);
-      var ph = (elapsed % MOUTH_BEAT) / MOUTH_BEAT;
-      var env = ph < MOUTH_DUTY ? Math.sin((ph / MOUTH_DUTY) * Math.PI) : 0;
-      var peak = MOUTH_OPEN[vis]; if (peak == null) peak = 1;
-      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (peak - MOUTH_FLOOR) * env).toFixed(3));
+      var wave = 0.5 - 0.5 * Math.cos((elapsed / MOUTH_OPEN_PERIOD) * 6.2831853); // 0..1 부드럽게
+      this.host.style.setProperty('--mopen', (0.45 + 0.55 * wave).toFixed(3)); // 0.45~1.0
     } else {
       this.host.setAttribute('data-viseme', 'closed');
       this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
