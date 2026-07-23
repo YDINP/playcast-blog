@@ -788,6 +788,18 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   .is-newsroom .sp-chyron .chyron-tag { top: -13px; left: 8px; padding: 4px 10px; font-size: 10px; }
   .is-newsroom .sp-ticker-track { font-size: 11px; }
   .is-newsroom .sp-desk-logo { font-size: 13px; }
+
+  /* 모바일: 플레이어 네비를 영상 '맨 아래'로 빼고, 날씨 데스크는 숨겨 공간 확보.
+     자막은 화면 중앙(기존 43%)이 아니라 네비 바로 위(하단)로 내린다. */
+  .sp-stage.is-newsroom .sp-desk { display: none; }
+  .sp-stage.is-newsroom .sp-controls,
+  .sp-stage.is-newsroom.cap-safe .sp-controls { bottom: 0; padding-bottom: 8px; }
+  .sp-stage.is-newsroom .sp-host,
+  .sp-stage.is-newsroom.cap-safe .sp-host { bottom: 0; }
+  .sp-stage.is-newsroom .sp-caption.sp-chyron,
+  .sp-stage.is-newsroom.cap-safe .sp-caption.sp-chyron {
+    left: 3%; right: auto; width: 62%; bottom: 22%;
+  }
 }
 
 /* big center play (before start / paused) */
