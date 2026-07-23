@@ -16,7 +16,7 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 200; // ms/글자 — 자막 진행 = 말하기(입 개폐) 속도. 이 값 하나로 함께 조절
+  var PER_CHAR = 260; // ms/글자 — 자막 진행 = 말하기(입 개폐) 속도. 이 값 하나로 함께 조절
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
