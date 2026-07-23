@@ -16,7 +16,8 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 200; // ms/글자 — 자막 진행 = 뻐끔(입 개폐) 속도
+  var PER_CHAR = 130; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
+  var MOUTH_BEAT = 190; // 뻐끔 한 번(열고닫음) 주기(ms) — 말하는 동안 일정 속도로 개폐
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
@@ -178,8 +179,8 @@
   Player.prototype._typingDuration = function () {
     var sc = this.scenes[this.i];
     if (this.audio && this.audio.duration) {
-      // 음성이 있으면 자막을 음성 길이의 92%에 걸쳐 노출
-      return this.audio.duration * 1000 * 0.92;
+      // 음성이 있으면 자막을 음성 길이의 앞 55%에 걸쳐 빠르게 노출(이후 말 끝날 때까지 유지)
+      return this.audio.duration * 1000 * 0.55;
     }
     return Math.max(TYPE_MIN, plainText(sc.text).length * PER_CHAR);
   };
@@ -326,30 +327,27 @@
     );
     if (this.textEl.textContent.length !== reveal) {
       this.textEl.innerHTML = revealHTML(text, reveal);
-      // 현재 글자의 입모양(모음/닫힘)만 갱신.
-      this._curVis = visemeOf(plain.charAt(reveal - 1));
-    }
-    // 입 개폐를 '자막 진행(글자)'에 동기화 — 글자 1개당 한 번 열렸다 닫힌다.
-    // reveal도 typingDur 기준이라 텍스트 진행 속도 = 말하기(입) 속도. 속도는 PER_CHAR로 조절.
-    // 뻐끔(또박또박): 발음에 안 맞추고 단일 개구 입모양('a')을 자막 글자마다 또렷하게
-    // 한 번 열었다 닫는다. 글자 beat 앞부분(duty)에서만 열고닫고 나머지는 다뭄 →
-    // 뉴스 앵커처럼 음절이 분리돼 들리는 느낌. (공백 글자는 완전히 다뭄.)
-    if (!this._curVis || this._curVis === 'closed') {
-      this.host.setAttribute('data-viseme', 'closed');
-      this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
-    } else {
-      this.host.setAttribute('data-viseme', 'a');
-      var beatLen = typingDur / Math.max(1, plen);       // 글자 1개 노출 시간(ms)
-      var ph = (elapsed % beatLen) / beatLen;            // 0..1 (현재 글자 내 위치)
-      var env = ph < MOUTH_DUTY ? Math.sin((ph / MOUTH_DUTY) * Math.PI) : 0; // 앞 duty에서만 개폐, 뒤는 다뭄
-      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (1 - MOUTH_FLOOR) * env).toFixed(3));
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
     this.stage.classList.toggle('is-typing', isTyping);
 
-    // 말하는 중: 호스트 끄덕임(정적 포트레이트라 입모양 대신)
-    this.host.classList.toggle('is-talking', isTyping);
+    // 말하는 동안 입 뻐끔: 음성이 있으면 '음성 재생 내내', 없으면 타이핑 중.
+    // → 자막은 빨리 다 뜨고(typingDur 짧음) 말 끝날 때까지 유지되며, 그동안 입은 계속 움직인다.
+    var speaking = (this.audio && this.audio.duration)
+      ? (!this.audio.paused && this.audio.currentTime < this.audio.duration - 0.05)
+      : isTyping;
+    this.host.classList.toggle('is-talking', speaking);
+    if (speaking) {
+      // 단일 개구 입모양('a')을 일정 주기(MOUTH_BEAT)로 또박또박 열고닫음(뒤 duty는 다뭄).
+      this.host.setAttribute('data-viseme', 'a');
+      var ph = (elapsed % MOUTH_BEAT) / MOUTH_BEAT;
+      var env = ph < MOUTH_DUTY ? Math.sin((ph / MOUTH_DUTY) * Math.PI) : 0;
+      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (1 - MOUTH_FLOOR) * env).toFixed(3));
+    } else {
+      this.host.setAttribute('data-viseme', 'closed');
+      this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
+    }
 
     // 진행바 + 시간
     var globalMs = this.prefix[this.i] + Math.min(elapsed, sceneDur);
