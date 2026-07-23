@@ -16,7 +16,7 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 130; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
+  var PER_CHAR = 100; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
   var MOUTH_BEAT = 240; // 입모양(모음) 유지 시간(ms) — 크로스페이드로 부드럽게 다음 모양으로
   var MOUTH_OPEN_PERIOD = 560; // 벌어짐 연속 사인 주기(ms) — 은은한 개폐(하드 X)
   var MOUTH_SEQ = ['a', 'e', 'o', 'a', 'i', 'e', 'o', 'u', 'e', 'a']; // 순환할 입모양(모음)
@@ -130,7 +130,7 @@
     this.started = false;
     this.autostarted = false;
     this._curVis = 'closed'; // 현재 글자(닫힘/모음) — 공백이면 입 다뭄
-    this.muted = false; // 기본 사운드 ON (효과음/음성 공통)
+    this.muted = true; // 자동재생 위해 음소거로 시작(브라우저 정책) — 첫 상호작용에 소리 켜짐
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
     this.activeBg = 'a';
@@ -182,8 +182,8 @@
   Player.prototype._typingDuration = function () {
     var sc = this.scenes[this.i];
     if (this.audio && this.audio.duration) {
-      // 음성이 있으면 자막을 음성 길이의 앞 55%에 걸쳐 빠르게 노출(이후 말 끝날 때까지 유지)
-      return this.audio.duration * 1000 * 0.55;
+      // 음성이 있으면 자막을 음성 길이의 앞 42%에 걸쳐 빠르게 노출(이후 말 끝날 때까지 유지)
+      return this.audio.duration * 1000 * 0.42;
     }
     return Math.max(TYPE_MIN, plainText(sc.text).length * PER_CHAR);
   };
@@ -782,6 +782,22 @@
     });
     document.querySelectorAll('.rig-blink').forEach(startBlink);
     initRigs();
+    armSound();
+  }
+
+  // 자동재생은 음소거로 시작(브라우저 정책). 첫 사용자 상호작용(클릭/터치/키/스크롤)에 소리 켜기.
+  function armSound() {
+    var armed = false;
+    function on() {
+      if (armed) return;
+      armed = true;
+      document.querySelectorAll('.sp-stage').forEach(function (st) {
+        if (st.__sp && st.__sp.setMuted) st.__sp.setMuted(false);
+      });
+    }
+    ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(function (ev) {
+      document.addEventListener(ev, on, { once: true, passive: true });
+    });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
