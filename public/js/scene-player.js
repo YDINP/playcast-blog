@@ -412,7 +412,7 @@
     cancelAnimationFrame(this.raf);
     this.stage.classList.add('is-paused');
     this.host.classList.remove('is-talking');
-    if (this.bigplay) this.bigplay.classList.add('is-hidden');
+    if (this.bigplay) this.bigplay.classList.remove('is-hidden'); // 일시정지 시 중앙 재생버튼 노출(재개 가능)
     this._setPlayIcon(false);
   };
 
