@@ -58,7 +58,7 @@ scenes:
     emotion: "surprised"
     chapter: "③ 면역 체계와 전투"
     image: "/games/scenes/patho-03.jpg"
-  - text: "핵심 재미는 **빌드 조합**입니다.\n세포 소기관·돌연변이·업그레이드가\n무려 **120종 이상** 준비돼 있습니다."
+  - text: "핵심 재미는 **빌드 조합**입니다.\n세포 소기관·돌연변이·업그레이드가\n**무려 120종 이상** 준비돼 있습니다."
     voice: "/voice/pathogenesis/04.mp3"
     emotion: "happy"
     chapter: "④ 120종+ 조합"
