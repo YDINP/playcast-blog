@@ -18,6 +18,7 @@
 
   var PER_CHAR = 130; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
   var MOUTH_BEAT = 190; // 뻐끔 한 번(열고닫음) 주기(ms) — 말하는 동안 일정 속도로 개폐
+  var MOUTH_SEQ = ['a', 'e', 'o', 'a', 'i', 'e', 'o', 'u', 'e', 'a']; // 뻐끔마다 순환할 입모양(모음)
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
@@ -340,11 +341,14 @@
       : isTyping;
     this.host.classList.toggle('is-talking', speaking);
     if (speaking) {
-      // 단일 개구 입모양('a')을 일정 주기(MOUTH_BEAT)로 또박또박 열고닫음(뒤 duty는 다뭄).
-      this.host.setAttribute('data-viseme', 'a');
+      // 뻐끔마다 입모양(모음)을 순환시켜 자연스럽게 — 벌어짐(--mopen)도 그 모음 기준으로.
+      var beatIdx = Math.floor(elapsed / MOUTH_BEAT);
+      var vis = MOUTH_SEQ[beatIdx % MOUTH_SEQ.length];
+      this.host.setAttribute('data-viseme', vis);
       var ph = (elapsed % MOUTH_BEAT) / MOUTH_BEAT;
       var env = ph < MOUTH_DUTY ? Math.sin((ph / MOUTH_DUTY) * Math.PI) : 0;
-      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (1 - MOUTH_FLOOR) * env).toFixed(3));
+      var peak = MOUTH_OPEN[vis]; if (peak == null) peak = 1;
+      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (peak - MOUTH_FLOOR) * env).toFixed(3));
     } else {
       this.host.setAttribute('data-viseme', 'closed');
       this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
