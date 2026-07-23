@@ -16,12 +16,12 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 200; // ms/글자 — 자막 진행 속도(입모양과 분리)
-  var SHAPE_MS = 360; // 입모양 한 번 열고닫는 주기(ms) — 자막과 별개로 입만 천천히
+  var PER_CHAR = 200; // ms/글자 — 자막 진행 = 뻐끔(입 개폐) 속도
   var HOLD_DEFAULT = 1100; // 타이핑 완료 후 정지(ms)
   var TYPE_MIN = 780; // 최소 타이핑 시간
   var MOUTH_MS = 130; // 입모양 토글 주기
-  var MOUTH_FLOOR = 0.15; // 최소 벌어짐(글자 사이 닫힘 정도)
+  var MOUTH_FLOOR = 0.1; // 최소 벌어짐(음절 사이 다뭄 정도 — 낮을수록 또박또박)
+  var MOUTH_DUTY = 0.72; // 글자 beat 중 입을 열고닫는 비율(나머지는 다뭄 → 음절 분리)
   // 각 입모양의 벌어짐(세로 스케일). 스텝마다 이 값으로 부드럽게 스케일 전환.
   var MOUTH_OPEN = { closed: 0.16, i: 0.55, u: 0.6, e: 0.82, o: 0.88, a: 1.0 };
 
@@ -125,10 +125,8 @@
     this.playing = false;
     this.started = false;
     this.autostarted = false;
-    this._curVis = 'closed'; // 현재 글자의 입모양(모음/닫힘)
-    this._mbeat = -1; // 입모양 주기 인덱스
-    this._mvis = 'closed'; // 이번 주기의 입모양
-    this.muted = true; // 기본 무음(효과음/음성 공통)
+    this._curVis = 'closed'; // 현재 글자(닫힘/모음) — 공백이면 입 다뭄
+    this.muted = false; // 기본 사운드 ON (효과음/음성 공통)
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
     this.activeBg = 'a';
@@ -333,21 +331,18 @@
     }
     // 입 개폐를 '자막 진행(글자)'에 동기화 — 글자 1개당 한 번 열렸다 닫힌다.
     // reveal도 typingDur 기준이라 텍스트 진행 속도 = 말하기(입) 속도. 속도는 PER_CHAR로 조절.
-    // 입모양(shape)은 자막보다 느린 SHAPE_MS 주기로만 갱신하고, 그 주기 안에서 한 번 열고 닫는다.
-    // (자막 reveal은 PER_CHAR로 더 빠르게 진행 — 입과 분리.)
-    var mbeat = Math.floor(elapsed / SHAPE_MS);
-    if (mbeat !== this._mbeat) {
-      this._mbeat = mbeat;
-      this._mvis = this._curVis || 'closed'; // 이 주기의 입모양 = 주기 시작 시점의 현재 글자 모음
-    }
-    var vis = this._mvis || 'closed';
-    this.host.setAttribute('data-viseme', vis);
-    if (vis === 'closed') {
+    // 뻐끔(또박또박): 발음에 안 맞추고 단일 개구 입모양('a')을 자막 글자마다 또렷하게
+    // 한 번 열었다 닫는다. 글자 beat 앞부분(duty)에서만 열고닫고 나머지는 다뭄 →
+    // 뉴스 앵커처럼 음절이 분리돼 들리는 느낌. (공백 글자는 완전히 다뭄.)
+    if (!this._curVis || this._curVis === 'closed') {
+      this.host.setAttribute('data-viseme', 'closed');
       this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
     } else {
-      var env = Math.sin(((elapsed % SHAPE_MS) / SHAPE_MS) * Math.PI); // 0→1→0 열림-닫힘
-      var peak = MOUTH_OPEN[vis]; if (peak == null) peak = 1;
-      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (peak - MOUTH_FLOOR) * env).toFixed(3));
+      this.host.setAttribute('data-viseme', 'a');
+      var beatLen = typingDur / Math.max(1, plen);       // 글자 1개 노출 시간(ms)
+      var ph = (elapsed % beatLen) / beatLen;            // 0..1 (현재 글자 내 위치)
+      var env = ph < MOUTH_DUTY ? Math.sin((ph / MOUTH_DUTY) * Math.PI) : 0; // 앞 duty에서만 개폐, 뒤는 다뭄
+      this.host.style.setProperty('--mopen', (MOUTH_FLOOR + (1 - MOUTH_FLOOR) * env).toFixed(3));
     }
     if (this.capWrap) this.capWrap.classList.toggle('is-empty', reveal === 0);
     var isTyping = elapsed < typingDur && reveal < plen;
@@ -610,9 +605,9 @@
         });
     }
     this._setPlayIcon(false);
-    this._setMuteIcon(true);
+    this._setMuteIcon(this.muted);
     this.setCapMode(this.capMode, true);
-    this.stage.classList.add('is-muted');
+    this.stage.classList.toggle('is-muted', this.muted);
   };
 
   Player.prototype._observe = function () {
