@@ -32,7 +32,7 @@ coupang:
     desc: "빌드 조합 많은 로그라이크 슈팅에 정밀 조작"
     url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%EB%A7%88%EC%9A%B0%EC%8A%A4"
 scenes:
-  - text: "이번 주 스팀 커뮤니티를 뜨겁게 달군 신작을 전해 드립니다.\n**출시 첫 주 만에 10만 장** 판매를 돌파했습니다."
+  - text: "이번 주 스팀 커뮤니티를 뜨겁게 달군 신작을 전해 드립니다.\n**출시 첫 주 만에 10만 장 판매**를 돌파했습니다."
     voice: "/voice/pathogenesis/00.mp3"
     emotion: "surprised"
     chapter: "오프닝"
