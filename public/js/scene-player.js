@@ -591,12 +591,36 @@
         self._seekFraction((e.clientX - r.left) / r.width);
       });
     }
-    // 스테이지 클릭(컨트롤/버튼 제외) → 토글
+    // ── 컨트롤바 자동 숨김/표시 ──
+    var isHoverable = !!(window.matchMedia && window.matchMedia('(hover: hover)').matches);
+    var hideEl = this.shell || this.stage;
+    self._showControls = function () {
+      hideEl.classList.remove('controls-hidden');
+      clearTimeout(self._hideTimer);
+      self._hideTimer = setTimeout(function () {
+        if (self.playing) hideEl.classList.add('controls-hidden');
+      }, 2600);
+    };
+    if (isHoverable) {
+      // PC: 마우스 움직이면 컨트롤 표시, 벗어나면 숨김
+      hideEl.addEventListener('mousemove', self._showControls);
+      hideEl.addEventListener('mouseleave', function () {
+        clearTimeout(self._hideTimer);
+        if (self.playing) hideEl.classList.add('controls-hidden');
+      });
+    }
+    // 스테이지 클릭(컨트롤/버튼 제외)
     this.stage.addEventListener('click', function (e) {
       if (e.target.closest('.sp-controls') || e.target.closest('.sp-bigplay'))
         return;
+      // 모바일: 컨트롤 숨김 상태면 터치 → 컨트롤만 표시(일시정지 안 함)
+      if (!isHoverable && hideEl.classList.contains('controls-hidden')) {
+        self._showControls();
+        return;
+      }
       if (self.started) self.toggle();
       else self.play();
+      self._showControls();
     });
     // 외부 트랜스크립트 항목 → 해당 씬으로
     var id = this.stage.getAttribute('data-player');
@@ -626,9 +650,9 @@
           ) {
             self.autostarted = true;
             self.play();
-          } else if (en.intersectionRatio < 0.15 && self.playing) {
-            self.pause();
+            if (self._showControls) self._showControls();
           }
+          // 스크롤로 화면 밖으로 나가도 계속 재생(자동 일시정지 제거)
         });
       },
       { threshold: [0, 0.15, 0.6] }

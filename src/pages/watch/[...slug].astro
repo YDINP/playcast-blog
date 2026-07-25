@@ -189,6 +189,18 @@ const faqSchema =
       }
     </div>
 
+    <!-- 카카오 애드핏 배너 (플레이어 아래). ⚠️ VIP 도메인(virtual-in-playing) 전용 유닛으로 교체 필요 -->
+    <div class="vw-ad" aria-hidden="true">
+      <ins
+        class="kakao_ad_area"
+        style="display:none;"
+        data-ad-unit="DAN-VIP-REPLACE-ME"
+        data-ad-width="320"
+        data-ad-height="100"
+      ></ins>
+    </div>
+    <script is:inline async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
+
     <!-- 관련 상품(쿠팡 파트너스). coupang 프론트매터 있을 때만 -->
     {
       data.coupang && data.coupang.length > 0 && (

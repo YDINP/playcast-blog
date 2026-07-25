@@ -329,6 +329,16 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   width: 100vw; height: auto; aspect-ratio: 16 / 9;
   max-height: 100vh; max-height: 100dvh; margin: auto; border-radius: 0;
 }
+/* 컨트롤바 자동 숨김/표시(유휴 시 숨김) */
+.sp-controls { transition: opacity .28s ease, transform .28s ease; }
+.sp-shell.controls-hidden .sp-controls { opacity: 0; pointer-events: none; transform: translateY(8px); }
+.sp-shell.controls-hidden { cursor: none; }
+/* 전체화면: 로지를 스테이지 '높이' 기준으로 크기 제한 → 머리 짤림 방지 */
+.sp-shell:fullscreen .sp-stage.is-newsroom .sp-host,
+.sp-shell:-webkit-full-screen .sp-stage.is-newsroom .sp-host,
+.sp-shell.is-fs .sp-stage.is-newsroom .sp-host {
+  height: 84%; width: auto; max-width: none; min-width: 0;
+}
 /* background crossfade layers */
 .sp-bg {
   position: absolute;
@@ -750,7 +760,7 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 .is-newsroom .sp-chyron .box {
   position: relative; max-width: none; text-align: left;
   display: flex; align-items: center; /* 3줄 고정 영역, 세로 중앙 */
-  height: 5.4em; padding: 16px 18px 16px 26px; overflow: hidden; /* 기본 자막 영역 확대(아래로) */
+  height: 6.6em; padding: 12px 18px 12px 26px; overflow: hidden; /* 3줄 자막 안 짤리게 높이 확대 */
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(14, 22, 42, 0.72), rgba(8, 13, 26, 0.84));
   -webkit-backdrop-filter: blur(12px) saturate(1.3);
@@ -2173,3 +2183,7 @@ body::after {
   width: 100%;
   height: 100%;
 }
+
+/* VIP 애드핏 배너(플레이어 아래) — 미채움 시 공간 제거 */
+.vw-ad { display: flex; justify-content: center; margin: 18px 0; }
+.vw-ad:not(:has(.kakao_ad_area iframe)) { display: none; }
