@@ -16,7 +16,7 @@
 (function () {
   'use strict';
 
-  var PER_CHAR = 100; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
+  var PER_CHAR = 68; // ms/글자 — 자막 리빌 속도(무음 씬). 작을수록 빠름
   var MOUTH_BEAT = 240; // 입모양(모음) 유지 시간(ms) — 크로스페이드로 부드럽게 다음 모양으로
   var MOUTH_OPEN_PERIOD = 560; // 벌어짐 연속 사인 주기(ms) — 은은한 개폐(하드 X)
   var MOUTH_SEQ = ['a', 'e', 'o', 'a', 'i', 'e', 'o', 'u', 'e', 'a']; // 순환할 입모양(모음)
@@ -182,8 +182,8 @@
   Player.prototype._typingDuration = function () {
     var sc = this.scenes[this.i];
     if (this.audio && this.audio.duration) {
-      // 음성이 있으면 자막을 음성 길이의 앞 42%에 걸쳐 빠르게 노출(이후 말 끝날 때까지 유지)
-      return this.audio.duration * 1000 * 0.42;
+      // 음성이 있으면 자막을 음성 길이의 앞 30%에 걸쳐 빠르게 노출(이후 말 끝날 때까지 유지)
+      return this.audio.duration * 1000 * 0.30;
     }
     return Math.max(TYPE_MIN, plainText(sc.text).length * PER_CHAR);
   };
@@ -303,6 +303,13 @@
       this.audio = null;
     }
     var sc = this.scenes[idx];
+    // 자막 동적 폰트: CSS vw(해상도) 스케일 × 텍스트 길이 보정(길수록 축소 → 박스에 맞춤)
+    if (this.captionBox) {
+      var _len = plainText(sc.text || '').length;
+      var _scale = _len <= 34 ? 1 : Math.max(0.68, 34 / _len);
+      this.captionBox.style.fontSize =
+        'calc(clamp(0.95rem, 2.2vw, 1.35rem) * ' + _scale.toFixed(2) + ')';
+    }
     if (sc.voice) {
       this.audio = new Audio(sc.voice);
       this.audio.muted = this.muted;
@@ -645,7 +652,7 @@
         entries.forEach(function (en) {
           if (
             en.isIntersecting &&
-            en.intersectionRatio >= 0.6 &&
+            en.intersectionRatio >= 0.4 &&
             !self.autostarted
           ) {
             self.autostarted = true;
@@ -655,7 +662,7 @@
           // 스크롤로 화면 밖으로 나가도 계속 재생(자동 일시정지 제거)
         });
       },
-      { threshold: [0, 0.15, 0.6] }
+      { threshold: [0, 0.2, 0.4] }
     );
     io.observe(this.stage);
   };
