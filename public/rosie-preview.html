@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>로지 캐릭터 프리뷰</title>
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 22px; padding: 32px;
+      background:
+        radial-gradient(60% 55% at 50% 30%, rgba(87,230,195,0.10), transparent 70%),
+        radial-gradient(55% 50% at 50% 100%, rgba(139,123,255,0.12), transparent 70%),
+        #0e0e14;
+      font-family: 'Pretendard', system-ui, 'Malgun Gothic', sans-serif;
+      color: #e8e8f0;
+    }
+    .stage {
+      position: relative;
+      display: grid; place-items: end center;
+    }
+    /* 접지 그림자 */
+    .stage::after {
+      content: ""; position: absolute; left: 50%; bottom: 4%;
+      width: 46%; height: 3.2%; transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(0,0,0,0.55), transparent 70%);
+      filter: blur(4px);
+    }
+    img.rosie {
+      height: min(78vh, 760px);
+      width: auto; display: block;
+      filter: drop-shadow(0 24px 40px rgba(0,0,0,0.5));
+      image-rendering: auto;
+    }
+    .cap { font-size: 0.9rem; color: #8b8b98; letter-spacing: 0.02em; }
+    .cap b { color: #7fe9d0; font-weight: 700; }
+    /* 배경 토글용 체크무늬(투명 확인) — 버튼으로 전환 */
+    body.check {
+      background:
+        repeating-conic-gradient(#2a2a33 0% 25%, #1c1c24 0% 50%) 0 / 34px 34px;
+    }
+    .btns { display: flex; gap: 8px; }
+    button {
+      font: inherit; font-size: 0.82rem; color: #cfcfda;
+      background: #1a1a22; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px; padding: 6px 14px; cursor: pointer;
+    }
+    button:hover { background: #24242e; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <img class="rosie" src="/host/rosie.png?v=1" alt="채널 호스트 로지" draggable="false" />
+  </div>
+  <div class="cap">VIP 호스트 <b>로지</b> · 캐릭터 프리뷰</div>
+  <div class="btns">
+    <button onclick="document.body.classList.toggle('check')">배경: 체크무늬 토글</button>
+    <button onclick="var i=document.querySelector('.rosie');i.style.height=(i.offsetHeight<720?'760px':'520px')">크기 토글</button>
+  </div>
+</body>
+</html>

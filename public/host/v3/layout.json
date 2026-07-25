@@ -3,56 +3,87 @@
     "w": 600,
     "h": 911
   },
-  "note": "원본 rosie(600x911) 정답 좌표계. 격자 실측 최종: eyes 0.752·y359(홍채폭161), head 코앵커 y425(정수리 hair 밑으로), hair 1.10, body 0.90·y480. head는 살색 베이스라 내려도 눈코입 불변. lid 살색 제거.",
+  "note": "원본 rosie(600x911) 정답 좌표계. iris는 흰자중심 0.9x 재배치본. blush=별도 볼그룹(눈 아님). lash=우하단 오프셋. 눈썹 원본 L246/R355·y317 매칭.",
   "layers": {
     "body": {
-      "left": -40.3,
-      "top": 286.5,
-      "width": 558,
-      "scale": 0.9
+      "left": -72,
+      "top": 242,
+      "width": 651,
+      "scale": 1.05
     },
     "head": {
-      "left": -59,
-      "top": 51.6,
-      "width": 667.1,
-      "scale": 1.076
+      "left": -22.6,
+      "top": 56,
+      "width": 632.4,
+      "scale": 1.02
     },
     "hair": {
-      "left": 40.5,
-      "top": 46,
-      "width": 682,
-      "scale": 1.1
+      "left": 61,
+      "top": 48,
+      "width": 651,
+      "scale": 1.05
     },
     "eyes": {
-      "left": 152.8,
-      "top": 208.6,
-      "width": 285.8,
-      "scale": 0.752
+      "left": 150.4,
+      "top": 225.9,
+      "width": 307.23,
+      "scale": 0.8085
     },
     "brow": {
-      "left": 166.1,
-      "top": 146.6,
-      "width": 258.8,
-      "scale": 0.7843
+      "left": 189.9,
+      "top": 177.3,
+      "width": 223,
+      "scale": 0.676
     },
     "mouth": {
-      "left": 204.8,
-      "top": 352.1,
-      "width": 188.2,
-      "scale": 0.5702
+      "left": 231.2,
+      "top": 378.5,
+      "width": 169.35,
+      "scale": 0.51318
+    },
+    "blush": {
+      "left": 104.25,
+      "top": 220.05,
+      "width": 420.3,
+      "scale": 1.1061
     }
+  },
+  "globalOffset": { "x": -20, "y": -20 },
+  "halfPartExtra": {
+    "eye-white": { "leftDx": 5 },
+    "iris": { "leftDx": 5 }
+  },
+  "partOverrides": {
+    "lash": { "dx": 8, "dy": 16 },
+    "nose": { "dx": 2, "dy": 8 }
+  },
+  "rightHalfShift": {
+    "dx": 20,
+    "leftDx": 2.5,
+    "rightDx": 17.5,
+    "browLeftDx": 2.5,
+    "browRightDx": 27.5,
+    "blushLeftDx": 18,
+    "blushRightDx": -18,
+    "eyeMidTile": 190,
+    "browMidTile": 164,
+    "blushMidTile": 184,
+    "eyeParts": ["eye-white", "iris", "gleam", "lid-open", "lash"],
+    "browParts": ["brow-neutral"],
+    "blushParts": ["blush"]
   },
   "zorder": [
     "body",
     "head",
+    "nose",
     "eye-white",
     "iris",
     "gleam",
     "lid-*",
     "lash",
-    "brow-*",
     "blush",
     "mouth-*",
-    "hair"
+    "hair",
+    "brow-*"
   ]
 }

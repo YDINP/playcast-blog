@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>로지 캐릭터 에디터</title>
+<style>
+  * { margin:0; box-sizing:border-box; }
+  body {
+    min-height:100vh; display:flex; gap:24px; padding:24px; align-items:flex-start;
+    background:#0e0e14; color:#e8e8f0;
+    font-family:'Pretendard', system-ui, 'Malgun Gothic', sans-serif;
+  }
+  .stagewrap {
+    position:sticky; top:24px; flex:0 0 auto;
+    background:
+      radial-gradient(60% 55% at 50% 30%, rgba(87,230,195,0.10), transparent 70%),
+      #12121a;
+    border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+  }
+  body.check .stagewrap {
+    background:repeating-conic-gradient(#2a2a33 0% 25%, #1c1c24 0% 50%) 0 / 30px 30px;
+  }
+  #cv { height:min(72vh,700px); width:auto; display:block;
+        filter:drop-shadow(0 20px 34px rgba(0,0,0,0.5)); image-rendering:auto; }
+  .panel { flex:1 1 auto; max-width:420px; display:flex; flex-direction:column; gap:14px; }
+  h1 { font-size:1.05rem; font-weight:700; letter-spacing:.02em; }
+  .hint { font-size:.78rem; color:#8b8b98; line-height:1.5; }
+  .grp { background:#16161e; border:1px solid rgba(255,255,255,0.08);
+         border-radius:12px; padding:12px 14px; }
+  .grp.off { opacity:.42; }
+  .grp-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .grp-head b { font-size:.92rem; }
+  .sw { display:inline-flex; align-items:center; gap:6px; font-size:.78rem; color:#b9b9c6; cursor:pointer; }
+  .sw input { accent-color:#57e6c3; width:15px; height:15px; }
+  .row { display:grid; grid-template-columns:52px 1fr 62px; align-items:center; gap:10px; margin:7px 0; }
+  .row label { font-size:.76rem; color:#a7a7b4; }
+  .row input[type=range] { width:100%; accent-color:#57e6c3; }
+  .row .val { font-size:.74rem; color:#dcdce6; text-align:right; font-variant-numeric:tabular-nums;
+              background:#0c0c12; border:1px solid rgba(255,255,255,0.14); border-radius:6px;
+              padding:3px 5px; width:100%; -moz-appearance:textfield; }
+  .row .val::-webkit-outer-spin-button, .row .val::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+  .btns { display:flex; flex-wrap:wrap; gap:8px; }
+  button { font:inherit; font-size:.82rem; color:#cfcfda; background:#1a1a22;
+           border:1px solid rgba(255,255,255,0.14); border-radius:999px; padding:7px 15px; cursor:pointer; }
+  button:hover { background:#24242e; }
+  button.pri { background:#1d5c4f; border-color:#2b7d6b; color:#dbfff5; }
+  .rig-row { display:flex; align-items:center; gap:10px; margin:9px 0; }
+  .rig-row>span { font-size:.78rem; color:#a7a7b4; width:42px; flex:0 0 auto; }
+  .expr-btns { display:flex; flex-wrap:wrap; gap:6px; }
+  .expr-btn, .tgl-btn, .vis-btn, .fr-btn, .ot-btn { font-size:.78rem; padding:6px 12px; }
+  .expr-btn.on, .tgl-btn.on, .vis-btn.on, .fr-btn.on, .ot-btn.on { background:#1d5c4f; border-color:#2b7d6b; color:#dbfff5; }
+  textarea { width:100%; height:120px; background:#0c0c12; color:#9fead9; border:1px solid rgba(255,255,255,0.12);
+             border-radius:10px; padding:10px; font-family:ui-monospace,Consolas,monospace; font-size:.72rem; resize:vertical; }
+</style>
+</head>
+<body>
+  <div class="stagewrap">
+    <canvas id="cv"></canvas>
+    <div class="btns">
+      <button onclick="document.body.classList.toggle('check')">배경 체크무늬</button>
+      <button onclick="savePNG()">PNG 다운로드</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h1>로지 캐릭터 에디터</h1>
+    <p class="hint">요소별 체크박스로 표시 on/off · X/Y로 이동(px) · 크기로 스케일. 아래 <b>값 출력</b>을 눌러 나온 JSON을 알려주시면 그대로 rosie.png에 반영합니다.</p>
+    <div id="groups"></div>
+
+    <div class="grp" id="rig-panel">
+      <div class="grp-head"><b>🎭 리깅 프리뷰</b></div>
+      <div class="rig-row"><span>표정</span>
+        <div class="expr-btns">
+          <button class="expr-btn on" data-e="idle">기본</button>
+          <button class="expr-btn" data-e="happy">기쁨</button>
+          <button class="expr-btn" data-e="surprised">놀람</button>
+          <button class="expr-btn" data-e="think">생각</button>
+        </div>
+      </div>
+      <div class="rig-row"><span>동작</span>
+        <div class="expr-btns">
+          <button class="tgl-btn" id="btn-talk">🗣 말하기</button>
+          <button class="tgl-btn" id="btn-blink">😌 깜빡임 자동</button>
+          <button class="expr-btn" id="btn-blink1">깜빡 1회</button>
+        </div>
+      </div>
+      <div class="rig-row"><span>입모양</span>
+        <div class="expr-btns">
+          <button class="vis-btn on" data-m="closed">닫힘</button>
+          <button class="vis-btn" data-m="a">아</button>
+          <button class="vis-btn" data-m="e">에</button>
+          <button class="vis-btn" data-m="i">이</button>
+          <button class="vis-btn" data-m="o">오</button>
+          <button class="vis-btn" data-m="u">우</button>
+        </div>
+      </div>
+      <div class="rig-row"><span>앞머리</span>
+        <div class="expr-btns">
+          <button class="fr-btn on" data-f="0">1</button>
+          <button class="fr-btn" data-f="1">2</button>
+          <button class="fr-btn" data-f="2">3</button>
+          <button class="fr-btn" data-f="3">4</button>
+        </div>
+      </div>
+      <div class="rig-row"><span>옷</span>
+        <div class="expr-btns">
+          <button class="ot-btn on" data-o="0">네이비</button>
+          <button class="ot-btn" data-o="1">핑크</button>
+          <button class="ot-btn" data-o="2">크림</button>
+          <button class="ot-btn" data-o="3">라벤더</button>
+          <button class="ot-btn" data-o="4">로즈</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button class="pri" onclick="saveServer()">💾 저장(적용)</button>
+      <button onclick="dump()">값 출력(JSON)</button>
+      <button onclick="resetAll()">리셋</button>
+    </div>
+    <p class="hint" id="status">저장을 누르면 조정값과 합성 결과가 프로젝트에 기록됩니다.</p>
+    <textarea id="out" readonly placeholder="값 출력을 누르면 여기에 JSON이 나옵니다"></textarea>
+  </div>
+
+<script>
+// ===== 베이스 상수(현재 rosie.png 합성값과 동일) =====
+const BASE = {
+  Ff:0.44, oyh:10, hairMul:1.5, cropFrac:0.50, topPad:22, CW:600,
+  back:  { src:'/host/parts/back.png?v=3',  cx:306, top:20, s:0.97, extra:1.5, dy:0   },
+  body:  { src:'/host/parts/body.png?v=3',  bodyW:700, neckFrac:0.135 },
+  face:  { src:'/host/parts/face.png?v=8',  cx:300, top:60, s:0.95, mul:1.4 },
+  mouth: { src:'/host/parts/mouth-closed.png?v=3', yFrac:0.755, wFrac:0.30 },
+  eyes:  { src:'/host/parts/eyes.png?v=4',  yFrac:0.54, wFrac:0.6541 },
+  brows: { src:'/host/parts/brows.png?v=1', yFrac:0.51, wFrac:0.66 },
+  front: { src:'/host/parts/front.png?v=6', cx:302, top:40, s:1.2, extra:1.0, dy:-10 },
+};
+// 로드/컨트롤 순서. 그리기 순서는 render()에서 back→body→face→mouth→front→eyes→brows
+const ORDER = ['back','body','face','mouth','eyes','brows','front'];
+const NAME  = { back:'뒷머리', body:'후디 바디', face:'얼굴', mouth:'입', eyes:'눈', brows:'눈썹', front:'앞머리' };
+// 요소별 조정값(오프셋/스케일/표시)
+const DEF = () => ({ back:{on:1,ox:0,oy:0,sc:1}, body:{on:1,ox:0,oy:0,sc:1}, face:{on:1,ox:0,oy:0,sc:1},
+                     mouth:{on:1,ox:0,oy:0,sc:1}, eyes:{on:1,ox:0,oy:0,sc:1}, brows:{on:1,ox:0,oy:0,sc:1}, front:{on:1,ox:0,oy:0,sc:1},
+                     _front:0, _outfit:0 });
+let S = DEF();
+
+// ===== 리깅 프리뷰 상태 =====
+// 표정별 눈/눈썹 변형(Phase1 임시: 변형 기반. Phase2에서 아트 교체 예정)
+const EXPR = {
+  idle:      { eyeSY:1,    eyeDy:0,  browDy:0,   browRot:0,  mMul:1   },
+  happy:     { eyeSY:0.86, eyeDy:0,  browDy:-8,  browRot:0,  mMul:1 }, // 기존 눈 유지·살짝 가늘게
+  surprised: { eyeSY:1,    eyeDy:3,  browDy:-20, browRot:0,  mMul:1.3, eyesImg:'eyesSurprised' }, // 홍채 유지·흰자↑ 놀란눈
+  think:     { eyeSY:1,    eyeDy:0,  browDy:-6,  browRot:-4, mMul:1   },
+};
+const RIG = { expr:'idle', talking:false, blinkAuto:false, blink:false, mouthOpen:0, mouth:'closed', talkViseme:'a' };
+const VISEMES = ['a','e','i','o','u'];
+const VISEME_W = 0.95;  // 닫힌 입 rect 폭 대비 비셈 폭 배율
+let rigRAF=null, blinkTimer=null, lastMouthTs=0;
+
+const imgs = {};
+function load(src){ return new Promise(r=>{ const i=new Image(); i.onload=()=>r(i); i.src=src; }); }
+
+// ===== 컨트롤 UI 생성 =====
+const groupsEl = document.getElementById('groups');
+ORDER.forEach(k=>{
+  const g = document.createElement('div'); g.className='grp'; g.id='grp-'+k;
+  g.innerHTML = `
+    <div class="grp-head">
+      <b>${NAME[k]}</b>
+      <label class="sw"><input type="checkbox" data-k="${k}" data-f="on" checked> 표시</label>
+    </div>
+    ${rowHTML(k,'ox','X 이동',-250,250,1)}
+    ${rowHTML(k,'oy','Y 이동',-250,250,1)}
+    ${rowHTML(k,'sc','크기',0.3,2.5,0.01)}`;
+  groupsEl.appendChild(g);
+});
+function rowHTML(k,f,label,min,max,step){
+  return `<div class="row">
+    <label>${label}</label>
+    <input type="range" data-k="${k}" data-f="${f}" data-role="rng" min="${min}" max="${max}" step="${step}">
+    <input type="number" class="val" data-k="${k}" data-f="${f}" data-role="num" min="${min}" max="${max}" step="${step}" id="v-${k}-${f}">
+  </div>`;
+}
+// 슬라이더 + 숫자입력 양방향 바인딩
+document.querySelectorAll('input[data-role]').forEach(inp=>{
+  inp.addEventListener('input',()=>{
+    let v=parseFloat(inp.value); if(isNaN(v)) return;
+    S[inp.dataset.k][inp.dataset.f]=v; syncVals(inp); render();
+  });
+});
+document.querySelectorAll('input[type=checkbox]').forEach(inp=>{
+  inp.addEventListener('change',()=>{ S[inp.dataset.k].on=inp.checked?1:0;
+    document.getElementById('grp-'+inp.dataset.k).classList.toggle('off',!inp.checked); render(); });
+});
+function syncControls(){
+  document.querySelectorAll('input[data-role]').forEach(inp=>{ inp.value=S[inp.dataset.k][inp.dataset.f]; });
+  document.querySelectorAll('input[type=checkbox]').forEach(inp=>{ inp.checked=!!S[inp.dataset.k].on;
+    document.getElementById('grp-'+inp.dataset.k).classList.toggle('off',!inp.checked); });
+  syncVals();
+}
+// 방금 편집한 입력(src)은 건드리지 않고 나머지 짝만 동기화(커서 튐 방지)
+function syncVals(src){
+  document.querySelectorAll('input[data-role]').forEach(inp=>{
+    if(inp===src) return;
+    const v=S[inp.dataset.k][inp.dataset.f];
+    inp.value = (inp.dataset.f==='sc') ? (+v).toFixed(2) : Math.round(v);
+  });
+}
+
+// ===== 기본 레이아웃 1회 계산 → 고정 캔버스 높이 + 요소별 base 사각형 =====
+// (node 합성 로직으로 기본 배치를 구해 rect로 고정. 이후 각 요소는 자기 중심 기준 sc/ox/oy만 적용)
+let CH_FIXED=783, RECT={};
+function computeBase(){
+  const B=BASE;
+  const bo=imgs.body, bodyW=B.body.bodyW, bh=bo.naturalHeight*(bodyW/bo.naturalWidth);
+  let minTop=1e9;
+  for(const k of ['back','front']){
+    const im=imgs[k], l=B[k]; const h0=im.naturalHeight*l.s*B.Ff;
+    const cy0=l.top*B.Ff+B.oyh+h0/2+(l.dy||0); minTop=Math.min(minTop,cy0-h0*B.hairMul/2);
+  }
+  const shiftY=Math.max(0,B.topPad-minTop);
+  const fi=imgs.face, lf=B.face;
+  const fwBase=fi.naturalWidth*lf.s*B.Ff, fhBase=fi.naturalHeight*lf.s*B.Ff;
+  const fcx=lf.cx, fcy=lf.top*B.Ff+B.oyh+shiftY+fhBase/2;
+  const fm=lf.mul, fw2=fwBase*fm, fh2=fhBase*fm, chinY=fcy+fh2/2;
+  const bodyTopY=chinY-bh*B.body.neckFrac;
+  CH_FIXED=Math.round(bodyTopY+bh*B.cropFrac);
+  // 각 요소 base rect
+  for(const k of ['back','front']){
+    const im=imgs[k], l=B[k];
+    const w0=im.naturalWidth*l.s*B.Ff, h0=im.naturalHeight*l.s*B.Ff, ex=l.extra||1;
+    const cx0=l.cx, cy0=l.top*B.Ff+B.oyh+shiftY+h0/2+(l.dy||0);
+    const bw=w0*B.hairMul*ex, bh2=h0*B.hairMul;
+    RECT[k]={x:cx0-bw/2, y:cy0-bh2/2, w:bw, h:bh2};
+  }
+  RECT.body={x:(B.CW-bodyW)/2, y:bodyTopY, w:bodyW, h:bh};
+  RECT.face={x:fcx-fw2/2, y:fcy-fh2/2, w:fw2, h:fh2};
+  // 눈: 얼굴 박스 기준(yFrac 세로위치, wFrac 폭)
+  const faceCX=RECT.face.x+RECT.face.w/2;
+  function faceElRect(k){const im=imgs[k],l=B[k];const w=fw2*l.wFrac,h=w*(im.naturalHeight/im.naturalWidth);
+    return {x:faceCX-w/2, y:RECT.face.y+l.yFrac*RECT.face.h-h/2, w, h};}
+  RECT.eyes=faceElRect('eyes');
+  RECT.mouth=faceElRect('mouth');
+  RECT.brows=faceElRect('brows');
+}
+
+// ===== 렌더: 캔버스 고정. 각 요소 base rect 중심 기준 sc·ox·oy + 리깅 변형(표정/립싱크/깜빡임) =====
+function render(){
+  const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  cv.width=BASE.CW; cv.height=CH_FIXED; ctx.clearRect(0,0,BASE.CW,CH_FIXED);
+  const ex=EXPR[RIG.expr]||EXPR.idle;
+  // t: {img, scaleY, rot(deg), dy, alpha}
+  function draw(k, t){
+    if(!S[k].on) return; const r=RECT[k], sc=S[k].sc;
+    const img=(t&&t.img)||imgs[k];
+    let w=r.w*sc, h=r.h*sc;
+    if(t&&t.img) h = w*(img.naturalHeight/img.naturalWidth);   // 다른 이미지면 비율 유지
+    const cx=r.x+r.w/2+S[k].ox, cy=r.y+r.h/2+S[k].oy+((t&&t.dy)||0);
+    ctx.save(); ctx.translate(cx, cy);
+    if(t&&t.rot) ctx.rotate(t.rot*Math.PI/180);
+    if(t&&t.scaleY) ctx.scale(1, t.scaleY);
+    if(t&&t.alpha!=null) ctx.globalAlpha=t.alpha;
+    ctx.drawImage(img, -w/2, -h/2, w, h);
+    ctx.restore();
+  }
+  draw('back'); draw('body'); draw('face');
+  // 입: 말하기(아에이오우 비셈 사이클) / 비셈 미리보기 / 닫힌 미소
+  const vkey = RIG.talking ? RIG.talkViseme : (RIG.mouth!=='closed' ? RIG.mouth : null);
+  if(vkey && vkey!=='closed' && imgs['m_'+vkey]){
+    const img=imgs['m_'+vkey], r=RECT.mouth, sc=S.mouth.sc;
+    const w=r.w*sc*VISEME_W, h=w*(img.naturalHeight/img.naturalWidth);
+    const cx=r.x+r.w/2+S.mouth.ox, cy=r.y+r.h/2+S.mouth.oy;
+    ctx.drawImage(img, cx-w/2, cy-h/2, w, h);
+  } else {
+    draw('mouth');                                              // 닫힌 미소
+  }
+  draw('front');
+  // 표정 + 깜빡임(감은 눈 이미지가 있으면 교체, 없으면 squash)
+  if(RIG.blink && imgs.eyesClosed){
+    draw('eyes', {img:imgs.eyesClosed, dy:(ex.eyeDy||0)});
+  } else {
+    const eyeSY = ex.eyeSY * (RIG.blink ? 0.1 : 1);
+    // happy 등 감은눈 표정 이미지가 있으면 교체
+    const exImg = ex.eyesImg && imgs[ex.eyesImg];
+    draw('eyes', exImg ? {img:imgs[ex.eyesImg], dy:(ex.eyeDy||0)} : {scaleY:eyeSY, dy:(ex.eyeDy||0)});
+  }
+  draw('brows', {dy:ex.browDy, rot:ex.browRot});
+}
+
+// ===== 리깅 애니메이션 =====
+function rigTick(ts){
+  if(RIG.talking){
+    if(!lastMouthTs || ts-lastMouthTs>130){ lastMouthTs=ts;
+      RIG.talkViseme = Math.random()<0.18 ? 'closed' : VISEMES[Math.floor(Math.random()*VISEMES.length)]; }
+  }
+  render();
+  rigRAF = RIG.talking ? requestAnimationFrame(rigTick) : null;
+}
+function setTalking(on){
+  RIG.talking=on; if(!on){ RIG.mouthOpen=0; }
+  if(on && !rigRAF) rigRAF=requestAnimationFrame(rigTick); else render();
+}
+function blinkOnce(){
+  RIG.blink=true; render();
+  setTimeout(()=>{ RIG.blink=false; if(!rigRAF) render(); }, 110);
+}
+function scheduleBlink(){
+  blinkTimer=setTimeout(function loop(){
+    blinkOnce();
+    if(Math.random()<0.22) setTimeout(blinkOnce, 260);
+    if(RIG.blinkAuto) blinkTimer=setTimeout(loop, 2400+Math.random()*4600);
+  }, 2400+Math.random()*4600);
+}
+function setBlinkAuto(on){
+  RIG.blinkAuto=on;
+  if(blinkTimer){ clearTimeout(blinkTimer); blinkTimer=null; }
+  if(on) scheduleBlink();
+}
+function setExpr(e){ RIG.expr=e; if(!rigRAF) render();
+  document.querySelectorAll('.expr-btn').forEach(b=>b.classList.toggle('on', b.dataset.e===e)); }
+
+function dump(){
+  document.getElementById('out').value = JSON.stringify(S);
+}
+function resetAll(){ S=DEF(); syncControls(); render(); }
+async function saveServer(){
+  const st=document.getElementById('status');
+  st.textContent='저장 중...';
+  try{
+    // 스냅샷은 항상 idle(표정/입/깜빡임 제외)로 — 리깅은 런타임에 얹힘
+    const keepExpr=RIG.expr, kb=RIG.blink, km=RIG.mouthOpen;
+    RIG.expr='idle'; RIG.blink=false; RIG.mouthOpen=0; render();
+    const png=document.getElementById('cv').toDataURL('image/png');
+    RIG.expr=keepExpr; RIG.blink=kb; RIG.mouthOpen=km; render();
+    const r=await fetch('/api/save-rosie',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({state:S,png})});
+    const j=await r.json();
+    st.innerHTML = j.ok ? '✅ 저장됨 — <code>.tmp/rosie-editor-state.json</code> + <code>public/host/rosie.png</code> 적용됨. Claude에게 "저장했어"라고 알려주세요.'
+                        : '❌ 저장 실패: '+(j.error||'');
+    document.getElementById('out').value=JSON.stringify(S);
+  }catch(e){ st.textContent='❌ 저장 실패(엔드포인트 응답 없음): '+e; }
+}
+function savePNG(){
+  const a=document.createElement('a'); a.download='rosie.png';
+  a.href=document.getElementById('cv').toDataURL('image/png'); a.click();
+}
+
+(async()=>{
+  await Promise.all(ORDER.map(async k=>{ imgs[k]=await load(BASE[k].src); }));
+  imgs.mouthOpen = await load('/host/mouth-open.png?v=1');   // 립싱크용 벌린 입
+  imgs.eyesClosed = await load('/host/parts/eyes-closed.png?v=1'); // 깜빡임(감은 눈)
+  imgs.eyesHappy  = await load('/host/parts/eyes-happy.png?v=1');  // happy(^^ 미소눈)
+  imgs.eyesSurprised = await load('/host/parts/eyes-surprised.png?v=1'); // 놀란눈(흰자↑)
+  for(const v of VISEMES) imgs['m_'+v] = await load('/host/parts/mouth-'+v+'.png?v=1'); // 아에이오우
+  imgs.front0 = imgs.front;
+  for(const n of [1,2,3]) imgs['front'+n] = await load('/host/parts/front-'+n+'.png?v=1'); // 앞머리 변형
+  imgs.body0 = imgs.body;
+  for(const n of [1,2,3,4]) imgs['body'+n] = await load('/host/parts/body-'+n+'.png?v=1'); // 옷(후디 색) 변형
+  // 마지막 저장상태 불러오기(있으면 이어서 조정)
+  try{
+    const saved=await (await fetch('/api/save-rosie')).json();
+    if(saved && typeof saved==='object'){
+      for(const k in S){ if(saved[k]!=null){ if(typeof S[k]==='object') Object.assign(S[k],saved[k]); else S[k]=saved[k]; } }
+      document.getElementById('status').textContent='↩ 마지막 저장상태를 불러왔습니다.'; }
+  }catch(e){}
+  if(imgs['front'+S._front]) imgs.front=imgs['front'+S._front];
+  if(imgs['body'+S._outfit]) imgs.body=imgs['body'+S._outfit];
+  computeBase();
+  // 리깅 버튼 배선
+  document.querySelectorAll('.expr-btn[data-e]').forEach(bt=>bt.onclick=()=>setExpr(bt.dataset.e));
+  document.getElementById('btn-talk').onclick=function(){ this.classList.toggle('on'); setTalking(this.classList.contains('on')); };
+  document.getElementById('btn-blink').onclick=function(){ this.classList.toggle('on'); setBlinkAuto(this.classList.contains('on')); };
+  document.getElementById('btn-blink1').onclick=blinkOnce;
+  document.querySelectorAll('.vis-btn').forEach(bt=>bt.onclick=()=>{
+    if(RIG.talking){ RIG.talking=false; document.getElementById('btn-talk').classList.remove('on'); }
+    RIG.mouth=bt.dataset.m; document.querySelectorAll('.vis-btn').forEach(x=>x.classList.toggle('on',x===bt)); render(); });
+  document.querySelectorAll('.fr-btn').forEach(bt=>bt.onclick=()=>{
+    S._front=+bt.dataset.f; imgs.front=imgs['front'+S._front]; computeBase();
+    document.querySelectorAll('.fr-btn').forEach(x=>x.classList.toggle('on',x===bt)); render(); });
+  document.querySelectorAll('.ot-btn').forEach(bt=>bt.onclick=()=>{
+    S._outfit=+bt.dataset.o; imgs.body=imgs['body'+S._outfit]; computeBase();
+    document.querySelectorAll('.ot-btn').forEach(x=>x.classList.toggle('on',x===bt)); render(); });
+  // 저장상태 반영(피커 on 표시)
+  document.querySelectorAll('.fr-btn').forEach(x=>x.classList.toggle('on',+x.dataset.f===(S._front||0)));
+  document.querySelectorAll('.ot-btn').forEach(x=>x.classList.toggle('on',+x.dataset.o===(S._outfit||0)));
+  syncControls(); render();
+})();
+</script>
+</body>
+</html>
