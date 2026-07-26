@@ -54,7 +54,7 @@ scenes:
     image: "/games/scenes/2026-07-26-dragon-sword-awakening-5.jpg"
     emotion: "happy"
     chapter: "하이라이트"
-  - text: "**드래곤소드: 어웨이크닝**은 스팀에서 만나볼 수 있어요. 감시해주셔서 감사합니다!"
+  - text: "**드래곤소드: 어웨이크닝**은 스팀에서 만나볼 수 있어요. 시청해주셔서 감사합니다!"
     voice: "/voice/2026-07-26-dragon-sword-awakening/05.mp3"
     image: "/games/2026-07-26-dragon-sword-awakening-thumb.jpg"
     emotion: "happy"
