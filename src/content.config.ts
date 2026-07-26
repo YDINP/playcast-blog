@@ -22,6 +22,12 @@ const videos = defineCollection({
         url: z.string().optional(), // 출처 링크
       })
       .optional(),
+    // 소개한 게임의 공식 링크(스팀 상점·공식 홈페이지·스토어). 시청페이지 '관련 상품' 바로 위에 렌더.
+    // 시청자가 바로 게임으로 갈 수 있는 1차 출구 + 인용 출처 역할을 겸한다.
+    // 미지정이면 imageCredit.url(쿠팡 제외)을 자동 폴백으로 쓴다.
+    officialLinks: z
+      .array(z.object({ label: z.string(), url: z.string() }))
+      .optional(),
     // 관련 상품(쿠팡 파트너스). 게임 기프트카드·게임기·게이밍 기어 등. 시청페이지 '관련 상품' 섹션에 렌더.
     // desc = 아이템 추천 설명(왜 이 글 독자에게 좋은지).
     coupang: z

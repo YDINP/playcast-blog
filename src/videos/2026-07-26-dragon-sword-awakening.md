@@ -9,6 +9,9 @@ customThumb: true
 imageCredit:
   text: "© HOUND13 — 드래곤소드: 어웨이크닝 (Steam) / 분위기 표현용 창작 이미지 포함"
   url: "https://store.steampowered.com/app/4570720/"
+officialLinks:
+  - label: "Steam 상점 페이지 (33,000원)"
+    url: "https://store.steampowered.com/app/4570720/"
 host: "rosie"
 views: 0
 faq:

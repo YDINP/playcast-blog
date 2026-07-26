@@ -116,6 +116,26 @@ const videoSchema = {
     },
   },
 };
+// 공식 링크(스팀·공식 홈페이지). officialLinks 미지정 시 imageCredit.url을 폴백으로 승격 —
+// 기존 글들이 대표이미지 출처로 이미 공식/스팀 URL을 들고 있어 그걸 그대로 출구로 쓴다(쿠팡 제외).
+const STORE_LABELS = [
+  [/store\.steampowered\.com/i, 'Steam 상점 페이지'],
+  [/store\.epicgames\.com/i, 'Epic Games 스토어'],
+  [/(playstation|xbox|nintendo)\./i, '콘솔 스토어 페이지'],
+  [/play\.google\.com|apps\.apple\.com/i, '모바일 스토어'],
+];
+const officialLinks =
+  data.officialLinks && data.officialLinks.length
+    ? data.officialLinks
+    : data.imageCredit?.url && !/coupang\.com/i.test(data.imageCredit.url)
+      ? [
+          {
+            label: STORE_LABELS.find(([re]) => re.test(data.imageCredit!.url!))?.[1] ?? '공식 홈페이지',
+            url: data.imageCredit.url,
+          },
+        ]
+      : [];
+
 // FAQPage — 인접 쿼리(출시일/시간/다운로드 등) 포획 + 리치결과. faq 있을 때만.
 const faqSchema =
   data.faq && data.faq.length
@@ -200,6 +220,25 @@ const faqSchema =
       ></ins>
     </div>
     <script is:inline async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
+
+    <!-- 소개한 게임 바로가기(공식·스팀). officialLinks 또는 imageCredit.url 폴백이 있을 때만.
+         쿠팡 제휴 링크와 성격이 달라 sponsored 없이 nofollow만 붙인다. -->
+    {
+      officialLinks.length > 0 && (
+        <section class="vw-sec vw-official">
+          <h2>🔗 게임 바로가기</h2>
+          <div class="vw-official-row">
+            {officialLinks.map((l) => (
+              <a class="vw-official-item" href={l.url} target="_blank" rel="noopener nofollow">
+                <span class="vw-official-t">{l.label}</span>
+                <span class="vw-official-go">열기 →</span>
+              </a>
+            ))}
+          </div>
+          <p class="vw-official-note">공식 페이지로 이동합니다. 제휴 링크가 아닙니다.</p>
+        </section>
+      )
+    }
 
     <!-- 관련 상품(쿠팡 파트너스). coupang 프론트매터 있을 때만 -->
     {
@@ -289,6 +328,21 @@ const faqSchema =
 </BaseLayout>
 
 <style>
+  /* 게임 바로가기(공식·스팀) — 관련 상품 위. 제휴가 아니라 1차 출구라 강조를 한 단계 낮춤 */
+  .vw-official-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .vw-official-item {
+    flex: 1 1 220px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  }
+  .vw-official-item:hover { background: var(--card-hover); border-color: var(--host); transform: translateY(-2px); }
+  .vw-official-t { font-weight: 700; font-size: 0.96rem; color: var(--text); }
+  .vw-official-go { font-size: 0.82rem; color: var(--host); font-weight: 600; white-space: nowrap; }
+  .vw-official-note { margin: 10px 0 0; font-size: 0.74rem; color: var(--text-muted); }
   /* 관련 상품(쿠팡) — 다크 유튜브 톤. 클래스에 ad/banner 미포함(광고차단 회피) */
   .vw-shop-row { display: flex; flex-wrap: wrap; gap: 10px; }
   .vw-shop-item {
