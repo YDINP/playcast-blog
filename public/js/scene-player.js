@@ -130,7 +130,11 @@
     this.started = false;
     this.autostarted = false;
     this._curVis = 'closed'; // 현재 글자(닫힘/모음) — 공백이면 입 다뭄
-    this.muted = true; // 자동재생 위해 음소거로 시작(브라우저 정책) — 첫 상호작용에 소리 켜짐
+    // 음소거로 시작하지 않는다: <audio>는 muted 여도 자동재생이 막히므로 음소거 시작은
+    // 이득이 없고, 정책이 허용되는 경우(재방문·이전 상호작용 있음)에도 소리를 잃었다.
+    // 차단되면 영상만 벽시계로 진행하고 첫 탭에서 unlockAudio()가 소리를 켠다.
+    this.muted = false;
+    this.userMuted = false; // 사용자가 음소거 버튼을 직접 누른 경우
     this.sceneStart = 0; // performance.now() 기준 (무음 경로)
     this.pausedAt = 0;
     this.activeBg = 'a';
@@ -191,8 +195,18 @@
     if (this.audio && this.audio.duration) return this.audio.duration * 1000;
     return this.durations[this.i];
   };
+  // 오디오 시계를 신뢰할 수 있는가 = 지금 '실제로 흐르는 중'인가.
+  // ⚠️ 브라우저 자동재생 정책상 <audio>는 muted 여도 사용자 활성화 없이 재생되지 않는다
+  //    (muted 예외는 <video> 전용). play()가 거부되면 audio는 paused·currentTime=0 에
+  //    머무는데, 예전엔 duration만 잡히면 그걸 시간 소스로 써서 자막·진행바·씬전환이
+  //    전부 0초에 얼어붙었다("새로고침하면 영상이 재시작을 안 함"의 원인).
+  //    → 오디오가 멈춰 있으면 벽시계로 진행한다. duration(길이)은 계속 신뢰해도 된다.
+  Player.prototype._audioLive = function () {
+    var a = this.audio;
+    return !!(a && a.duration && !a.paused && !a.ended);
+  };
   Player.prototype._sceneElapsed = function () {
-    if (this.audio && this.audio.duration) return this.audio.currentTime * 1000;
+    if (this._audioLive()) return this.audio.currentTime * 1000;
     return performance.now() - this.sceneStart;
   };
 
@@ -310,12 +324,26 @@
       this.captionBox.style.fontSize =
         'calc(clamp(0.95rem, 2.2vw, 1.35rem) * ' + _scale.toFixed(2) + ')';
     }
+    this.sceneStart = performance.now(); // 벽시계 기준(오디오가 못 돌 때의 시간 소스)
     if (sc.voice) {
-      this.audio = new Audio(sc.voice);
-      this.audio.muted = this.muted;
-      this.audio.play().catch(function () {});
+      var self = this;
+      var a = new Audio(sc.voice);
+      this.audio = a;
+      a.muted = this.muted;
+      // 재생이 실제로 시작되면 오디오 시계로 자연 전환 — 두 시계가 어긋나지 않게 원점을 맞춘다.
+      a.addEventListener('playing', function () {
+        if (self.audio !== a) return;
+        self.stage.classList.remove('is-sound-blocked');
+        self.sceneStart = performance.now() - a.currentTime * 1000;
+      });
+      var pr = a.play();
+      if (pr && pr.catch)
+        pr.catch(function () {
+          // 자동재생 차단 — 영상은 벽시계로 계속 진행하고, 첫 사용자 활성화 제스처에서
+          // unlockAudio()가 이 씬을 처음부터 소리와 함께 다시 태운다.
+          if (self.audio === a) self.stage.classList.add('is-sound-blocked');
+        });
     }
-    this.sceneStart = performance.now();
     this._updateActiveChapter(idx);
   };
 
@@ -393,7 +421,12 @@
 
   // ── 컨트롤 ────────────────────────────────────────────────
   Player.prototype.play = function () {
-    if (this.playing) return;
+    if (this.playing) {
+      // 영상은 (벽시계로) 도는데 자동재생 차단으로 오디오만 멈춘 상태 —
+      // 예전엔 여기서 그냥 return 해서 재생버튼을 눌러도 아무 일도 안 났다.
+      if (this.audio && this.audio.paused) this.unlockAudio();
+      return;
+    }
     if (this.stage.classList.contains('is-ended') || this.i < 0) {
       this._enterScene(0);
     } else {
@@ -453,11 +486,23 @@
     this.seekScene(idx);
   };
 
-  Player.prototype.setMuted = function (m) {
+  Player.prototype.setMuted = function (m, byUser) {
     this.muted = m;
+    if (byUser) this.userMuted = m; // 사용자가 직접 고른 음소거는 자동으로 해제하지 않는다
     if (this.audio) this.audio.muted = m;
     this.stage.classList.toggle('is-muted', m);
     this._setMuteIcon(m);
+  };
+
+  // 사운드 언락 — 반드시 사용자 활성화 제스처(클릭/탭/키) 안에서 호출해야 한다.
+  // 자동재생이 거부된 씬을 처음부터 다시 태워 자막과 음성 싱크를 맞춘다.
+  Player.prototype.unlockAudio = function () {
+    if (this.userMuted) return;          // 사용자가 음소거를 원함
+    if (this._audioLive()) return;       // 이미 소리가 흐르는 중
+    if (this.muted) this.setMuted(false);
+    var sc = this.scenes[this.i];
+    if (!this.playing || !sc || !sc.voice) return;
+    this._enterScene(this.i);
   };
 
   // 자막 위치 전환: overlay(이미지 위) ↔ safe(이미지 아래 전용 띠, 이미지 0% 가림)
@@ -576,7 +621,13 @@
       '.sp-prev': function () { self.seekScene(self.i - 1); },
       '.sp-next': function () { self.seekScene(self.i + 1); },
       '.sp-replay': function () { self.replay(); },
-      '.sp-mute': function () { self.setMuted(!self.muted); },
+      // 음소거 버튼: 사용자 의사(userMuted)를 기록하고, 해제 시엔 실제로 소리를 켠다
+      // (클릭 핸들러 = 활성화 제스처이므로 여기서 audio.play()가 통과한다).
+      '.sp-mute': function () {
+        var next = !self.muted;
+        self.setMuted(next, true);
+        if (!next) self.unlockAudio();
+      },
       '.sp-cap': function () { self.toggleCapMode(); },
       '.sp-fs': function () { self.toggleFullscreen(); },
     };
@@ -620,6 +671,13 @@
     this.stage.addEventListener('click', function (e) {
       if (e.target.closest('.sp-controls') || e.target.closest('.sp-bigplay'))
         return;
+      // 재생 중인데 소리가 안 나는 상태(자동재생 차단)면 탭은 '소리 켜기'로 쓴다 —
+      // 일시정지가 아니라 유튜브 앱처럼 탭 한 번에 소리가 붙는 게 기대 동작.
+      if (self.playing && !self.userMuted && !self._audioLive()) {
+        self.unlockAudio();
+        self._showControls();
+        return;
+      }
       // 모바일: 컨트롤 숨김 상태면 터치 → 컨트롤만 표시(일시정지 안 함)
       if (!isHoverable && hideEl.classList.contains('controls-hidden')) {
         self._showControls();
@@ -816,19 +874,29 @@
     armSound();
   }
 
-  // 자동재생은 음소거로 시작(브라우저 정책). 첫 사용자 상호작용(클릭/터치/키/스크롤)에 소리 켜기.
+  // 첫 사용자 활성화 제스처에 음성을 켠다.
+  // ⚠️ 'wheel'/'touchstart' 는 user activation 을 부여하지 않는 이벤트다. 예전엔 이 둘까지
+  //    once:true 로 걸어놔서 "스크롤 한 번"에 무장이 소진되고, 정작 소리를 켤 수 있는
+  //    탭/클릭 시점에는 아무 시도도 하지 않아 영상이 끝까지 무음이었다.
+  //    → 활성화를 주는 이벤트만 쓰고, 실제로 소리가 흐르는 게 확인될 때까지 유지한다.
+  //    버블 단계라 컨트롤 버튼(핸들러가 stopPropagation)의 클릭은 여기까지 오지 않는다.
   function armSound() {
-    var armed = false;
-    function on() {
-      if (armed) return;
-      armed = true;
-      document.querySelectorAll('.sp-stage').forEach(function (st) {
-        if (st.__sp && st.__sp.setMuted) st.__sp.setMuted(false);
-      });
+    var EVENTS = ['pointerup', 'click', 'touchend', 'keydown'];
+    function players() {
+      return Array.prototype.map
+        .call(document.querySelectorAll('.sp-stage'), function (st) { return st.__sp; })
+        .filter(Boolean);
     }
-    ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(function (ev) {
-      document.addEventListener(ev, on, { once: true, passive: true });
-    });
+    function on() {
+      var list = players();
+      list.forEach(function (sp) { sp.unlockAudio(); });
+      // play()는 비동기라 즉시 판정이 안 된다 — 다음 제스처에서 재확인하고,
+      // 소리가 확인되면(또는 사용자가 음소거를 골랐으면) 리스너를 뗀다.
+      var settled = list.every(function (sp) { return sp.userMuted || sp._audioLive(); });
+      if (settled)
+        EVENTS.forEach(function (ev) { document.removeEventListener(ev, on); });
+    }
+    EVENTS.forEach(function (ev) { document.addEventListener(ev, on, { passive: true }); });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

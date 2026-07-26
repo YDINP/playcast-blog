@@ -841,6 +841,28 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   opacity: 0;
   pointer-events: none;
 }
+
+/* 무음 안내 — <audio>는 사용자 활성화(탭/클릭) 없이는 재생되지 않으므로, 자동재생이
+   차단되면 영상만 무음으로 흐른다. 예전엔 아무 표시가 없어 "왜 소리가 안 나지"로 끝났다.
+   화면을 탭하면 scene-player 가 현재 장면을 소리와 함께 다시 태운다. */
+/* 사용자가 직접 누른 음소거(.is-muted)에는 띄우지 않는다 — 그 경우 탭이 아니라
+   음소거 버튼으로 켜야 하므로 안내가 틀린다. */
+.sp-stage.is-sound-blocked:not(.is-paused)::after {
+  content: '🔊 탭하면 소리';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 7;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.74);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
 .sp-bigplay button {
   width: 76px;
   height: 76px;
