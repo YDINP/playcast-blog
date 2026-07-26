@@ -333,17 +333,18 @@
       // 재생이 실제로 시작되면 오디오 시계로 자연 전환 — 두 시계가 어긋나지 않게 원점을 맞춘다.
       a.addEventListener('playing', function () {
         if (self.audio !== a) return;
-        self.stage.classList.remove('is-sound-blocked');
         self.sceneStart = performance.now() - a.currentTime * 1000;
+        self._syncSound();
       });
       var pr = a.play();
       if (pr && pr.catch)
         pr.catch(function () {
           // 자동재생 차단 — 영상은 벽시계로 계속 진행하고, 첫 사용자 활성화 제스처에서
           // unlockAudio()가 이 씬을 처음부터 소리와 함께 다시 태운다.
-          if (self.audio === a) self.stage.classList.add('is-sound-blocked');
+          if (self.audio === a) self._syncSound();
         });
     }
+    this._syncSound();
     this._updateActiveChapter(idx);
   };
 
@@ -417,6 +418,7 @@
     this.fill.style.width = '100%';
     if (this.bigplay) this.bigplay.classList.remove('is-hidden');
     this._setPlayIcon(false);
+    this._syncSound();
   };
 
   // ── 컨트롤 ────────────────────────────────────────────────
@@ -432,13 +434,19 @@
     } else {
       // resume: sceneStart 보정
       this.sceneStart = performance.now() - this.pausedAt;
-      if (this.audio) this.audio.play().catch(function () {});
+      if (this.audio) {
+        var self = this;
+        var pr = this.audio.play();
+        // 재개가 거부될 수도 있으므로(활성화 없는 재개) 성패 양쪽에서 토글 표시를 맞춘다
+        if (pr && pr.then) pr.then(function () { self._syncSound(); }, function () { self._syncSound(); });
+      }
     }
     this.playing = true;
     this.started = true;
     this.stage.classList.remove('is-paused', 'is-ended');
     if (this.bigplay) this.bigplay.classList.add('is-hidden');
     this._setPlayIcon(true);
+    this._syncSound();
     this.raf = requestAnimationFrame(this._loop);
   };
 
@@ -452,6 +460,7 @@
     this.host.classList.remove('is-talking');
     if (this.bigplay) this.bigplay.classList.remove('is-hidden'); // 일시정지 시 중앙 재생버튼 노출(재개 가능)
     this._setPlayIcon(false);
+    this._syncSound(); // 정지 중엔 토글이 '차단'이 아니라 사용자 음소거 설정을 가리킨다
   };
 
   Player.prototype.toggle = function () {
@@ -490,8 +499,24 @@
     this.muted = m;
     if (byUser) this.userMuted = m; // 사용자가 직접 고른 음소거는 자동으로 해제하지 않는다
     if (this.audio) this.audio.muted = m;
-    this.stage.classList.toggle('is-muted', m);
-    this._setMuteIcon(m);
+    this._syncSound();
+  };
+
+  // 사운드 토글이 가리켜야 하는 진실 = "지금 실제로 소리가 나고 있나".
+  // 자동재생이 차단돼 오디오가 못 도는 동안은 muted 가 아니어도 '꺼짐'으로 표시한다 —
+  // 토글이 켜짐인데 무음이면 유저가 속고, 그 상태에서 토글을 누르면 오히려 음소거된다.
+  // (paused 기준: play() 직후엔 metadata 로드 전에도 paused=false 라 장면마다 깜빡이지 않는다)
+  Player.prototype._soundOff = function () {
+    if (this.muted) return true;
+    var sc = this.scenes[this.i];
+    if (!sc || !sc.voice) return false;
+    return !!(this.playing && (!this.audio || this.audio.paused));
+  };
+  Player.prototype._syncSound = function () {
+    var off = this._soundOff();
+    this.stage.classList.toggle('is-muted', this.muted);
+    this.stage.classList.toggle('is-sound-blocked', off && !this.muted);
+    this._setMuteIcon(off);
   };
 
   // 사운드 언락 — 반드시 사용자 활성화 제스처(클릭/탭/키) 안에서 호출해야 한다.
@@ -624,9 +649,13 @@
       // 음소거 버튼: 사용자 의사(userMuted)를 기록하고, 해제 시엔 실제로 소리를 켠다
       // (클릭 핸들러 = 활성화 제스처이므로 여기서 audio.play()가 통과한다).
       '.sp-mute': function () {
-        var next = !self.muted;
-        self.setMuted(next, true);
-        if (!next) self.unlockAudio();
+        if (self._soundOff()) {
+          // 꺼짐(음소거 or 자동재생 차단) → 켜기. 클릭 = 활성화 제스처라 여기서 오디오가 통과한다.
+          self.setMuted(false, true);
+          self.unlockAudio();
+        } else {
+          self.setMuted(true, true);
+        }
       },
       '.sp-cap': function () { self.toggleCapMode(); },
       '.sp-fs': function () { self.toggleFullscreen(); },
@@ -697,9 +726,8 @@
         });
     }
     this._setPlayIcon(false);
-    this._setMuteIcon(this.muted);
     this.setCapMode(this.capMode, true);
-    this.stage.classList.toggle('is-muted', this.muted);
+    this._syncSound();
   };
 
   Player.prototype._observe = function () {
