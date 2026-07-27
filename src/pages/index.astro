@@ -20,6 +20,23 @@ const curated = videos
 // 기본은 최신순. pick을 지정한 글이 있으면 그 순서가 우선한다(큐레이션 훅).
 const picks = (curated.length ? curated : videos).slice(0, PICK_MAX);
 
+// 카드 라벨 — 긴 제목을 게임명 수준으로 줄인다. 카드가 작아서 전체 제목은 들어가지 않고,
+// 두 줄 넘게 흐르면 떠 있는 카드들이 서로 다른 높이로 흔들려 지저분해진다.
+// 규칙: ①"게임명 — 설명" 규격이면 앞부분 ②그래도 길면 따옴표로 감싼 고유명 ③최후에 절단.
+const MAX_LABEL = 24;
+const QUOTE_PAIRS: Record<string, string> = { "'": "'", '"': '"', '「': '」', '『': '』', '‘': '’', '“': '”' };
+function cardTitle(t: string): string {
+  let head = t.split(/\s[—–]\s/)[0].trim();
+  const q = t.match(/['"「『‘“]([^'"」』’”]{2,22})['"」』’”]/);
+  if (head.length > MAX_LABEL) {
+    if (q && q[1].length <= MAX_LABEL) head = q[1];
+    else head = head.split(/[!?·,]/)[0].trim();
+  }
+  const close = QUOTE_PAIRS[head[0]];
+  if (close && head.endsWith(close) && head.length > 2) head = head.slice(1, -1).trim();
+  return head.length > MAX_LABEL ? head.slice(0, MAX_LABEL - 1).trimEnd() + '…' : head;
+}
+
 const cats = Array.from(new Set(videos.map((v) => v.data.category)));
 
 // 채널 홈 = 영상 목록. ItemList로 검색엔진에 콘텐츠 리스트 구조 전달
@@ -47,33 +64,32 @@ const itemListSchema = {
   {
     picks.length > 0 && (
       <section class="pc-studio">
-        <div class="studio-host" aria-hidden="true">
-          <div class="studio-rig">
-            <HostRig />
-          </div>
-        </div>
-
-        <div class="studio-panel">
+        <div class="studio-head">
           <div class="hero-kicker">▶ 로지의 추천</div>
           <h2 class="studio-title">지금 볼 만한 영상</h2>
-          <p class="studio-sub">썸네일을 누르면 바로 시청 페이지로 이동합니다.</p>
+          <p class="studio-sub">카드를 누르면 바로 시청 페이지로 이동합니다.</p>
+        </div>
 
-          <ol class="pc-picks">
+        <div class="studio-stage">
+          <div class="studio-rig" aria-hidden="true">
+            <HostRig />
+          </div>
+
+          <ul class="float-cards">
             {picks.map((v, i) => {
               const poster = posterOf(v.data);
               return (
-                <li class="pick-item">
-                  <a href={watchHref(v.id)} class="pick-link">
-                    <span class="pick-rank">{i + 1}</span>
-                    <span class="pick-thumb">
+                <li class="fc-item" style={`--i:${i}`}>
+                  <a href={watchHref(v.id)} class="fc-card">
+                    <span class="fc-thumb">
                       {poster && <img src={poster} alt="" loading="lazy" />}
-                      <span class="pick-dur">
+                      <span class="fc-dur">
                         {durationLabel(v.data.scenes, v.data.durationLabel)}
                       </span>
                     </span>
-                    <span class="pick-body">
-                      <span class="pick-title">{v.data.title}</span>
-                      <span class="pick-meta">
+                    <span class="fc-body">
+                      <span class="fc-title">{cardTitle(v.data.title)}</span>
+                      <span class="fc-meta">
                         {v.data.category} · {timeAgo(v.data.pubDate)}
                       </span>
                     </span>
@@ -81,7 +97,7 @@ const itemListSchema = {
                 </li>
               );
             })}
-          </ol>
+          </ul>
         </div>
       </section>
     )

@@ -2214,106 +2214,112 @@ body::after {
 .vw-ad { display: flex; justify-content: center; }
 .vw-ad:has(.kakao_ad_area iframe) { margin: 18px 0; }
 
-/* ---------- 홈 히어로: 로지 스튜디오 + 추천 목록 ----------
-   재생을 기다려야 정보가 나오던 구조(자동재생 영상 → 추천 리엘)를 걷어내고,
-   로지는 배경에 서 있기만 하고 목록이 처음부터 다 보이게 한다. 썸네일 클릭 = 그 편으로 진입. */
+/* ---------- 홈 히어로: 로지 스튜디오 + 둥둥 뜬 추천 카드 ----------
+   재생을 기다려야 정보가 나오던 구조(자동재생 → 리엘)를 걷어낸 뒤,
+   로지를 크게 세우고 추천 카드가 그 주위를 떠다니게 한다. 카드는 처음부터 다 보이고
+   아무 카드나 누르면 그 편으로 바로 들어간다. */
 .pc-studio {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-  gap: 20px;
-  align-items: end;
   margin-bottom: 40px;
-  padding: 18px;
+  padding: 18px 18px 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-elev);
   overflow: hidden;
 }
-/* 스테이지 조명 — 로지 뒤쪽만 은은하게 */
-.pc-studio::before {
-  content: '';
-  position: absolute;
-  left: -60px;
-  bottom: -80px;
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(87, 230, 195, 0.16), transparent 68%);
-  pointer-events: none;
-}
-.studio-host {
-  position: relative;
-  align-self: end;
-}
-/* .rig 는 inset:0 절대배치라 비율을 가진 상자가 필요하다(애셋이 1254² 정사각). */
-.studio-rig {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-}
-.studio-panel {
-  min-width: 0;
-  padding: 4px 0;
-}
+.studio-head { position: relative; z-index: 2; }
 .studio-title {
   margin: 6px 0 4px;
   font-size: 1.35rem;
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
-.studio-sub {
-  margin: 0 0 14px;
-  color: var(--text-2);
-  font-size: 0.88rem;
+.studio-sub { margin: 0; color: var(--text-2); font-size: 0.88rem; }
+
+/* 무대 — 로지가 중앙, 카드가 좌우로 떠 있다.
+   높이를 고정해야 카드를 절대배치로 흩을 수 있다(내용 높이에 따라 흔들리면 배치가 깨진다). */
+.studio-stage {
+  position: relative;
+  height: 620px;
+  margin-top: 12px;
 }
-.pc-picks {
+/* 스테이지 조명 — 로지 뒤쪽 */
+.studio-stage::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -60px;
+  width: 640px;
+  height: 520px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(87, 230, 195, 0.18), transparent 66%);
+  pointer-events: none;
+}
+/* .rig 는 inset:0 절대배치라 비율을 가진 상자가 필요하다(애셋이 1254² 정사각). */
+.studio-rig {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 560px;
+  max-width: 62%;
+  aspect-ratio: 1 / 1;
+  z-index: 1;
+}
+
+.float-cards {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 8px;
 }
-.pick-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 7px 12px 7px 8px;
+.fc-item {
+  position: absolute;
+  width: 210px;
+  z-index: 2;
+  /* 카드마다 시작 위상을 어긋나게 해 같이 출렁이지 않도록 한다. */
+  animation: fc-float 7s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -1.15s);
+}
+/* 좌 3 · 우 3 배치. 로지(중앙 최대 62%)와 겹치지 않도록 바깥쪽으로 민다. */
+.fc-item:nth-child(1) { left: 0;    top: 2%; }
+.fc-item:nth-child(2) { left: 3%;   top: 36%; }
+.fc-item:nth-child(3) { left: 0;    top: 70%; }
+.fc-item:nth-child(4) { right: 0;   top: 2%; }
+.fc-item:nth-child(5) { right: 3%;  top: 36%; }
+.fc-item:nth-child(6) { right: 0;   top: 70%; }
+
+@keyframes fc-float {
+  0%, 100% { transform: translateY(0) rotate(-0.4deg); }
+  50%      { transform: translateY(-14px) rotate(0.4deg); }
+}
+
+.fc-card {
+  display: block;
+  padding: 8px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  background: rgba(14, 17, 23, 0.72);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s, transform 0.15s, background 0.15s;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
-.pick-link:hover {
+.fc-card:hover {
   border-color: var(--live);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateX(2px);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.5);
 }
-.pick-rank {
-  flex: none;
-  width: 20px;
-  text-align: center;
-  font-weight: 800;
-  font-size: 0.88rem;
-  color: var(--live);
-}
-.pick-thumb {
+.fc-thumb {
   position: relative;
-  flex: none;
-  width: 104px;
+  display: block;
   aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
-.pick-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.pick-dur {
+.fc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fc-dur {
   position: absolute;
   right: 4px;
   bottom: 4px;
@@ -2325,37 +2331,52 @@ body::after {
   font-weight: 700;
   line-height: 1.5;
 }
-.pick-body {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.pick-title {
-  font-size: 0.92rem;
-  font-weight: 650;
-  line-height: 1.35;
-  /* 제목 길이가 제각각이라 두 줄에서 자른다 — 행 높이가 흔들리면 목록이 산만해진다. */
+.fc-body { display: block; padding: 7px 3px 2px; }
+.fc-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+  /* 한 줄로 자르면 '메탈기어 솔리드 Δ: 스네이…'처럼 게임명이 끊긴다. 두 줄까지 허용하되
+     높이는 두 줄로 고정한다 — 떠 있는 카드들의 높이가 제각각이면 배치가 산만해진다. */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: calc(0.9rem * 1.3 * 2);
 }
-.pick-meta {
-  font-size: 0.76rem;
-  color: var(--text-muted);
+.fc-meta { display: block; margin-top: 3px; font-size: 0.74rem; color: var(--text-muted); }
+
+/* 카드가 좁아지는 구간: 폭만 줄여 절대배치를 유지한다. */
+@media (max-width: 1100px) {
+  .studio-stage { height: 560px; }
+  .studio-rig { width: 460px; }
+  .fc-item { width: 178px; }
 }
-/* 좁은 화면: 로지를 목록 위로 올리고 크기를 줄인다(목록이 주인공). */
-@media (max-width: 780px) {
-  .pc-studio {
-    grid-template-columns: 1fr;
+/* 세로 화면: 떠다니는 배치가 성립하지 않는다(로지와 카드가 겹친다).
+   로지를 위에 세우고 카드는 아래 그리드로 내린다 — 목록이 주인공. */
+@media (max-width: 860px) {
+  .studio-stage { height: auto; }
+  .studio-stage::before { display: none; }
+  .studio-rig {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    margin: 0 auto 14px;
+    width: min(300px, 68%);
+    max-width: none;
+  }
+  .float-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 10px;
-    padding: 14px;
   }
-  .studio-host {
-    justify-self: center;
-    width: min(210px, 56%);
+  .fc-item {
+    position: static;
+    width: auto;
+    animation: none;
   }
-  .pick-thumb { width: 88px; }
-  .pick-title { font-size: 0.88rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-item { animation: none; }
 }
