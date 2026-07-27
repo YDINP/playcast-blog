@@ -2224,9 +2224,26 @@ body::after {
   padding: 18px 18px 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  /* 배경 이미지가 로드되기 전/실패해도 어색하지 않도록 단색을 밑에 깐다. */
   background: var(--bg-elev);
   overflow: hidden;
 }
+/* 스튜디오 배경 이미지 — 로지와 카드가 그 위에 올라간다.
+   이미지가 세면 카드 글자가 안 읽히므로, 어둡게 눌러서(brightness) 위에 그라디언트를 덧씌운다. */
+.pc-studio::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(to bottom, rgba(15, 15, 17, 0.55) 0%, rgba(15, 15, 17, 0.3) 45%, rgba(15, 15, 17, 0.85) 100%),
+    url('/studio-bg.webp');
+  background-size: cover, cover;
+  background-position: center, center;
+  pointer-events: none;
+}
+/* 배경 위에 올라갈 요소들 */
+.studio-stage { z-index: 1; }
 .studio-head { position: relative; z-index: 2; }
 .studio-title {
   margin: 6px 0 4px;
