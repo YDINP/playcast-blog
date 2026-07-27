@@ -2213,3 +2213,77 @@ body::after {
    규칙은 iframe이 영원히 안 생기는 데드락이었다. 슬롯은 항상 렌더하고 여백만 조건부로 준다. */
 .vw-ad { display: flex; justify-content: center; }
 .vw-ad:has(.kakao_ad_area iframe) { margin: 18px 0; }
+
+/* ---------- 홈 히어로: 추천 영상 목록 ----------
+   히어로 플레이어가 추천작들을 훑어주지만 씬 자체는 클릭할 수 없다.
+   그래서 같은 목록을 바로 아래 링크로 한 벌 더 둔다 — 리엘을 다 보지 않아도
+   원하는 편으로 바로 갈 수 있게. 순서는 리엘 순서와 같다. */
+.pc-picks {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.pick-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.pick-link:hover {
+  border-color: var(--live);
+  transform: translateX(2px);
+}
+.pick-rank {
+  flex: none;
+  width: 22px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--live);
+}
+.pick-thumb {
+  flex: none;
+  width: 92px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+.pick-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pick-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pick-title {
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.35;
+  /* 제목이 길어도 카드 높이가 들쭉날쭉해지지 않게 두 줄에서 자른다. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pick-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+@media (max-width: 700px) {
+  .pick-thumb { width: 72px; }
+  .pick-title { font-size: 0.88rem; }
+}
