@@ -20,9 +20,9 @@ const curated = videos
 // 기본은 최신순. pick을 지정한 글이 있으면 그 순서가 우선한다(큐레이션 훅).
 const picks = (curated.length ? curated : videos).slice(0, PICK_MAX);
 
-// 카드 라벨 — 긴 제목을 게임명 수준으로 줄인다. 카드가 작아서 전체 제목은 들어가지 않고,
-// 두 줄 넘게 흐르면 떠 있는 카드들이 서로 다른 높이로 흔들려 지저분해진다.
-// 규칙: ①"게임명 — 설명" 규격이면 앞부분 ②그래도 길면 따옴표로 감싼 고유명 ③최후에 절단.
+// 카드 라벨 — 우선순위는 frontmatter `hook`(후킹 한 줄)이고, 없을 때만 아래 제목 축약을 쓴다.
+// 제목을 줄인 라벨은 "무슨 게임인지"만 알려줄 뿐 왜 봐야 하는지는 말해주지 않아 클릭이 잘 안 붙는다.
+// 축약 규칙: ①"게임명 — 설명" 규격이면 앞부분 ②그래도 길면 따옴표로 감싼 고유명 ③최후에 절단.
 const MAX_LABEL = 24;
 const QUOTE_PAIRS: Record<string, string> = { "'": "'", '"': '"', '「': '」', '『': '』', '‘': '’', '“': '”' };
 function cardTitle(t: string): string {
@@ -88,7 +88,7 @@ const itemListSchema = {
                       </span>
                     </span>
                     <span class="fc-body">
-                      <span class="fc-title">{cardTitle(v.data.title)}</span>
+                      <span class="fc-title">{v.data.hook || cardTitle(v.data.title)}</span>
                       <span class="fc-meta">
                         {v.data.category} · {timeAgo(v.data.pubDate)}
                       </span>

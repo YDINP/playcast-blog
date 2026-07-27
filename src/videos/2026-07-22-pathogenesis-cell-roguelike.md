@@ -4,6 +4,7 @@ description: "Aberrant Labs가 만들고 Slug Disco가 퍼블리싱한 '패서�
 pubDate: 2026-07-22
 updatedDate: 2026-07-22
 category: "New"
+hook: "내가 병원체가 된다, 첫 주 10만 장"
 tags: ["패서제닉", "Pathogenic", "로그라이크", "슈팅게임", "스팀신작"]
 host: "rosie"
 thumbnail: "/games/pathogenesis-thumb.jpg"

@@ -3,6 +3,7 @@ title: "어쌔신 크리드4 블랙 플래그 리싱크드 — 해적의 황금�
 description: "카리브해를 누비는 전설적인 해적 에드워드 켄웨이가 되어 자유와 부를 추구하세요! 암살단과 템플러의 세기적 투쟁 속에서 펼쳐지는 액션 어드벤처 게임입니다."
 pubDate: 2026-07-25
 category: "New"
+hook: "해적 되고 싶던 사람 다 모여"
 tags: ["어쌔신크리드", "해적모험", "액션게임", "카리브해", "Ubisoft", "리싱크드"]
 thumbnail: "/games/2026-07-25-assassins-creed-black-flag-thumb.jpg"
 customThumb: true

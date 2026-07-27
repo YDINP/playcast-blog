@@ -38,9 +38,12 @@ const videos = defineCollection({
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     durationLabel: z.string().optional(), // 표시용 "3:24" (미지정 시 씬 합산 자동)
     views: z.number().default(0), // 표시용 조회수 시드
-    // 채널 홈 추천 순서. 값이 있으면 홈 히어로의 "추천 영상" 리엘에 이 순서로 실린다(작을수록 먼저).
-    // 아무 글에도 없으면 조회수→최신 순으로 자동 선정하므로, 큐레이션을 안 해도 홈은 굴러간다.
+    // 채널 홈 추천 순서. 값이 있으면 홈 히어로의 추천 카드에 이 순서로 실린다(작을수록 먼저).
+    // 아무 글에도 없으면 최신순으로 자동 선정하므로, 큐레이션을 안 해도 홈은 굴러간다.
     pick: z.number().optional(),
+    // 홈 카드에 쓰는 후킹 한 줄. 제목을 줄인 라벨보다 "왜 봐야 하는지"가 드러나야 클릭이 붙는다.
+    // 카드 폭이 좁아 두 줄까지만 보이므로 24자 안팎으로 쓴다. 없으면 제목에서 게임명을 뽑아 대신 쓴다.
+    hook: z.string().optional(),
     // 광고 표시 여부. 공식 게임 이미지를 쓰는 글은 인용 근거 강화를 위해 false 권장.
     ads: z.boolean().default(true),
     scenes: z

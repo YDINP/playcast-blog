@@ -3,6 +3,7 @@ title: "메탈기어 솔리드 Δ: 스네이크 이터 — 전설의 스텔스 �
 description: "1964년 냉전 시대를 배경으로 소비에트 연방의 핵 병기 '샤고호드'를 저지하고 과학자를 구출해야 하는 요원 '네이키드 스네이크'의 이야기! 20년 전 명작 '메탈기어 솔리드 3: 스네이크 이터'를 최신 기술로 완전히 리메이크한 게임입니다."
 pubDate: 2026-07-27
 category: "New"
+hook: "20년 만에 돌아온 잠입의 교과서"
 tags: ["액션게임", "스텔스", "메탈기어", "2025", "콘솔게임", "리메이크"]
 thumbnail: "/games/2026-07-27-metal-gear-solid-delta-snake-eater-thumb.jpg"
 customThumb: true

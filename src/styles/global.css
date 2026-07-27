@@ -2368,15 +2368,42 @@ body::after {
   }
   .float-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
   .fc-item {
     position: static;
     width: auto;
-    animation: none;
+    /* 세로에선 절대배치를 못 쓰지만 부유감은 살린다 — 진폭을 줄이고 위상차만 유지.
+       가로 이동이 없으니 그리드 정렬은 그대로다. */
+    animation: fc-float-sm 6.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.9s);
   }
+  /* 로지를 카드 뒤로 살짝 물려 한 무대처럼 보이게 한다(카드가 로지 위로 뜬 느낌). */
+  .studio-rig { margin-bottom: -18px; z-index: 0; }
+}
+@keyframes fc-float-sm {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .fc-item { animation: none; }
+}
+
+/* ---------- 모바일: 전체 영상 그리드 2열 ----------
+   기본 그리드가 minmax(280px,1fr)이라 390px 화면에서는 1열로 떨어진다.
+   영상이 27편이면 홈이 9,800px까지 늘어나 아래쪽 편들은 사실상 도달하지 못한다.
+   2열로 바꿔 길이를 절반으로 줄인다(카드가 작아져도 썸네일·제목은 읽힌다). */
+@media (max-width: 560px) {
+  .pc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 10px;
+  }
+  .vcard-info h3 {
+    font-size: 0.84rem;
+    line-height: 1.32;
+  }
+  .vcard-info .sub { font-size: 0.72rem; }
+  /* 카드 안 호스트 아바타는 2열에서 자리만 먹는다. */
+  .vcard-ava { width: 24px; height: 24px; flex: none; }
 }

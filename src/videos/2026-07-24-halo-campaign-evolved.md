@@ -3,6 +3,7 @@ title: "엑스박스 간판 '헤일로'가 사상 첫 PS5로! 캠페인 이볼�
 description: "헤일로: 캠페인 이볼브드가 2026년 7월 29일 Xbox·PC와 함께 시리즈 사상 최초로 PS5에 출시돼요. 2001년 원작 '전쟁의 서막'을 언리얼 엔진 5 4K로 리메이크하고, 신규 무기·미션·강화 AI, 4인 온라인 협동과 2인 분할화면까지 담았습니다."
 pubDate: 2026-07-24
 category: "New"
+hook: "엑스박스 간판이 PS5로 넘어왔다"
 tags: ["헤일로", "Halo", "캠페인이볼브드", "PS5", "리메이크", "헤일로전쟁의서막"]
 thumbnail: "/games/halo-thumb.jpg"
 customThumb: true
