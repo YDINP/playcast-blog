@@ -2236,7 +2236,7 @@ body::after {
   inset: 0;
   z-index: 0;
   background-image:
-    linear-gradient(to bottom, rgba(15, 15, 17, 0.55) 0%, rgba(15, 15, 17, 0.3) 45%, rgba(15, 15, 17, 0.85) 100%),
+    linear-gradient(to bottom, rgba(15, 15, 17, 0.42) 0%, rgba(15, 15, 17, 0.16) 45%, rgba(15, 15, 17, 0.72) 100%),
     url('/studio-bg.webp');
   background-size: cover, cover;
   background-position: center, center;
@@ -2244,7 +2244,28 @@ body::after {
 }
 /* 배경 위에 올라갈 요소들 */
 .studio-stage { z-index: 1; }
-.studio-head { position: relative; z-index: 2; }
+.studio-head {
+  position: relative;
+  z-index: 2;
+}
+/* 오버레이를 얇게 가져가면 배경 밝기가 자리마다 달라져 제목 대비가 흔들린다.
+   제목 블록 뒤에만 국소 스크림을 깔아 배경이 무엇이든 읽히게 한다. */
+.studio-head::before {
+  content: '';
+  position: absolute;
+  /* 배경을 밝게 바꾸면서 흰 제목·회색 설명이 묻혔다. 제목 블록 뒤에만 짙은 스크림을 깔고
+     아래로 길게 페이드시켜 카드 영역과 이어지게 한다(경계가 보이면 띠처럼 도드라진다). */
+  inset: -20px -20px -34px -20px;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 12, 0.86) 0%,
+    rgba(10, 10, 12, 0.72) 46%,
+    rgba(10, 10, 12, 0) 100%
+  );
+  pointer-events: none;
+}
+.studio-sub { color: rgba(243, 243, 246, 0.82); }
 .studio-title {
   margin: 6px 0 4px;
   font-size: 1.35rem;
