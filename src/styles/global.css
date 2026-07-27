@@ -2280,6 +2280,9 @@ body::after {
   position: relative;
   height: 620px;
   margin-top: 12px;
+  /* 로지를 영역 하단에 딱 붙인다. .pc-studio의 padding-bottom(22px)만큼 끌어내려
+     무대 바닥 = 컨테이너 바닥이 되게 한다(컨테이너가 overflow:hidden이라 모서리에서 깔끔히 잘린다). */
+  margin-bottom: -22px;
 }
 /* 스테이지 조명 — 로지 뒤쪽 */
 .studio-stage::before {
@@ -2393,7 +2396,7 @@ body::after {
 /* 세로 화면: 떠다니는 배치가 성립하지 않는다(로지와 카드가 겹친다).
    로지를 위에 세우고 카드는 아래 그리드로 내린다 — 목록이 주인공. */
 @media (max-width: 860px) {
-  .studio-stage { height: auto; }
+  .studio-stage { height: auto; margin-bottom: 0; }
   .studio-stage::before { display: none; }
   .studio-rig {
     position: relative;
