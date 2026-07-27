@@ -1,63 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HostStage from '../components/HostStage.astro';
+import HostRig from '../components/HostRig.astro';
 import VideoCard from '../components/VideoCard.astro';
-import { watchHref, durationLabel, posterOf } from '../lib/video';
+import { watchHref, durationLabel, posterOf, timeAgo } from '../lib/video';
 
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort(
   (a, b) => +b.data.pubDate - +a.data.pubDate
 );
 
-// 홈 히어로 = "최신 한 편 자동재생"이 아니라 추천 영상들을 훑어주는 소개 리엘.
-// 최신 글이 그날의 대표작이라는 보장이 없고, 방문자가 처음 보는 화면이 한 편에 묶이면
-// 나머지 영상으로 가는 길이 그리드 스크롤뿐이었다. 추천 목록 자체를 영상으로 만든다.
-const PICK_MAX = 5;
+// 홈 히어로 = 로지가 서 있는 스튜디오 + 최신 영상 썸네일 목록.
+// 예전엔 최신 한 편을 자동재생했고, 그 다음엔 추천작을 훑는 리엘을 틀었다. 둘 다 "보고 있어야
+// 다음 정보가 나오는" 구조라, 처음 온 방문자가 어떤 편들이 있는지 한눈에 못 봤다.
+// 지금은 재생을 기다릴 필요 없이 목록이 즉시 다 보이고, 썸네일을 누르면 그 편으로 바로 간다.
+const PICK_MAX = 6;
 const curated = videos
   .filter((v) => typeof v.data.pick === 'number')
   .sort((a, b) => (a.data.pick as number) - (b.data.pick as number));
-// 큐레이션이 없으면 조회수 → 최신 순으로 자동 선정(홈이 비지 않게).
-const picks = (curated.length
-  ? curated
-  : [...videos].sort((a, b) => (b.data.views || 0) - (a.data.views || 0) || +b.data.pubDate - +a.data.pubDate)
-).slice(0, PICK_MAX);
-
-// 제목이 "게임명 — 설명" 규격이라 앞부분만 쓰면 자막이 깔끔하다.
-// 따옴표는 양끝을 함께 감쌀 때만 벗긴다 — 한쪽만 지우면 "스팀 대박난 '메챠 카멜레온" 처럼 짝이 깨진다.
-const QUOTE_PAIRS: Record<string, string> = { "'": "'", '"': '"', '「': '」', '『': '』', '‘': '’', '“': '”' };
-const shortTitle = (t: string) => {
-  const head = t.split(/\s[—–-]\s/)[0].trim();
-  const close = QUOTE_PAIRS[head[0]];
-  return close && head.endsWith(close) && head.length > 2 ? head.slice(1, -1).trim() : head;
-};
-// 설명 첫 문장만(자막 한 줄 분량).
-const firstSentence = (s: string) => {
-  const m = s.split(/(?<=[.!?])\s|(?<=[다요])\s/)[0] || s;
-  return m.length > 78 ? m.slice(0, 76).trimEnd() + '…' : m;
-};
-
-const reelScenes = picks.length
-  ? [
-      {
-        text: '안녕하세요, 로지예요! 오늘은 VIP가 골라둔 **추천 영상**들을 한 번에 훑어드릴게요.',
-        image: posterOf(picks[0].data),
-        emotion: 'happy' as const,
-        chapter: '오프닝',
-      },
-      ...picks.map((v, i) => ({
-        text: `${i + 1}. **${shortTitle(v.data.title)}** — ${firstSentence(v.data.description)}`,
-        image: posterOf(v.data),
-        emotion: (i % 2 === 0 ? 'happy' : 'surprised') as 'happy' | 'surprised',
-        chapter: `추천 ${i + 1}`,
-      })),
-      {
-        text: '마음에 드는 편이 있었나요? 바로 아래 목록에서 골라 보시면 됩니다!',
-        image: posterOf(picks[picks.length - 1].data),
-        emotion: 'happy' as const,
-        chapter: '마무리',
-      },
-    ]
-  : [];
+// 기본은 최신순. pick을 지정한 글이 있으면 그 순서가 우선한다(큐레이션 훅).
+const picks = (curated.length ? curated : videos).slice(0, PICK_MAX);
 
 const cats = Array.from(new Set(videos.map((v) => v.data.category)));
 
@@ -84,40 +45,44 @@ const itemListSchema = {
   schemas={[itemListSchema]}
 >
   {
-    reelScenes.length > 0 && (
-      <section class="pc-hero">
-        <HostStage scenes={reelScenes} playerId="heroreel" host="rosie" />
-        <div class="hero-info">
-          <div class="hero-copy">
-            <div class="hero-kicker">▶ 추천 영상 모아보기</div>
-            <h2>로지가 고른 {picks.length}편</h2>
-            <p>
-              지금 볼 만한 편들을 한 영상으로 소개합니다. 아래 목록에서 원하는 편을 바로 시청하세요.
-            </p>
+    picks.length > 0 && (
+      <section class="pc-studio">
+        <div class="studio-host" aria-hidden="true">
+          <div class="studio-rig">
+            <HostRig />
           </div>
         </div>
 
-        <ol class="pc-picks">
-          {picks.map((v, i) => {
-            const poster = posterOf(v.data);
-            return (
-              <li class="pick-item">
-                <a href={watchHref(v.id)} class="pick-link">
-                  <span class="pick-rank">{i + 1}</span>
-                  <span class="pick-thumb">
-                    {poster && <img src={poster} alt="" loading="lazy" />}
-                  </span>
-                  <span class="pick-body">
-                    <span class="pick-title">{v.data.title}</span>
-                    <span class="pick-meta">
-                      {v.data.category} · {durationLabel(v.data.scenes, v.data.durationLabel)}
+        <div class="studio-panel">
+          <div class="hero-kicker">▶ 로지의 추천</div>
+          <h2 class="studio-title">지금 볼 만한 영상</h2>
+          <p class="studio-sub">썸네일을 누르면 바로 시청 페이지로 이동합니다.</p>
+
+          <ol class="pc-picks">
+            {picks.map((v, i) => {
+              const poster = posterOf(v.data);
+              return (
+                <li class="pick-item">
+                  <a href={watchHref(v.id)} class="pick-link">
+                    <span class="pick-rank">{i + 1}</span>
+                    <span class="pick-thumb">
+                      {poster && <img src={poster} alt="" loading="lazy" />}
+                      <span class="pick-dur">
+                        {durationLabel(v.data.scenes, v.data.durationLabel)}
+                      </span>
                     </span>
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ol>
+                    <span class="pick-body">
+                      <span class="pick-title">{v.data.title}</span>
+                      <span class="pick-meta">
+                        {v.data.category} · {timeAgo(v.data.pubDate)}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </section>
     )
   }
