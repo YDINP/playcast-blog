@@ -1,0 +1,53 @@
+{
+  "task": "vip-adfit",
+  "created": "2026-07-30",
+  "prd": "PRD-vip-adfit.md",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "AdSlot.astro 컴포넌트 신규 (VIP 다크 톤)",
+      "files": ["src/components/AdSlot.astro"],
+      "detail": "position: top|bottom|anchor|home|genre. top은 PC 728x90 + 모바일 320x100 두 슬롯. 앵커는 visualViewport 보정 + body padding 스페이서. 닫기 버튼 금지.",
+      "status": "pending"
+    },
+    {
+      "id": "T2",
+      "title": "watch 페이지 플레이스홀더 교체 + 본문 하단 슬롯 추가",
+      "files": ["src/pages/watch/[...slug].astro"],
+      "detail": "DAN-VIP-REPLACE-ME 블록을 <AdSlot position=\"top\" />로 교체. '이어서 볼 방송' 섹션 앞에 <AdSlot position=\"bottom\" /> 추가.",
+      "status": "pending"
+    },
+    {
+      "id": "T3",
+      "title": "BaseLayout에 앵커 슬롯 + ba.min.js 1회 로드",
+      "files": ["src/layouts/BaseLayout.astro"],
+      "detail": "footer 뒤에 <AdSlot position=\"anchor\" />, body 끝에 ba.min.js 단일 로드.",
+      "status": "pending"
+    },
+    {
+      "id": "T4",
+      "title": "홈 '전체 영상' 타이틀 앞 300x250",
+      "files": ["src/pages/index.astro"],
+      "status": "pending"
+    },
+    {
+      "id": "T5",
+      "title": "장르 페이지 그리드 위 320x100",
+      "files": ["src/pages/genre/[genre].astro"],
+      "status": "pending"
+    },
+    {
+      "id": "T6",
+      "title": "global.css .vw-ad 규칙 정리",
+      "files": ["src/styles/global.css"],
+      "detail": "AdSlot이 자체 스타일을 가지므로 사문화되는 .vw-ad 블록 제거.",
+      "status": "pending"
+    },
+    {
+      "id": "T7",
+      "title": "빌드 + 뷰포트별 슬롯 검증",
+      "detail": "npm run build 통과. 360/767/768/782/783/1280px에서 노출 ins 개수·유닛 검증(동시 2개 이하). 실제 광고 노출은 사람이 확인.",
+      "status": "pending"
+    }
+  ]
+}

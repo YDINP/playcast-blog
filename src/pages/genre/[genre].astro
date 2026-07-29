@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoCard from '../../components/VideoCard.astro';
+import AdSlot from '../../components/AdSlot.astro';
 import { getCollection } from 'astro:content';
 
 // 카테고리(코너/장르) → 한글 라벨·설명. 맵에 없으면 원문 폴백.
@@ -68,6 +69,8 @@ const jsonLd = {
       <p>{meta.desc}</p>
       <span class="genre-count">{videos.length}개 방송</span>
     </header>
+
+    <AdSlot position="genre" />
 
     <div class="pc-grid genre-grid">
       {videos.map((v) => <VideoCard video={v} />)}

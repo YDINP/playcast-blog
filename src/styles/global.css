@@ -2208,13 +2208,9 @@ body::after {
   height: 100%;
 }
 
-/* VIP 애드핏 배너(플레이어 아래) — 미채움 시 공간만 제거(슬롯은 계속 보이게)
-   ⚠️ 예전엔 `.vw-ad:not(:has(iframe)){display:none}` 으로 숨겼는데, 애드핏 ba.min.js는
-   슬롯이 display:none 이면 광고 요청 자체를 하지 않는다(PC에서 앵커 슬롯이 숨겨질 때
-   serv.ds.kakao.com/sdk/banner 요청이 안 나가는 것으로 확인). 즉 "iframe 생기면 보여준다"
-   규칙은 iframe이 영원히 안 생기는 데드락이었다. 슬롯은 항상 렌더하고 여백만 조건부로 준다. */
-.vw-ad { display: flex; justify-content: center; }
-.vw-ad:has(.kakao_ad_area iframe) { margin: 18px 0; }
+/* 애드핏 슬롯 스타일은 components/AdSlot.astro 로 옮겼다(.vad / .vad-anchor).
+   ⚠️ 그때 얻은 교훈은 그쪽 주석에 그대로 살려뒀다: 슬롯이 display:none 이면 애드핏은
+   광고 요청 자체를 하지 않으므로 "iframe 생기면 보여준다" 규칙은 영구 데드락이다. */
 
 /* ---------- 홈 히어로: 로지 스튜디오 + 둥둥 뜬 추천 카드 ----------
    재생을 기다려야 정보가 나오던 구조(자동재생 → 리엘)를 걷어낸 뒤,

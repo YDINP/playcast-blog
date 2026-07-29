@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HostRig from '../components/HostRig.astro';
 import VideoCard from '../components/VideoCard.astro';
+import AdSlot from '../components/AdSlot.astro';
 import { watchHref, durationLabel, posterOf, timeAgo } from '../lib/video';
 
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort(
@@ -102,6 +103,9 @@ const itemListSchema = {
       </section>
     )
   }
+
+  <!-- 추천 스튜디오와 전체 목록 사이 — 스크롤로 지나가는 자리라 300x250(PC·모바일 겸용) -->
+  <AdSlot position="home" />
 
   <div class="section-title"><span class="bar"></span> 전체 영상</div>
 

@@ -1,0 +1,208 @@
+---
+/**
+ * AdSlot — 카카오 애드핏 광고 슬롯 (VIP / playcast)
+ *
+ * 유닛·자리 매핑과 설계 근거는 PRD-vip-adfit.md 참조. 요약:
+ *  - 페이지당 동시 노출 2개 상한을 "뷰포트로 갈라서" 지킨다.
+ *    <768px: top(320x100) + anchor(320x100) / ≥783px: top(728x90) + bottom(300x250)
+ *  - bottom 게이트 783px — 앵커(≤767px 고정)와 세로로 인접하는 것을 막는다.
+ *  - 슬롯은 항상 렌더한다. display:none 이면 애드핏이 광고 요청조차 하지 않아
+ *    "iframe 생기면 보여준다" 규칙은 영구 데드락이 된다. 여백만 조건부로 준다.
+ *  - ba.min.js 는 BaseLayout 에서 페이지당 1회만 로드한다(여기서 로드하지 않는다).
+ *  - ⚠️ 하단 고정배너에 닫기(×) 버튼 금지 — 애드핏 심사 반려 사유(오클릭 유발).
+ */
+interface Props {
+  position: 'top' | 'bottom' | 'anchor' | 'home' | 'genre';
+}
+const { position } = Astro.props;
+
+type Unit = { unit: string; w: number; h: number };
+
+// 발급 유닛(2026-07-30). 규격은 콘솔에서 고른 크기와 반드시 일치해야 서빙된다.
+const UNITS: Record<string, Unit> = {
+  // watch 플레이어 아래 — PC/태블릿(≥768px)
+  top: { unit: 'DAN-pwo3tYrXlLQvJa3g', w: 728, h: 90 },
+  // watch 플레이어 아래 — 모바일(<768px). 728x90 은 모바일에서 잘리므로 별도 유닛.
+  topMobile: { unit: 'DAN-sdH3bZFqWCgZlTJ1', w: 320, h: 100 },
+  // 전 페이지 하단 고정 — 모바일 전용
+  anchor: { unit: 'DAN-Zr9h4NXLISsFH6ww', w: 320, h: 100 },
+  // watch 본문 하단("이어서 볼 방송" 앞) — ≥783px
+  bottom: { unit: 'DAN-C0L9Acg4VFJet5sC', w: 300, h: 250 },
+  // 홈 "전체 영상" 타이틀 앞
+  home: { unit: 'DAN-xiFmPLYjqxZyyYNd', w: 300, h: 250 },
+  // 장르 페이지 그리드 위
+  genre: { unit: 'DAN-1jVfOQopXk0gBu42', w: 320, h: 100 },
+};
+
+const isAnchor = position === 'anchor';
+const isTop = position === 'top';
+const main = UNITS[position];
+const mobile = isTop ? UNITS.topMobile : null;
+---
+
+{
+  isAnchor && main.unit && (
+    <div class="vad-anchor" id="vad-anchor">
+      <ins
+        class="kakao_ad_area"
+        style="display:none;"
+        data-ad-unit={main.unit}
+        data-ad-width={String(main.w)}
+        data-ad-height={String(main.h)}
+      />
+    </div>
+  )
+}
+
+{
+  !isAnchor && main.unit && (
+    <div class="vad" data-vad={position} data-vad-view={isTop ? 'pc' : 'all'}>
+      <ins
+        class="kakao_ad_area"
+        style="display:none;"
+        data-ad-unit={main.unit}
+        data-ad-width={String(main.w)}
+        data-ad-height={String(main.h)}
+      />
+    </div>
+  )
+}
+
+{
+  mobile?.unit && (
+    <div class="vad" data-vad={position} data-vad-view="mobile">
+      <ins
+        class="kakao_ad_area"
+        style="display:none;"
+        data-ad-unit={mobile.unit}
+        data-ad-width={String(mobile.w)}
+        data-ad-height={String(mobile.h)}
+      />
+    </div>
+  )
+}
+
+<style>
+  /* 애드핏 iframe 은 고정폭이라 좁은 화면에서 부모를 밀어 페이지 전체에 가로 스크롤을
+     만든다. 슬롯 안에서만 넘치게 잘라 레이아웃 붕괴를 막는다. */
+  .vad {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  /* 미채움(광고차단·인벤토리 없음) 시 빈 구멍이 남지 않게 여백은 채워졌을 때만 준다. */
+  .vad:has(.kakao_ad_area iframe) {
+    margin: 20px 0;
+  }
+
+  /* ── 뷰포트 전용 슬롯 ──
+     PC 728x90 을 모바일에 내보내면 좌우가 잘리고 가로 스크롤이 생기므로 폭별로 유닛을 가른다.
+     (미디어쿼리로 숨긴 슬롯은 광고 요청도 나가지 않는다 — 여기서는 그게 의도한 동작이다.) */
+  .vad[data-vad-view='mobile'] {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .vad[data-vad-view='pc'] {
+      display: none;
+    }
+    .vad[data-vad-view='mobile'] {
+      display: flex;
+    }
+  }
+
+  /* ── 본문 하단 300x250: 783px 게이트 ──
+     앵커가 767px 이하에서 화면 바닥에 고정되므로, 그 폭에서 하단 슬롯을 함께 띄우면
+     독자가 글 끝에 멈춰 있는 동안 두 광고가 세로로 붙는다(광고 인접). */
+  .vad[data-vad='bottom'] {
+    display: none;
+  }
+  @media (min-width: 783px) {
+    .vad[data-vad='bottom'] {
+      display: flex;
+    }
+  }
+
+  /* ── 모바일 하단 고정 배너 ──
+     ⚠️ 닫기(×) 버튼을 두지 말 것 — 애드핏 심사 반려 사유(광고 오클릭 유발). */
+  .vad-anchor {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    /* iOS Safari: position:fixed 는 '축소된' 레이아웃 뷰포트 기준이라 위로 스크롤해
+       하단 툴바가 올라오면 배너가 툴바 뒤로 밀려 내려간 것처럼 보인다.
+       아래 스크립트가 visualViewport 차이만큼 끌어올린다. */
+    transform: translateY(0);
+    will-change: transform;
+  }
+  /* 배경·테두리·높이는 광고가 실제로 채워졌을 때만 준다.
+     항상 min-height 를 주면 미충족(광고차단·인벤토리 없음) 시 모바일 전 페이지 바닥에
+     빈 바가 남는다. 슬롯 자체는 계속 렌더되므로 광고 요청은 정상적으로 나간다. */
+  .vad-anchor:has(.kakao_ad_area iframe) {
+    background: rgba(15, 15, 17, 0.97);
+    border-top: 1px solid var(--border, rgba(255, 255, 255, 0.09));
+    padding: 2px 0;
+    padding-bottom: calc(2px + env(safe-area-inset-bottom, 0px));
+    min-height: 52px;
+  }
+  @media (min-width: 768px) {
+    .vad-anchor {
+      display: none;
+    }
+  }
+  /* 전체화면 플레이어(.sp-shell.is-fs, z-index 9999)는 앵커 위를 덮는다 — 의도된 동작. */
+</style>
+
+{
+  isAnchor && main.unit && (
+    <script is:inline>
+      (function () {
+        var el = document.getElementById('vad-anchor');
+        if (!el) return;
+
+        // 1) 고정배너가 본문 마지막 줄·푸터를 덮지 않도록 body 에 여백을 확보한다.
+        //    광고가 늦게 로드돼 높이가 바뀌면 다시 반영한다.
+        function syncSpacer() {
+          var visible = getComputedStyle(el).display !== 'none';
+          if (!visible) {
+            document.body.style.paddingBottom = '';
+            document.documentElement.style.removeProperty('--vad-anchor-h');
+            return;
+          }
+          var h = el.offsetHeight || 0;
+          document.documentElement.style.setProperty('--vad-anchor-h', h + 'px');
+          document.body.style.paddingBottom = h + 'px';
+        }
+
+        // 2) iOS Safari 하단 툴바 보정. 레이아웃 뷰포트와 visualViewport 의 하단 차이만큼
+        //    끌어올려 배너를 항상 화면 안에 붙여둔다.
+        var vv = window.visualViewport;
+        function syncOffset() {
+          if (!vv) return;
+          var hidden = window.innerHeight - (vv.height + vv.offsetTop);
+          el.style.transform = 'translateY(' + -Math.max(0, Math.round(hidden)) + 'px)';
+        }
+
+        function syncAll() {
+          syncOffset();
+          syncSpacer();
+        }
+
+        if (vv) {
+          vv.addEventListener('resize', syncAll, { passive: true });
+          vv.addEventListener('scroll', syncOffset, { passive: true });
+        }
+        window.addEventListener('orientationchange', syncAll);
+        window.addEventListener('resize', syncSpacer, { passive: true });
+        if (window.ResizeObserver) new ResizeObserver(syncSpacer).observe(el);
+
+        syncAll();
+        window.addEventListener('load', syncAll);
+      })();
+    </script>
+  )
+}

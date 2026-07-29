@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import HostStage from '../../components/HostStage.astro';
 import VideoCard from '../../components/VideoCard.astro';
 import CommentSection from '../../components/CommentSection.astro';
+import AdSlot from '../../components/AdSlot.astro';
 import {
   estimateSeconds,
   durationLabel,
@@ -212,17 +213,9 @@ const faqSchema =
       }
     </div>
 
-    <!-- 카카오 애드핏 배너 (플레이어 아래). ⚠️ VIP 도메인(virtual-in-playing) 전용 유닛으로 교체 필요 -->
-    <div class="vw-ad" aria-hidden="true">
-      <ins
-        class="kakao_ad_area"
-        style="display:none;"
-        data-ad-unit="DAN-VIP-REPLACE-ME"
-        data-ad-width="320"
-        data-ad-height="100"
-      ></ins>
-    </div>
-    <script is:inline async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
+    <!-- 카카오 애드핏 (플레이어 아래) — PC 728x90 / 모바일 320x100 두 유닛으로 갈린다.
+         ba.min.js 로드는 BaseLayout 에서 페이지당 1회. 자리 근거는 PRD-vip-adfit.md -->
+    <AdSlot position="top" />
 
     <!-- 소개한 게임 바로가기(공식·스팀). officialLinks 또는 imageCredit.url 폴백이 있을 때만.
          쿠팡 제휴 링크와 성격이 달라 sponsored 없이 nofollow만 붙인다. -->
@@ -291,6 +284,10 @@ const faqSchema =
         ))}
       </div>
     </section>
+
+    <!-- 본문 하단 300x250 — 대본 타임라인을 다 읽고 멈추는 자리.
+         ⚠️ 783px 이상에서만 노출된다(그 아래는 하단 고정 앵커와 세로로 인접). -->
+    <AdSlot position="bottom" />
 
     <!-- 추천: 우측 사이드바 대신 하단 풀폭 그리드 -->
     <section class="vw-sec">

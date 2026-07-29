@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import AdSlot from '../components/AdSlot.astro';
 
 interface Props {
   title: string;
@@ -174,8 +175,15 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
       </p>
     </footer>
 
+    <!-- 카카오 애드핏 하단 고정 배너(모바일 전용). embed 페이지는 이 레이아웃을 쓰지 않아 제외된다. -->
+    <AdSlot position="anchor" />
+
     <script src="/js/scene-player.js" defer is:inline></script>
     <slot name="tail" />
+
+    <!-- 애드핏 ba.min.js — 페이지당 1회만 로드한다(슬롯마다 로드하면 중복).
+         async 라 실행 시점엔 서버 렌더된 모든 ins 가 이미 DOM 에 있다. -->
+    <script is:inline async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
 
     <!-- Pageview tracking (VIP → 공용 analytics, ai-revenue 대시보드 집계) -->
     <script is:inline>
