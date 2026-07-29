@@ -1649,9 +1649,11 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   letter-spacing: -0.02em;
   margin: 0 0 12px;
 }
+/* 소개글은 헤더가 아니라 플레이어 **아래**에 온다(레이아웃 변경).
+   헤더 안에 있을 때 쓰던 margin(0 0 14px)은 플레이어에 딱 붙어 보이므로 위 여백을 준다. */
 .vw-lead {
   max-width: 68ch;
-  margin: 0 0 14px;
+  margin: 18px 0 14px;
   color: var(--text-2);
   font-size: 1rem;
   line-height: 1.75;

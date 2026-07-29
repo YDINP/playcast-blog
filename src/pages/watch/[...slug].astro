@@ -161,14 +161,15 @@ const faqSchema =
   schemas={[blogPostingSchema, videoSchema, breadcrumbSchema, faqSchema].filter(Boolean)}
 >
   <article class="vw">
-    <!-- 헤더: 제목·리드를 플레이어 위로 올려 "무엇에 관한 방송인지" 먼저 읽히게 -->
+    <!-- 헤더: 제목·메타만 플레이어 위에 둔다.
+         소개글(vw-lead)은 플레이어 아래로 내렸다 — 위에 두면 본문 한 문단이 영상을 밀어내
+         첫 화면에서 플레이어가 접히고, 영상형 페이지인데 글부터 읽히는 구조가 된다. -->
     <header class="vw-head">
       <div class="vw-chips">
         <span class="vw-chip is-cat">{data.category}</span>
         {data.tags.slice(0, 4).map((t) => <span class="vw-chip">#{t}</span>)}
       </div>
       <h1>{data.title}</h1>
-      <p class="vw-lead">{data.description}</p>
       <div class="vw-meta">
         <span class="vw-n" data-vw-slug={video.id} data-vw-seed={data.views}>{formatViews(data.views)}</span>
         <span>·</span>
@@ -182,6 +183,8 @@ const faqSchema =
 
     <!-- 스테이지: 영상 프레임 + 우측 호스트 부스 -->
     <HostStage scenes={scenes} playerId={playerId} host={data.host} booth />
+
+    <p class="vw-lead">{data.description}</p>
 
     <div class="vw-actions">
       <button class="ch-pill" id="btn-like" type="button" aria-label="좋아요">

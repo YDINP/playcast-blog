@@ -9,7 +9,7 @@ enName: "Trickcal RE:VIVE (Global: Trickcal: Chibi Go)"
 thumbnail: "/games/2026-07-29-trickcal-revive-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사 / 분위기 표현용 창작 이미지 포함"
+  text: "게임 화면 © EPIDGames — 스토어 공식 스크린샷 · 썸네일은 창작 이미지"
   url: "https://trickcal.com/"
 officialLinks:
   - label: "공식 사이트"
