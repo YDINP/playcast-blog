@@ -110,6 +110,7 @@ button {
 }
 .pc-search {
   flex: 1;
+  min-width: 0; /* flex 기본 min-width:auto 면 입력폭이 안 줄어 헤더가 넘친다 */
   max-width: 520px;
   margin: 0 auto;
   display: flex;
@@ -808,8 +809,18 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
     padding: 6px 10px 8px; background: #0b0e16;
     border-radius: 0 0 var(--radius) var(--radius);
   }
+  /* 모바일 컨트롤은 영상 '밖' 별도 바다 — 유휴 자동숨김을 적용하면 안 된다.
+     .sp-shell.controls-hidden .sp-controls 가 (0,3,0) 으로 위 규칙(0,2,0)을 눌러
+     opacity:0 + pointer-events:none 을 걸어버려, 바가 보이는데도 터치가 먹지 않았다. */
+  .sp-shell.controls-hidden .sp-controls {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+  .sp-shell.controls-hidden { cursor: auto; }
   .sp-controls .sp-progress { margin: 0 2px 6px; height: 4px; }
-  .sp-controls .sp-btnrow { gap: 2px; }
+  /* gap 은 히트박스 확장폭(±3px)의 2배 — 인접 버튼 터치영역이 겹쳐 오탭되지 않게. */
+  .sp-controls .sp-btnrow { gap: 6px; }
   .sp-controls .sp-btnrow button { width: 30px; height: 30px; }
   .sp-controls .sp-btnrow svg { width: 18px; height: 18px; }
   .sp-controls .sp-time { font-size: 0.72rem; margin-left: 2px; }
@@ -1257,6 +1268,18 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   }
   .pc-search {
     max-width: none;
+  }
+  /* 헤더 폭 경쟁 — 네비에 '썸네일'(모음집)이 들어오면서 좁은 화면에서 검색창이 잘리고
+     ON AIR 배지가 밀려났다. 배지는 장식이고 모음집은 기능이라, 배지를 접는다. */
+  .pc-onair {
+    display: none;
+  }
+  .pc-nav {
+    gap: 2px;
+  }
+  .pc-nav a {
+    padding: 7px 9px;
+    font-size: 0.84rem;
   }
   .side-card {
     grid-template-columns: 140px 1fr;
@@ -2429,22 +2452,16 @@ body::after {
   .fc-item { animation: none; }
 }
 
-/* ---------- 모바일: 전체 영상 그리드 2열 ----------
-   기본 그리드가 minmax(280px,1fr)이라 390px 화면에서는 1열로 떨어진다.
-   영상이 27편이면 홈이 9,800px까지 늘어나 아래쪽 편들은 사실상 도달하지 못한다.
-   2열로 바꿔 길이를 절반으로 줄인다(카드가 작아져도 썸네일·제목은 읽힌다). */
+/* ---------- 모바일: 전체 영상 그리드 1열 ----------
+   한때 2열로 좁혔다(홈 길이를 절반으로 줄이려고). 그런데 390px 화면에서 2열이면 카드 폭이
+   ~185px, 썸네일 높이가 ~104px 까지 줄어 포스터에서 무슨 게임인지 알아볼 수 없었다.
+   썸네일 판독성이 목록의 존재 이유라 1열로 되돌린다. 대신 홈이 길어지므로 상단 필터탭
+   (전체/New/Update/…)과 썸네일 모음집(/thumbs)이 탐색을 담당한다. */
 @media (max-width: 560px) {
   .pc-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 10px;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
-  .vcard-info h3 {
-    font-size: 0.84rem;
-    line-height: 1.32;
-  }
-  .vcard-info .sub { font-size: 0.72rem; }
-  /* 카드 안 호스트 아바타는 2열에서 자리만 먹는다. */
-  .vcard-ava { width: 24px; height: 24px; flex: none; }
 }
 
 /* ============================================================
@@ -2487,6 +2504,52 @@ body::after {
   .sp-controls .sp-btnrow button::after {
     content: '';
     position: absolute;
-    inset: -7px; /* 30px + 7*2 = 44px */
+    /* 세로로는 44px 확보, 가로는 gap(6px)의 절반만 — 인접 버튼과 히트영역이 겹치면
+       가장자리 탭이 옆 버튼으로 먹혀 "터치가 안 되는" 체감이 된다. */
+    inset: -7px -3px;
   }
+}
+
+/* ============================================================
+   카드 카테고리 태그 — 썸네일을 가리지 않게 '바깥 위'로, 상태는 테두리 글로우로
+   ------------------------------------------------------------
+   기존엔 .vcard-cat 이 썸네일 안쪽 좌상단(left/top 8px)에 얹혀 포스터의 주제부
+   (캐릭터 얼굴·타이틀 로고)를 덮었다. 태그를 썸네일 위쪽 여백으로 올려 영상 영역을
+   전혀 가리지 않게 하고, "새 글/업데이트" 라는 신호는 썸네일 테두리 글로우가 대신 준다.
+   .vcard 의 overflow:hidden 을 풀어야 태그가 썸네일 밖에 놓일 수 있다(썸네일 자체는
+   .vcard-thumb 의 overflow:hidden 으로 계속 클리핑된다).
+   ============================================================ */
+.vcard {
+  position: relative;
+  overflow: visible;
+  padding-top: 27px; /* 태그 높이(25px) + 2px — 썸네일과 겹치지 않는 최소값 */
+}
+.vcard-cat {
+  top: 0;
+  left: 10px;
+  z-index: 3;
+  color: var(--cat-glow, var(--host));
+  border-color: var(--cat-glow-soft, rgba(255, 255, 255, 0.18));
+  box-shadow: 0 0 12px -4px var(--cat-glow, transparent);
+}
+/* 카테고리별 글로우 색 */
+.vcard[data-cat='new']    { --cat-glow: #57e6c3; --cat-glow-soft: rgba(87, 230, 195, 0.5); }
+.vcard[data-cat='update'] { --cat-glow: #8b7bff; --cat-glow-soft: rgba(139, 123, 255, 0.5); }
+.vcard[data-cat='guide']  { --cat-glow: #ffc861; --cat-glow-soft: rgba(255, 200, 97, 0.5); }
+.vcard[data-cat='free']   { --cat-glow: #7ee787; --cat-glow-soft: rgba(126, 231, 135, 0.5); }
+.vcard[data-cat='indie']  { --cat-glow: #ff8fd0; --cat-glow-soft: rgba(255, 143, 208, 0.5); }
+/* 썸네일 테두리 글로우 (hover 는 기존 리프트 유지 + 글로우 강화) */
+.vcard[data-cat] .vcard-thumb {
+  border-color: var(--cat-glow-soft, var(--border));
+  box-shadow:
+    0 16px 34px -24px rgba(0, 0, 0, 0.9),
+    0 0 0 1px var(--cat-glow-soft, transparent),
+    0 0 18px -6px var(--cat-glow, transparent);
+}
+.vcard[data-cat]:hover .vcard-thumb {
+  border-color: var(--cat-glow, rgba(87, 230, 195, 0.45));
+  box-shadow:
+    0 26px 46px -26px rgba(0, 0, 0, 0.9),
+    0 0 0 1px var(--cat-glow-soft, transparent),
+    0 0 26px -6px var(--cat-glow, transparent);
 }

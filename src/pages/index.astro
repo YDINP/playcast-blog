@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HostRig from '../components/HostRig.astro';
 import VideoCard from '../components/VideoCard.astro';
 import AdSlot from '../components/AdSlot.astro';
-import { watchHref, durationLabel, posterOf, timeAgo } from '../lib/video';
+import { watchHref, durationLabel, posterOf, timeAgo, displayCategory } from '../lib/video';
 
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort(
   (a, b) => +b.data.pubDate - +a.data.pubDate
@@ -38,7 +38,13 @@ function cardTitle(t: string): string {
   return head.length > MAX_LABEL ? head.slice(0, MAX_LABEL - 1).trimEnd() + '…' : head;
 }
 
-const cats = Array.from(new Set(videos.map((v) => v.data.category)));
+// 필터칩·grid-item 의 카테고리는 카드에 '보이는' 라벨과 같아야 한다(New 시효 반영).
+// 안 맞추면 "New" 칩이 반년 전 편까지 24개를 물어오는데 카드 태그는 New 가 아니어서 어긋난다.
+// 순서: New 를 맨 앞에 두고 나머지는 등장순.
+const shownCatOf = (v: (typeof videos)[number]) => displayCategory(v.data.category, v.data.pubDate);
+const cats = Array.from(new Set(videos.map(shownCatOf))).sort((a, b) =>
+  a === 'New' ? -1 : b === 'New' ? 1 : 0
+);
 
 // 채널 홈 = 영상 목록. ItemList로 검색엔진에 콘텐츠 리스트 구조 전달
 const site = Astro.site || new URL('https://virtual-in-playing.vercel.app');
@@ -117,7 +123,7 @@ const itemListSchema = {
   <div class="pc-grid" id="pc-grid">
     {
       videos.map((v) => (
-        <div class="grid-item" data-cat={v.data.category} data-title={v.data.title.toLowerCase()}>
+        <div class="grid-item" data-cat={shownCatOf(v)} data-title={v.data.title.toLowerCase()}>
           <VideoCard video={v} />
         </div>
       ))

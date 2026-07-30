@@ -80,3 +80,29 @@ export function watchHref(id: string): string {
 export function posterOf(data: { thumbnail?: string; scenes: Scene[] }): string | undefined {
   return data.thumbnail || data.scenes.find((s) => s.image)?.image;
 }
+
+/* ── 카드 카테고리 태그의 시효 ──────────────────────────────────────────────
+   category 값의 24/34가 literal "New"라서, 그대로 두면 반년 지난 편도 New 로 보인다.
+   "New"는 발행 후 FRESH_DAYS(2일)까지만 쓰고, 그 뒤엔 원래 코너 태그로 내려간다.
+   category 자체가 "New"인 글은 대체 라벨이 없으므로 기본 코너명(게임소개)을 쓴다.
+
+   정적 사이트라 여기서 나온 값은 '빌드 시점' 판정이다. 실제 '접속 날짜' 기준 보정은
+   BaseLayout 의 인라인 스크립트가 .vcard[data-pub] 를 훑어 라벨·글로우·필터키를 갱신한다.
+   판정은 시각이 아니라 KST 달력일 기준 — "접속 날짜로 2일까지"를 그대로 옮긴 것.        */
+export const FRESH_DAYS = 2;
+export const CORNER_DEFAULT = '게임소개';
+
+export function kstDay(d: Date): string {
+  return new Date(d.getTime() + 9 * 3600_000).toISOString().slice(0, 10);
+}
+
+/** 시효가 지나면 쓰는 코너 태그(New 이외의 category 는 그대로). */
+export function baseCategory(category: string): string {
+  return category === 'New' ? CORNER_DEFAULT : category;
+}
+
+/** 지금(now) 기준으로 카드에 보여줄 카테고리 라벨. */
+export function displayCategory(category: string, pubDate: Date, now: Date = new Date()): string {
+  const ageDays = (Date.parse(kstDay(now)) - Date.parse(kstDay(pubDate))) / 86_400_000;
+  return ageDays <= FRESH_DAYS ? 'New' : baseCategory(category);
+}

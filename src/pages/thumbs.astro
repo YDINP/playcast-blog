@@ -1,0 +1,133 @@
+---
+// 썸네일 모음집 — 메타(제목·조회수·호스트)를 다 걷어내고 '표지만' 벽처럼 늘어놓는 페이지.
+// 홈 목록은 카드 1장당 세로 260px 이상을 쓰기 때문에 편수가 늘면 표지를 훑기가 어렵다.
+// 여기서는 한 화면에 최대한 많은 표지를 담고, 제목은 hover/포커스 때만 얹는다.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { watchHref, posterOf, timeAgo } from '../lib/video';
+
+const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort(
+  (a, b) => +b.data.pubDate - +a.data.pubDate
+);
+const items = videos
+  .map((v) => ({ v, poster: posterOf(v.data) }))
+  .filter((x) => !!x.poster);
+---
+
+<BaseLayout
+  title="썸네일 모음집 — VIP"
+  description={`로지가 소개한 게임 ${items.length}편의 표지를 한 화면에 모았습니다. 표지를 누르면 그 편으로 바로 이동합니다.`}
+>
+  <section class="tw-head">
+    <h1>썸네일 모음집</h1>
+    <p>표지만 모아 봅니다 · 총 {items.length}편 · 누르면 해당 편으로 이동합니다</p>
+  </section>
+
+  <div class="tw-grid">
+    {
+      items.map(({ v, poster }) => (
+        <a href={watchHref(v.id)} class="tw-item" title={v.data.title}>
+          <img src={poster} alt={v.data.title} loading="lazy" />
+          <span class="tw-cap">
+            <b>{v.data.title}</b>
+            <i>{timeAgo(v.data.pubDate)}</i>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .tw-head {
+    margin: 6px 0 18px;
+  }
+  .tw-head h1 {
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    margin: 0 0 6px;
+  }
+  .tw-head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+  /* 표지 벽 — 최소 200px 폭으로 자동 채움. 16:9 를 유지해 카드 높이가 들쭉날쭉하지 않게. */
+  .tw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .tw-item {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, #23233a, #141420);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .tw-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .tw-item:hover,
+  .tw-item:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(87, 230, 195, 0.5);
+    box-shadow: 0 18px 34px -22px rgba(87, 230, 195, 0.45);
+  }
+  /* 제목은 평소엔 숨긴다 — 표지를 가리지 않는 게 이 페이지의 목적이다. */
+  .tw-cap {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 20px 10px 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.82));
+    color: #fff;
+    display: grid;
+    gap: 2px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .tw-item:hover .tw-cap,
+  .tw-item:focus-visible .tw-cap {
+    opacity: 1;
+    transform: none;
+  }
+  .tw-cap b {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tw-cap i {
+    font-style: normal;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  /* 모바일: 표지를 훑는 페이지라 여기서는 2열을 유지한다(홈 목록과 목적이 다르다).
+     터치 기기엔 hover 가 없으므로 제목을 항상 보이게 두고 폰트만 줄인다. */
+  @media (max-width: 560px) {
+    .tw-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .tw-cap {
+      opacity: 1;
+      transform: none;
+      padding: 16px 7px 6px;
+    }
+    .tw-cap b {
+      font-size: 0.7rem;
+      -webkit-line-clamp: 1;
+    }
+    .tw-cap i {
+      display: none;
+    }
+  }
+</style>

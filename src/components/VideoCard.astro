@@ -1,6 +1,15 @@
 ---
 import HostMascot from './HostMascot.astro';
-import { durationLabel, formatViews, timeAgo, watchHref, posterOf } from '../lib/video';
+import {
+  durationLabel,
+  formatViews,
+  timeAgo,
+  watchHref,
+  posterOf,
+  baseCategory,
+  displayCategory,
+  kstDay,
+} from '../lib/video';
 import type { CollectionEntry } from 'astro:content';
 import hostSide from '../data/host-side.json';
 
@@ -32,6 +41,11 @@ function seeded(str: string) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+// 카테고리 태그의 시효(New는 2일까지)는 lib/video.ts 가 SSOT — 홈 필터칩도 같은 함수를 쓴다.
+const baseCat = baseCategory(data.category);
+const pubDay = kstDay(data.pubDate);
+const shownCat = displayCategory(data.category, data.pubDate);
+
 const rnd = seeded(video.id);
 const rojiExprs = ['base', 'mouth-a', 'mouth-e', 'mouth-i']; // 기본 얼굴 + 입모양만 변화(표정 X)
 const rojiExpr = rojiExprs[Math.floor(rnd() * rojiExprs.length)];
@@ -45,7 +59,17 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
 
 {
   variant === 'grid' ? (
-    <a href={href} class="vcard">
+    <a
+      href={href}
+      class="vcard"
+      data-cat={shownCat.toLowerCase()}
+      data-pub={pubDay}
+      data-cat-base={baseCat}
+    >
+      {/* 카테고리 태그는 썸네일 '바깥 위쪽'에 둔다 — 안에 얹으면 포스터 주제부를 가린다.
+          "새 글" 신호는 썸네일 테두리 글로우(data-cat 색)가 대신 준다.
+          라벨은 접속 날짜 기준으로 BaseLayout 인라인 스크립트가 New↔코너를 보정한다. */}
+      <span class="vcard-cat">{shownCat}</span>
       <div class:list={['vcard-thumb', { 'is-empty': !poster }]}>
         <div class="sp-bg is-grad is-on" style="position:absolute;inset:0"></div>
         {poster && <img src={poster} alt={data.title} loading="lazy" onerror="this.style.display='none'" />}
@@ -54,7 +78,6 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
             <img class="roji-base" src={`/host/roji/${rojiExpr}.png`} alt="" loading="lazy" />
           </span>
         )}
-        <span class="vcard-cat">{data.category}</span>
         <span class="vcard-dur">{dur}</span>
         <span class="vcard-play">
           <span>
