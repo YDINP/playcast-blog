@@ -42,7 +42,11 @@ const items = videos
   <div class="tw-lb" id="tw-lb" hidden aria-modal="true" role="dialog" aria-label="썸네일 원본 보기">
     <div class="tw-lb-bg" data-close></div>
     <figure class="tw-lb-box">
-      <img id="tw-lb-img" src="" alt="" />
+      {/* 이미지는 항상 원본 픽셀 크기로 두고, 화면보다 크면 이 상자를 스크롤(팬)한다.
+          축소해서 맞추면 "원본으로 본다"는 목적이 사라지므로 축소는 하지 않는다. */}
+      <div class="tw-lb-view" id="tw-lb-view">
+        <img id="tw-lb-img" src="" alt="" />
+      </div>
       <figcaption class="tw-lb-bar">
         <span class="tw-lb-meta"><b id="tw-lb-title"></b><i id="tw-lb-dim"></i></span>
         <span class="tw-lb-btns">
@@ -65,7 +69,31 @@ const items = videos
     var elTitle = document.getElementById('tw-lb-title');
     var elDim = document.getElementById('tw-lb-dim');
     var go = document.getElementById('tw-lb-go');
+    var view = document.getElementById('tw-lb-view');
     var lastFocus = null;
+
+    // 마우스 드래그 팬 — 터치는 상자의 네이티브 스크롤이 이미 팬이라 건드리지 않는다
+    // (touch 에 pointer 캡처를 걸면 관성 스크롤을 잃는다).
+    var drag = null;
+    view.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      if (view.scrollWidth <= view.clientWidth && view.scrollHeight <= view.clientHeight) return;
+      drag = { x: e.clientX, y: e.clientY, l: view.scrollLeft, t: view.scrollTop };
+      view.classList.add('is-drag');
+      view.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    view.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      view.scrollLeft = drag.l - (e.clientX - drag.x);
+      view.scrollTop = drag.t - (e.clientY - drag.y);
+    });
+    function endDrag() {
+      drag = null;
+      view.classList.remove('is-drag');
+    }
+    view.addEventListener('pointerup', endDrag);
+    view.addEventListener('pointercancel', endDrag);
 
     function open(a) {
       lastFocus = a;
@@ -83,7 +111,15 @@ const items = videos
         ? img.decode().then(show).catch(show)
         : img.addEventListener('load', show, { once: true });
       function show() {
-        elDim.textContent = img.naturalWidth ? img.naturalWidth + '×' + img.naturalHeight : '';
+        if (!img.naturalWidth) return;
+        // 화면보다 크면 팬 모드 — 가운데에서 시작해 좌우로 훑게 한다.
+        var panX = view.scrollWidth > view.clientWidth + 1;
+        var panY = view.scrollHeight > view.clientHeight + 1;
+        view.classList.toggle('is-pan', panX || panY);
+        view.scrollLeft = (view.scrollWidth - view.clientWidth) / 2;
+        view.scrollTop = (view.scrollHeight - view.clientHeight) / 2;
+        elDim.textContent =
+          img.naturalWidth + '×' + img.naturalHeight + (panX || panY ? ' · 1:1 · 드래그해 이동' : '');
       }
       go.focus();
     }
@@ -209,17 +245,44 @@ const items = videos
     gap: 10px;
     justify-items: center;
   }
-  /* 원본 픽셀 크기로 보여주되(1280x720) 화면을 넘으면 담기게만 줄인다. */
+  /* 뷰포트: 원본(1280px)이 들어가면 그대로, 좁으면 스크롤 상자가 되어 드래그로 훑는다. */
+  .tw-lb-view {
+    width: min(1280px, 100%);
+    max-height: calc(100dvh - 104px);
+    overflow: auto;
+    overscroll-behavior: contain; /* 끝까지 밀었을 때 페이지가 따라 움직이지 않게 */
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    /* 테두리는 border 대신 outline — box-sizing:border-box 에서 border 는 콘텐츠 폭을 2px
+       깎아버려, 1280px 이미지가 1278px 상자에 들어가며 데스크톱에서도 팬으로 오판정됐다. */
+    outline: 1px solid rgba(255, 255, 255, 0.16);
+    outline-offset: -1px;
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+    background: #000;
+    line-height: 0;
+  }
+  /* 스크롤바는 얇게 — 좁은 화면에서 그림을 덜 가리게 */
+  .tw-lb-view::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .tw-lb-view::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 99px;
+  }
+  .tw-lb-view.is-pan {
+    cursor: grab;
+  }
+  .tw-lb-view.is-pan.is-drag {
+    cursor: grabbing;
+  }
+  /* 항상 원본 픽셀 크기 — 축소 금지(축소하면 원본 확인 목적이 없어진다) */
   .tw-lb-box img {
     display: block;
     width: auto;
     height: auto;
-    max-width: min(1280px, 100%);
-    max-height: calc(100dvh - 96px);
-    border-radius: var(--radius);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
-    background: #000;
+    max-width: none;
+    max-height: none;
   }
   .tw-lb-bar {
     display: flex;
@@ -292,6 +355,32 @@ const items = videos
     }
     .tw-cap i {
       display: none;
+    }
+    /* 라이트박스: 1:1 팬 모드라 이미지가 720px 로 고정되는데, 제목이 2줄로 접히면
+       하단 바가 화면 밖으로 밀려 '닫기'를 누를 수 없었다(고정 오버레이라 스크롤도 못 함).
+       이미지 상자 높이를 바 몫만큼 줄이고, 바는 한 줄로 고정한다. */
+    .tw-lb {
+      padding: 10px;
+    }
+    .tw-lb-view {
+      max-height: calc(100dvh - 132px);
+    }
+    .tw-lb-bar {
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+    .tw-lb-meta b {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 0.8rem;
+    }
+    .tw-btn {
+      min-height: 44px; /* 터치 최소 크기 */
+      padding: 0 12px;
+      font-size: 0.8rem;
+      white-space: nowrap;
     }
   }
 </style>

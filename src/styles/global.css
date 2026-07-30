@@ -2522,15 +2522,34 @@ body::after {
 .vcard {
   position: relative;
   overflow: visible;
-  padding-top: 27px; /* 태그 높이(25px) + 2px — 썸네일과 겹치지 않는 최소값 */
+  /* 태그가 썸네일 '뒤에서' 위로 삐져나오는 만큼만 확보 (파일철에 붙인 인덱스 탭 느낌).
+     태그 전체 높이보다 작게 잡아야 아랫부분이 썸네일에 가려진다. */
+  padding-top: 17px;
 }
 .vcard-cat {
   top: 0;
-  left: 10px;
-  z-index: 3;
+  left: 9px;
+  z-index: 0; /* 썸네일(z-index:1) 뒤 — 아래쪽이 가려져 '끼워 넣은' 탭처럼 보인다 */
+  padding: 3px 11px 8px; /* 아래 패딩은 가려지는 몫 */
+  border-radius: 8px 8px 3px 3px; /* 위만 둥근 탭 모양 */
+  background: rgba(14, 16, 22, 0.94);
+  backdrop-filter: none;
+  transform: rotate(-1.5deg); /* 살짝 비뚤게 붙인 포스트잇 */
+  transform-origin: bottom left;
   color: var(--cat-glow, var(--host));
   border-color: var(--cat-glow-soft, rgba(255, 255, 255, 0.18));
-  box-shadow: 0 0 12px -4px var(--cat-glow, transparent);
+  box-shadow:
+    0 -3px 10px -4px rgba(0, 0, 0, 0.8),
+    0 0 12px -4px var(--cat-glow, transparent);
+  transition: transform 0.25s ease;
+}
+/* 썸네일이 태그를 덮어야 '뒤에 끼운' 느낌이 난다 */
+.vcard-thumb {
+  z-index: 1;
+}
+/* hover 로 썸네일이 4px 들리면 탭이 그만큼 더 드러난다 — 같이 살짝 세워 준다 */
+.vcard:hover .vcard-cat {
+  transform: rotate(-3deg) translateY(-2px);
 }
 /* 카테고리별 글로우 색 */
 .vcard[data-cat='new']    { --cat-glow: #57e6c3; --cat-glow-soft: rgba(87, 230, 195, 0.5); }
