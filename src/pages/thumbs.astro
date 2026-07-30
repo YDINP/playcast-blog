@@ -26,7 +26,7 @@ const items = videos
   <div class="tw-grid">
     {
       items.map(({ v, poster }) => (
-        <a href={watchHref(v.id)} class="tw-item" title={v.data.title}>
+        <a href={watchHref(v.id)} class="tw-item" title={v.data.title} data-full={poster}>
           <img src={poster} alt={v.data.title} loading="lazy" />
           <span class="tw-cap">
             <b>{v.data.title}</b>
@@ -36,7 +36,80 @@ const items = videos
       ))
     }
   </div>
+
+  {/* 원본 보기 — 표지를 실제 픽셀 크기(1280x720)로 확인하는 용도.
+      href 는 카드에 그대로 남겨 두고(새 탭·중클릭 유지) 좌클릭만 가로채 여기서 띄운다. */}
+  <div class="tw-lb" id="tw-lb" hidden aria-modal="true" role="dialog" aria-label="썸네일 원본 보기">
+    <div class="tw-lb-bg" data-close></div>
+    <figure class="tw-lb-box">
+      <img id="tw-lb-img" src="" alt="" />
+      <figcaption class="tw-lb-bar">
+        <span class="tw-lb-meta"><b id="tw-lb-title"></b><i id="tw-lb-dim"></i></span>
+        <span class="tw-lb-btns">
+          <a id="tw-lb-go" class="tw-btn is-go" href="#">링크로 가기 →</a>
+          <button type="button" class="tw-btn" data-close>닫기 ✕</button>
+        </span>
+      </figcaption>
+    </figure>
+  </div>
 </BaseLayout>
+
+<script>
+  (function () {
+    var lb = document.getElementById('tw-lb');
+    if (!lb) return;
+    // .pc-main 이 position:relative + z-index:1 로 스택 컨텍스트를 만들기 때문에, 그 안에서는
+    // z-index 를 아무리 올려도 헤더(z-index:50)를 덮지 못한다. body 로 꺼내 루트에서 겨루게 한다.
+    document.body.appendChild(lb);
+    var img = document.getElementById('tw-lb-img');
+    var elTitle = document.getElementById('tw-lb-title');
+    var elDim = document.getElementById('tw-lb-dim');
+    var go = document.getElementById('tw-lb-go');
+    var lastFocus = null;
+
+    function open(a) {
+      lastFocus = a;
+      var src = a.getAttribute('data-full') || '';
+      var title = a.getAttribute('title') || '';
+      img.src = src;
+      img.alt = title;
+      elTitle.textContent = title;
+      elDim.textContent = '';
+      go.href = a.getAttribute('href') || '#';
+      lb.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      // 원본 픽셀 크기는 디코드 후에만 알 수 있다.
+      img.decode
+        ? img.decode().then(show).catch(show)
+        : img.addEventListener('load', show, { once: true });
+      function show() {
+        elDim.textContent = img.naturalWidth ? img.naturalWidth + '×' + img.naturalHeight : '';
+      }
+      go.focus();
+    }
+    function close() {
+      lb.hidden = true;
+      img.src = '';
+      document.documentElement.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    }
+
+    document.querySelectorAll('.tw-item').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        // 새 탭/새 창 의도(수식키·휠클릭)는 그대로 통과시킨다.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        open(a);
+      });
+    });
+    lb.addEventListener('click', function (e) {
+      if (e.target.closest('[data-close]')) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (!lb.hidden && e.key === 'Escape') close();
+    });
+  })();
+</script>
 
 <style>
   .tw-head {
@@ -110,6 +183,97 @@ const items = videos
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.7);
   }
+  /* ── 원본 보기 라이트박스 ── */
+  .tw-lb {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+  .tw-lb[hidden] {
+    display: none;
+  }
+  .tw-lb-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 6, 10, 0.86);
+    backdrop-filter: blur(4px);
+  }
+  .tw-lb-box {
+    position: relative;
+    margin: 0;
+    max-width: 100%;
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+  }
+  /* 원본 픽셀 크기로 보여주되(1280x720) 화면을 넘으면 담기게만 줄인다. */
+  .tw-lb-box img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(1280px, 100%);
+    max-height: calc(100dvh - 96px);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+    background: #000;
+  }
+  .tw-lb-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 14px;
+    width: min(1280px, 100%);
+  }
+  .tw-lb-meta {
+    display: grid;
+    min-width: 0;
+  }
+  .tw-lb-meta b {
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+  .tw-lb-meta i {
+    font-style: normal;
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-variant-numeric: tabular-nums;
+  }
+  .tw-lb-btns {
+    display: flex;
+    gap: 8px;
+    flex: none;
+  }
+  .tw-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tw-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .tw-btn.is-go {
+    background: var(--host);
+    border-color: transparent;
+    color: #06231c;
+  }
+  .tw-btn.is-go:hover {
+    filter: brightness(1.08);
+  }
+
   /* 모바일: 표지를 훑는 페이지라 여기서는 2열을 유지한다(홈 목록과 목적이 다르다).
      터치 기기엔 hover 가 없으므로 제목을 항상 보이게 두고 폰트만 줄인다. */
   @media (max-width: 560px) {
