@@ -117,8 +117,8 @@ async function diag(src, dst) {
   console.log(`  → 진단 이미지 ${dst} (빨강=광대선, 초록=얼굴폭, 파랑=정수리)`);
 }
 
-/** 규격에 맞춰 스케일·이동 후 흰 캔버스에 합성 */
-async function align(src, dst, nudge = 1) {
+/** 규격에 맞춰 스케일·이동 후 캔버스에 합성 (기본으로 배경 알파 컷까지 수행) */
+async function align(src, dst, nudge = 1, doAlpha = true) {
   const S = REPORTER_SPEC;
   const m = await measure(src);
   report(m);
@@ -149,14 +149,130 @@ async function align(src, dst, nudge = 1) {
     .png()
     .toBuffer();
 
-  await sharp({ create: { width: S.W, height: S.H, channels: 4, background: '#ffffff' } })
+  const composed = await sharp({ create: { width: S.W, height: S.H, channels: 4, background: '#ffffff' } })
     .composite([{ input: resized, top: dy, left: dx }])
     .png()
-    .toFile(dst);
+    .toBuffer();
 
-  console.log(`  → ${dst}  scale=${scale.toFixed(4)}${nudge !== 1 ? ` (nudge ${nudge})` : ''} top=${top} left=${left}`);
+  console.log(`  정렬  scale=${scale.toFixed(4)}${nudge !== 1 ? ` (nudge ${nudge})` : ''} top=${top} left=${left}`);
+  if (doAlpha) await alphaCut(composed, dst, `${src} (정렬본)`);
+  else await sharp(composed).toFile(dst);
+
   const a = await measure(dst);
   console.log(`  검증: 광대선 ${(a.cheekY / S.H * 100).toFixed(1)}% (목표 ${(S.CHEEK_Y * 100).toFixed(1)}) / 얼굴폭 ${(a.faceW / S.W * 100).toFixed(1)}% (목표 ${(S.FACE_W * 100).toFixed(1)}) / 정수리 ${(a.minY / S.H * 100).toFixed(1)}%`);
+}
+
+/* 배경 알파 컷 — 가장자리에서 플러드필로 "바깥" 배경만 지운다.
+ *
+ * 단순 흰색 제거(색 기준 일괄 투명화)는 절대 쓰면 안 된다. 이 캐릭터들은 화이트 셔츠를
+ * 입고 있어서 셔츠가 통째로 날아간다. 바깥 배경만 지우려면 "프레임 가장자리와 연결된
+ * 밝은 영역"이라는 위치 조건이 필요하고, 그건 플러드필로만 판정된다.
+ *
+ * 임계값 두 개(히스테리시스):
+ *   FILL  — 이보다 밝으면 배경으로 보고 전파한다(확실한 배경)
+ *   EDGE  — FILL~EDGE 사이는 경계 안티에일리어싱으로 보고 부분 알파를 준다
+ *           (머리카락 끝 등 반투명 픽셀이 하드하게 잘리는 것을 막는다)
+ */
+const ALPHA_FILL = 244;
+const ALPHA_EDGE = 224;
+// 원본 배경이 순백이 아니라 아주 연한 회색이라, 경계 안티에일리어싱 픽셀이 FILL 임계값
+// 아래로 살아남아 실루엣에 흰 테두리(할로)가 남는다. 그래서 플러드필 후 "배경에 닿은
+// 밝은 픽셀"을 몇 겹 깎아낸다. 셔츠는 바깥과 연결돼 있지 않아 침식되지 않는다.
+const ALPHA_RIM = 232;   // 이보다 밝고 배경에 닿아 있으면 테두리로 보고 깎는다
+const ALPHA_RIM_PASSES = 2;
+
+async function alphaCut(src, dst, label = src) {
+  const { data, info } = await sharp(src).ensureAlpha().raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width: W, height: H } = info;
+  const bright = (i) => Math.min(data[i], data[i + 1], data[i + 2]);
+
+  // 1) 가장자리에서 시작해 밝은 영역을 4방향 전파
+  const bg = new Uint8Array(W * H);
+  const stack = [];
+  const push = (x, y) => {
+    const p = y * W + x;
+    if (bg[p]) return;
+    if (bright(p * 4) < ALPHA_FILL) return;
+    bg[p] = 1; stack.push(p);
+  };
+  for (let x = 0; x < W; x++) { push(x, 0); push(x, H - 1); }
+  for (let y = 0; y < H; y++) { push(0, y); push(W - 1, y); }
+  while (stack.length) {
+    const p = stack.pop();
+    const x = p % W, y = (p - x) / W;
+    if (x > 0) push(x - 1, y);
+    if (x < W - 1) push(x + 1, y);
+    if (y > 0) push(x, y - 1);
+    if (y < H - 1) push(x, y + 1);
+  }
+
+  // 1-b) 흰 테두리 침식: 배경에 닿은 밝은 픽셀을 ALPHA_RIM_PASSES 겹 배경으로 흡수
+  let rim = 0;
+  for (let k = 0; k < ALPHA_RIM_PASSES; k++) {
+    const add = [];
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const p = y * W + x;
+        if (bg[p] || bright(p * 4) < ALPHA_RIM) continue;
+        if ((x > 0 && bg[p - 1]) || (x < W - 1 && bg[p + 1]) ||
+            (y > 0 && bg[p - W]) || (y < H - 1 && bg[p + W])) add.push(p);
+      }
+    }
+    for (const p of add) bg[p] = 1;
+    rim += add.length;
+    if (!add.length) break;
+  }
+
+  // 2) 알파 적용: 배경=0, 배경에 인접한 밝은 픽셀=부분 알파, 나머지=255
+  let cut = 0, soft = 0;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const p = y * W + x, i = p * 4;
+      if (bg[p]) { data[i + 3] = 0; cut++; continue; }
+      const b = bright(i);
+      if (b <= ALPHA_EDGE) { data[i + 3] = 255; continue; }
+      const touching =
+        (x > 0 && bg[p - 1]) || (x < W - 1 && bg[p + 1]) ||
+        (y > 0 && bg[p - W]) || (y < H - 1 && bg[p + W]);
+      if (!touching) { data[i + 3] = 255; continue; }
+      data[i + 3] = Math.round(255 * (ALPHA_FILL - b) / (ALPHA_FILL - ALPHA_EDGE));
+      soft++;
+    }
+  }
+
+  // 3) 남은 밝은 불투명 영역 보고 — 대부분 화이트 셔츠 하이라이트(정상)다.
+  //    배경 흰색과 셔츠 흰색은 색으로 구분되지 않으므로 자동 판정하지 않고 좌표만 알린다.
+  //    팔·몸통 사이가 뚫렸는지는 결과를 색 배경에 올려 눈으로 확인하는 것이 확실하다.
+  const seen = new Uint8Array(W * H);
+  const holes = [];
+  for (let p = 0; p < W * H; p++) {
+    if (bg[p] || seen[p] || bright(p * 4) < ALPHA_FILL) continue;
+    let n = 0, minX = W, maxX = -1, minY = H, maxY = -1;
+    const st = [p]; seen[p] = 1;
+    while (st.length) {
+      const q = st.pop(); const qx = q % W, qy = (q - qx) / W;
+      n++;
+      if (qx < minX) minX = qx; if (qx > maxX) maxX = qx;
+      if (qy < minY) minY = qy; if (qy > maxY) maxY = qy;
+      for (const r of [qx > 0 ? q - 1 : -1, qx < W - 1 ? q + 1 : -1,
+                       qy > 0 ? q - W : -1, qy < H - 1 ? q + W : -1]) {
+        if (r < 0 || seen[r] || bg[r] || bright(r * 4) < ALPHA_FILL) continue;
+        seen[r] = 1; st.push(r);
+      }
+    }
+    if (n >= 200) holes.push({ n, minX, maxX, minY, maxY });
+  }
+  holes.sort((a, b) => b.n - a.n);
+
+  await sharp(data, { raw: { width: W, height: H, channels: 4 } }).png().toFile(dst);
+  console.log(`\n=== 알파 컷 ${label} → ${dst} ===`);
+  console.log(`  배경 제거 ${cut}px (${(cut / (W * H) * 100).toFixed(1)}%), 테두리 침식 ${rim}px, 소프트 엣지 ${soft}px`);
+  console.log(`  남은 밝은 불투명 영역 ${holes.length}개 (대개 화이트 셔츠 하이라이트, 상위 3개):`);
+  for (const h of holes.slice(0, 3)) {
+    console.log(`    ${h.n}px  x ${h.minX}..${h.maxX} y ${h.minY}..${h.maxY}`);
+  }
+  console.log(`  팔·몸통 사이가 뚫렸는지는 색 배경에 올려 눈으로 확인할 것`);
 }
 
 /** 정렬 검증용: 정렬된 베이스들을 나란히 놓고 기준선을 그린 시트 */
@@ -183,6 +299,9 @@ const flag = (n) => { const i = argv.indexOf(n); return i < 0 ? null : argv[i + 
 
 if (argv.includes('--measure')) {
   for (const f of argv.slice(argv.indexOf('--measure') + 1)) report(await measure(f));
+} else if (argv.includes('--alpha')) {
+  const [src, dst] = argv.slice(argv.indexOf('--alpha') + 1);
+  await alphaCut(src, dst);
 } else if (argv.includes('--sheet')) {
   const rest = argv.slice(argv.indexOf('--sheet') + 1);
   await sheet(rest.slice(0, -1), rest[rest.length - 1]);
@@ -192,8 +311,13 @@ if (argv.includes('--measure')) {
 } else {
   const src = flag('--in'), dst = flag('--out');
   if (!src || !dst) {
-    console.error('usage: --measure <img>... | --in <src> --out <dst> [--scale-nudge 1.0]');
+    console.error('usage:\n' +
+      '  --in <src> --out <dst> [--scale-nudge 1.0] [--no-alpha]   규격 정렬 + 배경 알파 컷\n' +
+      '  --measure <img>...                                        실루엣·얼굴 측정\n' +
+      '  --diag <src> <dst>                                        검출 마커 이미지\n' +
+      '  --alpha <src> <dst>                                       배경 알파 컷만\n' +
+      '  --sheet <img>... <dst>                                    정렬 검증 시트');
     process.exit(1);
   }
-  await align(src, dst, Number(flag('--scale-nudge') ?? 1));
+  await align(src, dst, Number(flag('--scale-nudge') ?? 1), !argv.includes('--no-alpha'));
 }
