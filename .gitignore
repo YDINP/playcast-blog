@@ -24,3 +24,6 @@ Thumbs.db
 # 이미지 생성 API 키 (커밋 금지)
 .imagegen.env
 dist-preview/
+
+# 캐릭터 시안 아카이브 — README만 버전 관리 (PNG 49장 73MB, 대부분 폐기 시안)
+host-archive/**/*.png
