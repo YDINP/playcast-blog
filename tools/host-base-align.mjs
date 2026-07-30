@@ -34,6 +34,21 @@ export const REPORTER_SPEC = {
   FACE_W: 0.225,   // 얼굴 광대폭 (캔버스 가로 비율)
 };
 
+/* 캐릭터별 스케일 보정 — 파일명(확장자 제외) 기준으로 자동 적용된다.
+ *
+ * 얼굴 크기를 똑같이 맞춰도 헤어 볼륨이 작은 캐릭터는 머리 위 여백이 커져서 인물이
+ * 뒤로 물러난 것처럼, 즉 "작아" 보인다. 실측: 정수리 여백이 미아 1.8% / 레이 4.2% /
+ * 카이 8.4%였다(카이는 짧은 남성 헤어). 몸은 오히려 카이가 더 넓다
+ * (가슴~허리 폭 미아 405~482 / 레이 419~496 / 카이 407~561).
+ *
+ * 여백을 스케일로 완전히 맞추려 하면 안 된다 — 미아 수준까지 줄이려면 44% 확대가 필요하고
+ * 그러면 얼굴폭이 32%가 되어 원근이 다른 인물처럼 보인다. 남성이 여성보다 머리가 조금 큰
+ * 정도까지만 올린다.
+ */
+export const SCALE_NUDGE = {
+  kai: 1.20, // 남성이라 키가 큰 설정 → 얼굴폭 26.9% / 정수리 여백 5.4%
+};
+
 const BG_THRESH = 240; // 이보다 밝으면 배경(흰색)으로 간주
 
 /** 창백한 애니 피부톤 판정 — 흰 셔츠/배경, 머리카락, 옷과 구분된다 */
@@ -310,6 +325,10 @@ if (argv.includes('--measure')) {
   await diag(src, dst);
 } else {
   const src = flag('--in'), dst = flag('--out');
+  // 캐릭터별 보정값을 자동 적용한다(플래그를 매번 기억해야 하면 재현이 깨진다).
+  // --scale-nudge 를 명시하면 그 값이 우선한다.
+  const key = dst && dst.replace(/\\/g, '/').split('/').pop().replace(/\.[^.]+$/, '');
+  const autoNudge = SCALE_NUDGE[key] ?? 1;
   if (!src || !dst) {
     console.error('usage:\n' +
       '  --in <src> --out <dst> [--scale-nudge 1.0] [--no-alpha]   규격 정렬 + 배경 알파 컷\n' +
@@ -319,5 +338,5 @@ if (argv.includes('--measure')) {
       '  --sheet <img>... <dst>                                    정렬 검증 시트');
     process.exit(1);
   }
-  await align(src, dst, Number(flag('--scale-nudge') ?? 1), !argv.includes('--no-alpha'));
+  await align(src, dst, Number(flag('--scale-nudge') ?? autoNudge), !argv.includes('--no-alpha'));
 }
