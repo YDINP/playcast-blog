@@ -154,8 +154,7 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
           <a href="/thumbs">썸네일</a>
           <a href="/notice">공지</a>
           <a href="/about" class="hide-sm">채널</a>
-          <a href="https://ai-revenue-blog.vercel.app/" target="_blank" rel="noopener" class="hide-sm">TechFlow ↗</a>
-          <a href="https://life-revenue-blog.vercel.app/" target="_blank" rel="noopener" class="hide-sm">LifeFlow ↗</a>
+          <a href="https://mungge.com/" target="_blank" rel="noopener" class="hide-sm">뭉게 ↗</a>
           <span class="pc-onair" title="로지는 항상 방송 중입니다"><i></i>ON AIR</span>
         </nav>
       </div>
@@ -166,16 +165,79 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
     </main>
 
     <footer class="pc-footer">
+      <!-- 문의하기 (블로그 최하단 · 전 페이지 공통). Supabase submit_comment RPC로 저장. -->
+      <section class="pc-contact" id="contact">
+        <h2 class="pc-contact-title">문의하기</h2>
+        <p class="pc-contact-desc">채널 문의·제보·제휴 제안을 남겨주세요. 연락처를 적어주시면 확인 후 답신드립니다.</p>
+        <form class="pc-contact-form" id="contact-form" novalidate>
+          <div class="pcc-row">
+            <input id="ct-name" type="text" required minlength="2" maxlength="20" placeholder="이름 / 닉네임" autocomplete="off" aria-label="이름 또는 닉네임" />
+            <input id="ct-contact" type="text" maxlength="80" placeholder="연락처 (선택) · 이메일 등" autocomplete="off" aria-label="연락처(선택)" />
+          </div>
+          <textarea id="ct-msg" required minlength="5" maxlength="800" rows="3" placeholder="문의하실 내용을 적어주세요 (5~800자)" aria-label="문의 내용"></textarea>
+          <input type="text" id="ct-website" class="pcc-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="pcc-foot">
+            <span class="pcc-status" id="ct-status" role="status" aria-live="polite"></span>
+            <button type="submit" class="pcc-submit" id="ct-submit">보내기</button>
+          </div>
+        </form>
+      </section>
+
       <p class="pc-footer-family">
         함께 보기 ·
-        <a href="https://ai-revenue-blog.vercel.app/" target="_blank" rel="noopener">TechFlow ↗</a> ·
-        <a href="https://life-revenue-blog.vercel.app/" target="_blank" rel="noopener">LifeFlow ↗</a>
+        <a href="https://mungge.com/" target="_blank" rel="noopener">뭉게 ↗</a>
       </p>
       <p>
         © {new Date().getFullYear()} VIP · 버츄얼 호스트 로지의 게임 소개 채널 ·
         <a href="/rss.xml">RSS</a>
       </p>
     </footer>
+
+    <!-- 문의하기 전송: 댓글 RPC 재사용(slug=contact-inquiry, source=vip). comments INSERT는
+         (웹훅 트리거가 설치되면) @ben_dashboard_bot 텔레그램 알림으로 이어진다. -->
+    <script is:inline>
+      (function () {
+        var RPC = 'https://xyprbsmagtlzebxyxsvj.supabase.co/rest/v1/rpc/submit_comment';
+        var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cHJic21hZ3RsemVieHl4c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjY4NTQsImV4cCI6MjA4NjA0Mjg1NH0.dajN0n0IWzOgYOSCglxVLzddg7jJFRHNCHwTWMG62uU';
+        var form = document.getElementById('contact-form');
+        if (!form) return;
+        var statusEl = document.getElementById('ct-status');
+        var btn = document.getElementById('ct-submit');
+        var last = 0;
+        function setStatus(m, err) { statusEl.textContent = m; statusEl.style.color = err ? 'var(--live)' : 'var(--host)'; }
+        function rndpw() { var s = ''; for (var i = 0; i < 16; i++) s += Math.floor(Math.random() * 36).toString(36); return s; }
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          if (document.getElementById('ct-website').value) return;
+          var now = Date.now();
+          if (now - last < 30000) { setStatus('잠시 후 다시 시도해주세요 (30초).', true); return; }
+          var name = document.getElementById('ct-name').value.trim();
+          var contact = document.getElementById('ct-contact').value.trim();
+          var msg = document.getElementById('ct-msg').value.trim();
+          if (name.length < 2 || msg.length < 5) { setStatus('이름 2자, 내용 5자 이상 입력해주세요.', true); return; }
+          var content = '📮 [VIP 채널 문의]\n' + (contact ? '[연락처: ' + contact + ']\n' : '') + msg;
+          btn.disabled = true; btn.textContent = '보내는 중...'; setStatus('', false);
+          try {
+            var res = await fetch(RPC, {
+              method: 'POST',
+              headers: { apikey: ANON, Authorization: 'Bearer ' + ANON, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ p_slug: 'contact-inquiry', p_source: 'vip', p_nickname: name, p_password: rndpw(), p_content: content, p_parent_id: null })
+            });
+            var data = await res.json().catch(function () { return null; });
+            if (res.ok && data && data.success) {
+              last = now;
+              form.innerHTML = '<div class="pcc-done">문의가 접수되었습니다. 감사합니다! 🎀<br>연락처를 남겨주신 경우 확인 후 답신드리겠습니다.</div>';
+            } else {
+              setStatus('전송에 실패했습니다. 잠시 후 다시 시도해주세요.', true);
+              btn.disabled = false; btn.textContent = '보내기';
+            }
+          } catch (err) {
+            setStatus('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', true);
+            btn.disabled = false; btn.textContent = '보내기';
+          }
+        });
+      })();
+    </script>
 
     <!-- 카카오 애드핏 하단 고정 배너(모바일 전용). embed 페이지는 이 레이아웃을 쓰지 않아 제외된다. -->
     <AdSlot position="anchor" />

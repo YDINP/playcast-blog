@@ -15,7 +15,7 @@ const fmtDate = (d: string): string => String(d).replace(/-/g, '.');
 
 <BaseLayout
   title="공지사항"
-  description="VIP(Virtual in Playing) 채널 공지사항 — 채널 이용 안내와 업데이트 소식을 확인하고, 문의를 남겨보세요."
+  description="VIP(Virtual in Playing) 채널 공지사항 — 채널 이용 안내와 업데이트 소식을 확인하세요."
 >
   <div class="nt-wrap">
     <div class="section-title"><span class="bar"></span> 공지사항</div>
@@ -39,89 +39,11 @@ const fmtDate = (d: string): string => String(d).replace(/-/g, '.');
           </li>
         ))}
       </ul>
+
     )}
 
-    <!-- 문의하기: 채널 문의·제보·제휴. submit_comment RPC 재사용(전용 슬러그, 목록 비노출=쓰기전용). -->
-    <div class="section-title ct-head"><span class="bar"></span> 문의하기</div>
-    <p class="ct-desc">
-      채널 문의·제보·제휴 제안을 남겨주세요. 남겨주신 내용은 운영자에게 전달되며,
-      연락처를 적어주시면 확인 후 답신드립니다.
-    </p>
-
-    <form class="ct-form" id="contact-form" novalidate>
-      <div class="ct-row">
-        <div class="ct-field">
-          <label for="ct-name">이름 / 닉네임</label>
-          <input id="ct-name" type="text" required minlength="2" maxlength="20" placeholder="어떻게 불러드릴까요?" autocomplete="off" />
-        </div>
-        <div class="ct-field">
-          <label for="ct-contact">연락처 <span class="ct-opt">(선택)</span></label>
-          <input id="ct-contact" type="text" maxlength="80" placeholder="이메일 등 답신받을 곳" autocomplete="off" />
-        </div>
-      </div>
-      <div class="ct-field">
-        <label for="ct-msg">문의 내용</label>
-        <textarea id="ct-msg" required minlength="5" maxlength="800" rows="5" placeholder="문의하실 내용을 적어주세요 (5~800자)"></textarea>
-      </div>
-      <!-- 허니팟(스팸 방지) -->
-      <input type="text" id="ct-website" class="ct-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-      <div class="ct-footer">
-        <span class="ct-status" id="ct-status" role="status" aria-live="polite"></span>
-        <button type="submit" class="ct-submit" id="ct-submit">보내기</button>
-      </div>
-    </form>
+    <p class="nt-tocontact">채널 문의·제보는 페이지 맨 아래 <a href="#contact">문의하기</a>를 이용해 주세요.</p>
   </div>
-
-  <script is:inline>
-    (function () {
-      var RPC = 'https://xyprbsmagtlzebxyxsvj.supabase.co/rest/v1/rpc/submit_comment';
-      var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cHJic21hZ3RsemVieHl4c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjY4NTQsImV4cCI6MjA4NjA0Mjg1NH0.dajN0n0IWzOgYOSCglxVLzddg7jJFRHNCHwTWMG62uU';
-      var form = document.getElementById('contact-form');
-      if (!form) return;
-      var statusEl = document.getElementById('ct-status');
-      var btn = document.getElementById('ct-submit');
-      var last = 0;
-      function setStatus(m, err) { statusEl.textContent = m; statusEl.style.color = err ? 'var(--live)' : 'var(--host)'; }
-      function rndpw() {
-        var s = '';
-        for (var i = 0; i < 16; i++) s += Math.floor(Math.random() * 36).toString(36);
-        return s; // 문의는 본인 삭제 용도가 없어 무작위 비번으로 필수 인자만 충족
-      }
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (document.getElementById('ct-website').value) return; // 허니팟
-        var now = Date.now();
-        if (now - last < 30000) { setStatus('잠시 후 다시 시도해주세요 (30초).', true); return; }
-        var name = document.getElementById('ct-name').value.trim();
-        var contact = document.getElementById('ct-contact').value.trim();
-        var msg = document.getElementById('ct-msg').value.trim();
-        if (name.length < 2 || msg.length < 5) { setStatus('이름 2자, 내용 5자 이상 입력해주세요.', true); return; }
-        var content = '📮 [VIP 채널 문의]\n' + (contact ? '[연락처: ' + contact + ']\n' : '') + msg;
-        btn.disabled = true; btn.textContent = '보내는 중...'; setStatus('', false);
-        try {
-          var res = await fetch(RPC, {
-            method: 'POST',
-            headers: { apikey: ANON, Authorization: 'Bearer ' + ANON, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              p_slug: 'contact-inquiry', p_source: 'vip',
-              p_nickname: name, p_password: rndpw(), p_content: content, p_parent_id: null
-            })
-          });
-          var data = await res.json().catch(function () { return null; });
-          if (res.ok && data && data.success) {
-            last = now;
-            form.innerHTML = '<div class="ct-done">문의가 접수되었습니다. 감사합니다! 🎀<br>연락처를 남겨주신 경우 확인 후 답신드리겠습니다.</div>';
-          } else {
-            setStatus('전송에 실패했습니다. 잠시 후 다시 시도해주세요.', true);
-            btn.disabled = false; btn.textContent = '보내기';
-          }
-        } catch (err) {
-          setStatus('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', true);
-          btn.disabled = false; btn.textContent = '보내기';
-        }
-      });
-    })();
-  </script>
 
   <style>
     .nt-wrap { max-width: 760px; margin: 0 auto; }
@@ -166,48 +88,13 @@ const fmtDate = (d: string): string => String(d).replace(/-/g, '.');
     .nt-link:hover { text-decoration: underline; }
 
     .nt-empty { color: var(--text-muted); margin-top: 1.4rem; text-align: center; }
-
-    /* ── 문의하기 ── */
-    .ct-head { margin-top: 2.6rem; }
-    .ct-desc { color: var(--text-muted); font-size: .9rem; line-height: 1.7; margin: .9rem 0 1.1rem; }
-    .ct-form {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 18px 20px;
-    }
-    .ct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .ct-field label { display: block; font-size: .78rem; font-weight: 700; color: var(--text-muted); margin-bottom: .35rem; }
-    .ct-opt { font-weight: 500; color: var(--text-muted); }
-    .ct-field input, .ct-field textarea {
-      width: 100%; box-sizing: border-box; padding: .65rem .8rem;
-      background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-size: .92rem; font-family: inherit;
-      transition: border-color .18s, box-shadow .18s;
-    }
-    .ct-field textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
-    .ct-field input::placeholder, .ct-field textarea::placeholder { color: var(--text-muted); }
-    .ct-field input:focus, .ct-field textarea:focus {
-      outline: none; border-color: var(--host);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--host) 22%, transparent);
-    }
-    .ct-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-    .ct-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
-    .ct-status { font-size: .82rem; font-weight: 600; }
-    .ct-submit {
-      margin-left: auto; padding: .62rem 1.5rem; border: none; border-radius: 999px;
-      background: linear-gradient(120deg, var(--host), color-mix(in srgb, var(--host) 55%, var(--host-2)));
-      color: #06231c; font-size: .9rem; font-weight: 800; cursor: pointer;
-      transition: transform .15s, filter .18s;
-    }
-    .ct-submit:hover { filter: brightness(1.06); transform: translateY(-1px); }
-    .ct-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
-    .ct-done {
-      color: var(--text); font-size: .95rem; line-height: 1.7; text-align: center; padding: 8px 4px;
-    }
+    .nt-tocontact { margin-top: 1.6rem; font-size: .86rem; color: var(--text-muted); text-align: center; }
+    .nt-tocontact a { color: var(--host); font-weight: 700; text-decoration: none; }
+    .nt-tocontact a:hover { text-decoration: underline; }
 
     @media (max-width: 640px) {
-      .nt-card, .ct-form { padding: 15px 16px; }
+      .nt-card { padding: 15px 16px; }
       .nt-title { font-size: 1.04rem; }
-      .ct-row { grid-template-columns: 1fr; }
     }
   </style>
 </BaseLayout>
