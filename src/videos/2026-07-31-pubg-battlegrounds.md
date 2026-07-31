@@ -55,7 +55,7 @@ scenes:
     emotion: "happy"
     chapter: "플랫폼과 가격"
   - text: "PC·콘솔 **7,500만 장 이상 판매**, 모바일 포함 누적 매출 **130억 달러**. 기네스 세계 기록도 7개나 세운 게임이에요. 지금은 무료니까 한 판 떨어져 보실래요?"
-    image: "/games/scenes/2026-07-31-pubg-battlegrounds-1.jpg"
+    image: "/games/scenes/2026-07-31-pubg-battlegrounds-undefined.jpg"
     emotion: "happy"
     chapter: "마무리"
 ---
