@@ -106,7 +106,10 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
+    <!-- .ico 를 함께 두는 이유: 브라우저·크롤러는 링크 태그와 무관하게 /favicon.ico 를 기본 요청한다.
+         SVG만 있으면 그 요청이 404가 되고, 네이버 서치어드바이저가 "접근 제한 URL"로 집계한다(07-18 실측). -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="32x32" />
     <!-- Pretendard 웹폰트 (외부 CDN preconnect로 폰트 로드 지연 완화) -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
