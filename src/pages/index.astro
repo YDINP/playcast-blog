@@ -115,9 +115,29 @@ const itemListSchema = {
 
   <div class="section-title"><span class="bar"></span> 전체 영상</div>
 
-  <div class="pc-chips" id="pc-chips">
-    <button class="pc-chip is-active" data-cat="__all">전체</button>
-    {cats.map((c) => <button class="pc-chip" data-cat={c}>{c}</button>)}
+  {/* 좌: 카테고리 칩(가로 스크롤) / 우: 보기 방식 토글. 칩 줄에 같이 넣으면 토글이 함께
+      스크롤돼 사라지므로, 한 단계 감싸서 토글만 고정한다. */}
+  <div class="pc-listbar">
+    <div class="pc-chips" id="pc-chips">
+      <button class="pc-chip is-active" data-cat="__all">전체</button>
+      {cats.map((c) => <button class="pc-chip" data-cat={c}>{c}</button>)}
+    </div>
+    <div class="pc-view" id="pc-view" role="group" aria-label="목록 보기 방식">
+      <button class="pc-viewbtn is-active" data-view="card" aria-pressed="true" title="카드 보기" aria-label="카드 보기">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+          <rect x="3" y="4" width="8" height="7" rx="1.5" /><rect x="13" y="4" width="8" height="7" rx="1.5" />
+          <rect x="3" y="13" width="8" height="7" rx="1.5" /><rect x="13" y="13" width="8" height="7" rx="1.5" />
+        </svg>
+      </button>
+      <button class="pc-viewbtn" data-view="list" aria-pressed="false" title="리스트 보기" aria-label="리스트 보기">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+          <rect x="3" y="5" width="7" height="5" rx="1.2" /><rect x="12" y="5.6" width="9" height="1.8" rx="0.9" />
+          <rect x="12" y="8.6" width="6" height="1.6" rx="0.8" />
+          <rect x="3" y="14" width="7" height="5" rx="1.2" /><rect x="12" y="14.6" width="9" height="1.8" rx="0.9" />
+          <rect x="12" y="17.6" width="6" height="1.6" rx="0.8" />
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="pc-grid" id="pc-grid">
@@ -168,6 +188,31 @@ const itemListSchema = {
         search.addEventListener('input', function () {
           q = search.value.trim().toLowerCase();
           apply();
+        });
+
+      // 보기 방식(카드/리스트) 토글 — 선택은 localStorage 에 남겨 다음 방문에도 유지한다.
+      var view = document.getElementById('pc-view');
+      var KEY = 'pc-view';
+      function setView(mode) {
+        grid.classList.toggle('is-list', mode === 'list');
+        if (view)
+          view.querySelectorAll('.pc-viewbtn').forEach(function (b) {
+            var on = b.dataset.view === mode;
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+        try {
+          localStorage.setItem(KEY, mode);
+        } catch (e) {}
+      }
+      try {
+        var saved = localStorage.getItem(KEY);
+        if (saved === 'list') setView('list');
+      } catch (e) {}
+      if (view)
+        view.addEventListener('click', function (e) {
+          var b = e.target.closest('.pc-viewbtn');
+          if (b) setView(b.dataset.view);
         });
     })();
   </script>

@@ -99,6 +99,8 @@ const rojiStyle = `${rojiSide}:${rojiOff}%;height:${rojiH}%;${rojiFlip ? 'transf
               <span class="vw-n" data-vw-slug={video.id} data-vw-seed={data.views}>{formatViews(data.views)}</span> · {timeAgo(data.pubDate)}
             </div>
           </div>
+          {/* 리스트 보기에서만 노출 — 카드 보기에선 제목 옆 여백이 없어 넣을 자리가 없다. */}
+          <p class="vcard-desc">{data.hook ?? data.description}</p>
         </div>
       </div>
     </a>
