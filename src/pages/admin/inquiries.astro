@@ -1,0 +1,144 @@
+---
+// 관리자 전용 문의함. 레이아웃 미사용(독립 최소 페이지) + noindex. 데이터는 get_inquiries RPC(관리자 키 검증, SECURITY DEFINER)로만 조회 — anon 직접 조회는 RLS로 차단됨.
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>문의 관리 · VIP</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: #0f0f11; color: #f3f3f6;
+        font-family: Pretendard, system-ui, -apple-system, sans-serif;
+        padding: 24px 16px 60px;
+      }
+      main { max-width: 680px; margin: 0 auto; }
+      h1 { font-size: 1.3rem; margin: 4px 0 20px; }
+      .muted { color: #8b8b98; }
+      .gate { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      input[type=password] {
+        flex: 1; min-width: 180px; padding: 10px 12px; border-radius: 10px;
+        background: #17171b; border: 1px solid rgba(255,255,255,.12); color: #f3f3f6; font-size: .95rem;
+      }
+      input:focus { outline: none; border-color: #57e6c3; box-shadow: 0 0 0 3px rgba(87,230,195,.2); }
+      button {
+        padding: 10px 18px; border: none; border-radius: 999px; cursor: pointer;
+        background: #57e6c3; color: #06231c; font-weight: 800; font-size: .9rem;
+      }
+      button.ghost { background: #22222a; color: #c7c7d1; font-weight: 700; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      #msg { font-size: .85rem; margin: 10px 0 0; min-height: 1em; }
+      .toolbar { display: flex; align-items: center; gap: 10px; margin: 4px 0 16px; }
+      .count { font-weight: 700; }
+      .card {
+        background: #1a1a1f; border: 1px solid rgba(255,255,255,.09); border-radius: 12px;
+        padding: 14px 16px; margin-bottom: 12px;
+      }
+      .card .head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+      .nick { font-weight: 700; }
+      .date { color: #8b8b98; font-size: .78rem; margin-left: auto; }
+      .contact { font-size: .85rem; margin: 0 0 8px; }
+      .contact a { color: #57e6c3; font-weight: 700; text-decoration: none; }
+      .msg { white-space: pre-wrap; line-height: 1.65; font-size: .93rem; color: #e6e6ee; }
+      .empty { color: #8b8b98; text-align: center; padding: 30px 0; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>📮 문의 관리 <span class="muted" style="font-size:.8rem;font-weight:400">· VIP</span></h1>
+
+      <div id="gate" class="gate">
+        <input id="pw" type="password" placeholder="관리자 비밀번호" autocomplete="current-password" />
+        <button id="go" type="button">열기</button>
+      </div>
+      <p id="msg" class="muted"></p>
+
+      <div id="panel" hidden>
+        <div class="toolbar">
+          <span class="count" id="count"></span>
+          <span style="margin-left:auto"></span>
+          <button class="ghost" id="refresh" type="button">새로고침</button>
+          <button class="ghost" id="lock" type="button">잠금</button>
+        </div>
+        <div id="list"></div>
+      </div>
+    </main>
+
+    <script is:inline>
+      (function () {
+        var RPC = 'https://xyprbsmagtlzebxyxsvj.supabase.co/rest/v1/rpc/get_inquiries';
+        var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cHJic21hZ3RsemVieHl4c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjY4NTQsImV4cCI6MjA4NjA0Mjg1NH0.dajN0n0IWzOgYOSCglxVLzddg7jJFRHNCHwTWMG62uU';
+        var SK = 'vip_inq_key';
+        var $ = function (id) { return document.getElementById(id); };
+        var esc = function (s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+
+        function fmtDate(iso) {
+          try { return new Date(iso).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+          catch (e) { return iso; }
+        }
+        // content 파싱: "📮 [VIP 채널 문의]" 헤더 제거, [연락처: x] 추출, 나머지=본문
+        function parse(content) {
+          var lines = String(content || '').split('\n');
+          var contact = '', body = [];
+          for (var i = 0; i < lines.length; i++) {
+            var l = lines[i];
+            if (/^📮\s*\[/.test(l)) continue;
+            var m = l.match(/^\[연락처:\s*(.*?)\]\s*$/);
+            if (m) { contact = m[1].trim(); continue; }
+            body.push(l);
+          }
+          return { contact: contact, body: body.join('\n').trim() };
+        }
+        function contactHtml(c) {
+          if (!c) return '<span class="muted">연락처 미기재</span>';
+          if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c)) return '📧 <a href="mailto:' + esc(c) + '">' + esc(c) + '</a>';
+          return '📧 ' + esc(c);
+        }
+
+        function render(rows) {
+          $('count').textContent = '총 ' + rows.length + '건';
+          if (!rows.length) { $('list').innerHTML = '<div class="empty">아직 접수된 문의가 없습니다.</div>'; return; }
+          $('list').innerHTML = rows.map(function (r) {
+            var p = parse(r.content);
+            return '<div class="card">' +
+              '<div class="head"><span class="nick">' + esc(r.nickname) + '</span>' +
+              '<span class="date">' + esc(fmtDate(r.created_at)) + '</span></div>' +
+              '<p class="contact">' + contactHtml(p.contact) + '</p>' +
+              '<div class="msg">' + esc(p.body) + '</div></div>';
+          }).join('');
+        }
+
+        function load(key) {
+          $('msg').textContent = '불러오는 중…';
+          return fetch(RPC, {
+            method: 'POST',
+            headers: { apikey: ANON, Authorization: 'Bearer ' + ANON, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p_admin_key: key })
+          }).then(function (r) { return r.json(); }).then(function (data) {
+            if (data && data.error === 'unauthorized') { $('msg').textContent = '비밀번호가 올바르지 않습니다.'; sessionStorage.removeItem(SK); return false; }
+            if (!Array.isArray(data)) { $('msg').textContent = '조회 실패. 잠시 후 다시 시도해주세요.'; return false; }
+            sessionStorage.setItem(SK, key);
+            $('msg').textContent = '';
+            $('gate').hidden = true;
+            $('panel').hidden = false;
+            render(data);
+            return true;
+          }).catch(function () { $('msg').textContent = '오류가 발생했습니다.'; return false; });
+        }
+
+        $('go').addEventListener('click', function () { var k = $('pw').value.trim(); if (k) load(k); });
+        $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('go').click(); });
+        $('refresh').addEventListener('click', function () { var k = sessionStorage.getItem(SK); if (k) load(k); });
+        $('lock').addEventListener('click', function () { sessionStorage.removeItem(SK); location.reload(); });
+
+        var saved = sessionStorage.getItem(SK);
+        if (saved) load(saved);
+      })();
+    </script>
+  </body>
+</html>
