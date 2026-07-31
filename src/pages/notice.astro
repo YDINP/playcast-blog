@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import noticesData from '../data/notices.json';
+
+// 고정(pinned) 우선 → 날짜 내림차순. 공지 추가/수정은 src/data/notices.json 에서만.
+const notices = [...noticesData.notices].sort((a, b) => {
+  const pa = a.pinned ? 1 : 0;
+  const pb = b.pinned ? 1 : 0;
+  if (pa !== pb) return pb - pa;
+  return String(b.date).localeCompare(String(a.date));
+});
+const paras = (body: string): string[] => String(body || '').split(/\n\n+/).filter(Boolean);
+const fmtDate = (d: string): string => String(d).replace(/-/g, '.');
+---
+
+<BaseLayout
+  title="공지사항"
+  description="VIP(Virtual in Playing) 채널 공지사항 — 채널 이용 안내와 업데이트 소식을 확인하세요."
+>
+  <div class="nt-wrap">
+    <div class="section-title"><span class="bar"></span> 공지사항</div>
+
+    {notices.length === 0 ? (
+      <p class="nt-empty">등록된 공지가 없습니다.</p>
+    ) : (
+      <ul class="nt-list">
+        {notices.map((n) => (
+          <li class:list={['nt-card', { 'is-pinned': n.pinned }]}>
+            <div class="nt-meta">
+              {n.pinned && <span class="nt-pin">📌 고정</span>}
+              {n.tag && <span class="nt-tag">{n.tag}</span>}
+              <time class="nt-date" datetime={n.date}>{fmtDate(n.date)}</time>
+            </div>
+            <h2 class="nt-title">{n.title}</h2>
+            <div class="nt-body">{paras(n.body).map((p) => <p>{p}</p>)}</div>
+            {n.link && (
+              <a class="nt-link" href={n.link.url}>{n.link.label} →</a>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  <style>
+    .nt-wrap { max-width: 760px; margin: 0 auto; }
+    .nt-list { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-direction: column; gap: 14px; }
+    .nt-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: border-color .18s, transform .18s, background .18s;
+    }
+    .nt-card:hover { border-color: var(--border-strong); background: var(--card-hover); transform: translateY(-1px); }
+    /* 고정 공지: 좌측 민트 액센트 바 + 살짝 강조 */
+    .nt-card.is-pinned {
+      position: relative;
+      border-color: color-mix(in srgb, var(--host) 32%, var(--border));
+      background: color-mix(in srgb, var(--host) 6%, var(--card));
+    }
+    .nt-card.is-pinned::before {
+      content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+      border-radius: 3px; background: linear-gradient(180deg, var(--host), color-mix(in srgb, var(--host) 60%, #000));
+    }
+
+    .nt-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .nt-pin { font-size: .74rem; font-weight: 800; color: var(--host); letter-spacing: .02em; }
+    .nt-tag {
+      font-size: .72rem; font-weight: 700; color: var(--text-2);
+      padding: 2px 9px; border-radius: 999px;
+      background: var(--bg-elev); border: 1px solid var(--border);
+    }
+    .nt-date { font-size: .78rem; color: var(--text-muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+    .nt-title { margin: 0 0 8px; font-size: 1.12rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+    .nt-body { color: var(--text-2); font-size: .95rem; line-height: 1.75; }
+    .nt-body p { margin: 0 0 .7em; }
+    .nt-body p:last-child { margin-bottom: 0; }
+
+    .nt-link {
+      display: inline-block; margin-top: 12px;
+      font-size: .88rem; font-weight: 700; color: var(--host); text-decoration: none;
+    }
+    .nt-link:hover { text-decoration: underline; }
+
+    .nt-empty { color: var(--text-muted); margin-top: 1.4rem; text-align: center; }
+
+    @media (max-width: 640px) {
+      .nt-card { padding: 15px 16px; }
+      .nt-title { font-size: 1.04rem; }
+    }
+  </style>
+</BaseLayout>
