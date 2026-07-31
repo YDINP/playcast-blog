@@ -526,6 +526,31 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   min-width: 260px;
   right: 1.5%;
 }
+
+/* ── 리포터(미아/레이/카이) 정지 반신 portrait ─────────────────────────────
+   로지는 정사각(1/1) 립싱크 리그, 리포터는 2:3 투명 반신 PNG(립싱크는 Phase B).
+   .sp-host의 aspect-ratio:1/1을 이겨야 하므로 두 클래스로 특이도를 올린다. */
+.sp-host.sp-host--portrait { aspect-ratio: 2 / 3; }
+/* 뉴스룸에선 스탠딩 전신 실루엣이 앵커 바스트업보다 커 보이므로 폭을 좁혀 데스크 옆에 세운다.
+   (동일 특이도의 newsroom .sp-host 규칙을 소스 순서로 이긴다 — 이 블록이 뒤에 온다) */
+.sp-stage.is-newsroom .sp-host.sp-host--portrait,
+.sp-stage.is-newsroom.cap-safe .sp-host.sp-host--portrait {
+  width: 30%; max-width: 320px; min-width: 150px;
+}
+.sp-host-portrait {
+  width: 100%; height: 100%;
+  object-fit: contain; object-position: bottom center;
+  display: block; transform-origin: bottom center;
+  animation: rep-idle 4.6s ease-in-out infinite; /* 정지프레임 티 안 나게 미세 호흡 */
+}
+.sp-host.is-talking .sp-host-portrait { animation-duration: 1.15s; } /* 말할 때 빨라짐 = 반응감 */
+@keyframes rep-idle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-0.7%) rotate(0.35deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-host-portrait { animation: none; }
+}
 @media (max-width: 640px) {
   .sp-host--cam { width: 46%; min-width: 150px; }
 }
@@ -742,14 +767,14 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
   position: absolute; top: -23px; left: 12px; z-index: 2; /* 박스 위로 올려 텍스트와 겹침 방지 */
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 16px 6px 12px; border-radius: 999px; letter-spacing: 0.02em;
-  font: 800 clamp(12.5px, 1.6vw, 15.5px)/1 system-ui, sans-serif; color: #06231c;
-  background: linear-gradient(135deg, #8ff7dc 0%, #35d0ab 100%);
+  font: 800 clamp(12.5px, 1.6vw, 15.5px)/1 system-ui, sans-serif; color: var(--rep-ink, #06231c);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--rep, #57e6c3) 80%, #fff) 0%, var(--rep, #35d0ab) 100%);
   /* 어두운 링 + 강한 그림자로 자막 글래스 박스와 확실히 분리(가시성↑) */
   box-shadow: 0 0 0 2px rgba(6, 20, 15, 0.85), 0 7px 18px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 .is-newsroom .chyron-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: #06231c;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--rep-ink, #06231c);
   animation: chyron-pulse 1.6s ease-out infinite;
 }
 @keyframes chyron-pulse {
@@ -774,7 +799,7 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 /* 좌측 민트 그라디언트 액센트 바 */
 .is-newsroom .sp-chyron .box::before {
   content: ''; position: absolute; left: 10px; top: 14px; bottom: 14px; width: 4px;
-  border-radius: 4px; background: linear-gradient(180deg, #7df3d6, #37c9a8);
+  border-radius: 4px; background: linear-gradient(180deg, var(--rep, #7df3d6), color-mix(in srgb, var(--rep, #37c9a8) 78%, #000));
   box-shadow: 0 0 12px rgba(55, 201, 168, 0.6);
 }
 .is-newsroom .sp-chyron.is-empty { opacity: 0; }

@@ -1,0 +1,41 @@
+{
+  "_doc": "VIP 방송 크루 SSOT. 렌더(HostStage)와 배정 규칙(automation/reporters.mjs)이 함께 읽는다. keywords는 pickReporter 스코어링용(카테고리+태그+훅+제목+설명 대상). rig=true는 로지(char2 립싱크 리그), 리포터는 정지 반신 portrait(립싱크는 Phase B).",
+  "anchor": "rosie",
+  "reporters": {
+    "rosie": {
+      "name": "로지",
+      "color": "#57e6c3",
+      "rig": true,
+      "role": "anchor",
+      "beat": "메인 앵커 — 진행·정리",
+      "keywords": []
+    },
+    "mia": {
+      "name": "미아",
+      "color": "#b28cf0",
+      "rig": false,
+      "img": "/host/base/mia.png",
+      "role": "field",
+      "beat": "신작·속보",
+      "keywords": ["신작", "출시", "발매", "런칭", "론칭", "스팀신작", "얼리액세스", "앞서해보기", "데모", "넥스트페스트", "공개", "발표", "예약", "사전예약", "속보", "오픈", "정식출시", "최초공개", "베타", "체험판"]
+    },
+    "rei": {
+      "name": "레이",
+      "color": "#5b7fa6",
+      "rig": false,
+      "img": "/host/base/rei.png",
+      "role": "field",
+      "beat": "현장·심층",
+      "keywords": ["오픈월드", "스토리", "싱글", "싱글플레이", "내러티브", "세계관", "소울라이크", "느와르", "분위기", "대작", "콘솔", "어드벤처", "호러", "탐험", "생존", "RPG", "액션RPG", "잠입", "심층", "리뷰", "명작"]
+    },
+    "kai": {
+      "name": "카이",
+      "color": "#3d6fe0",
+      "rig": false,
+      "img": "/host/base/kai.png",
+      "role": "field",
+      "beat": "데이터·분석",
+      "keywords": ["지표", "매출", "판매량", "순위", "랭킹", "패치", "패치노트", "시즌", "업데이트", "밸런스", "요구사양", "스펙", "벤치마크", "가격", "할인", "확률", "가챠", "과금", "MMO", "라이브서비스", "e스포츠", "대회", "메타", "티어", "통계", "경제", "성능"]
+    }
+  }
+}

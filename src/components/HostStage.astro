@@ -4,6 +4,7 @@
 // booth=false(홈 히어로): 기존 풀프레임 배경 + 영상 내 오버레이 호스트.
 import HostRig from './HostRig.astro';
 import { parseEmphasis } from '../lib/video';
+import reporters from '../data/reporters.json';
 
 interface Scene {
   image?: string;
@@ -32,6 +33,10 @@ interface Props {
   booth?: boolean;
 }
 const { scenes, playerId, host = 'rosie', booth = false } = Astro.props;
+// 진행 크루(Phase A). 로지=풀 립싱크 리그, 리포터(미아/레이/카이)=정지 반신 portrait(립싱크는 Phase B).
+const rep = (reporters.reporters as Record<string, any>)[host] || (reporters.reporters as Record<string, any>)[reporters.anchor];
+const repInk = rep.rig ? '#06231c' : '#ffffff'; // 밝은 민트=어두운 잉크 / 중간톤 리포터색=흰 잉크
+const repStyle = `--rep:${rep.color};--rep-ink:${repInk}`;
 const first = scenes[0] || { text: '' };
 const firstSegs = parseEmphasis(first.text);
 const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as string[];
@@ -40,7 +45,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
 {booth ? (
   <Fragment>
   <div class="sp-shell has-newsroom">
-    <div class="sp-stage is-newsroom is-paused" data-player={playerId} data-host={host}>
+    <div class="sp-stage is-newsroom is-paused" data-player={playerId} data-host={host} style={repStyle}>
       <!-- 뉴스룸 스튜디오 배경 -->
       <div class="sp-newsroom-bg" aria-hidden="true">
         <span class="nr-panel nr-panel-a"></span>
@@ -65,8 +70,12 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
 
       <!-- 우측 앵커 호스트 -->
       <div class="sp-anchor" aria-hidden="true">
-        <div class="sp-host sp-host--anchor">
-          <HostRig emotions={emotions} />
+        <div class:list={['sp-host', 'sp-host--anchor', { 'sp-host--portrait': !rep.rig }]}>
+          {rep.rig ? (
+            <HostRig emotions={emotions} />
+          ) : (
+            <img class="sp-host-portrait" src={rep.img} alt={rep.name} draggable={false} />
+          )}
         </div>
       </div>
 
@@ -80,7 +89,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
 
       <!-- 뉴스 하단 자막(카이런) -->
       <div class="sp-caption sp-chyron">
-        <span class="chyron-tag"><i class="chyron-dot"></i>로지</span>
+        <span class="chyron-tag"><i class="chyron-dot"></i>{rep.name}</span>
         <div class="box"><span class="sp-text">{firstSegs.map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
       </div>
 
@@ -160,7 +169,7 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
   </Fragment>
 ) : (
   <div class="sp-shell">
-    <div class="sp-stage is-paused" data-player={playerId} data-host={host}>
+    <div class="sp-stage is-paused" data-player={playerId} data-host={host} style={repStyle}>
       <div
         class:list={['sp-bg', 'sp-bg-a', 'is-on', { 'is-grad': !first.image }]}
         style={first.image ? `background-image:url("${first.image}")` : ''}
@@ -168,8 +177,12 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
       <div class="sp-bg sp-bg-b"></div>
       <div class="sp-card" aria-hidden="true"></div>
       <div class="sp-pointer" aria-hidden="true"></div>
-      <div class="sp-host">
-        <HostRig emotions={emotions} />
+      <div class:list={['sp-host', { 'sp-host--portrait': !rep.rig }]}>
+        {rep.rig ? (
+          <HostRig emotions={emotions} />
+        ) : (
+          <img class="sp-host-portrait" src={rep.img} alt={rep.name} draggable={false} />
+        )}
       </div>
       <div class="sp-caption">
         <div class="box"><span class="sp-text">{firstSegs.map((seg) => (seg.em ? <span class="sp-em">{seg.s}</span> : seg.s))}</span><span class="cursor"></span></div>
