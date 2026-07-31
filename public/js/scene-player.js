@@ -118,6 +118,12 @@
       var savedCap = localStorage.getItem('sp-cap-mode');
       if (savedCap === 'safe' || savedCap === 'overlay') this.capMode = savedCap;
     } catch (e) {}
+    // 호스트(로지) 캐릭터 표시/숨김. localStorage에 저장 → 다른 페이지·재접속에도 유지.
+    this.hostToggleBtn = this.ctl.querySelector('.sp-host-toggle');
+    this.hostHidden = false;
+    try { this.hostHidden = localStorage.getItem('sp-host-hidden') === '1'; } catch (e) {}
+    if (this.host) this.host.classList.toggle('is-hidden', this.hostHidden);
+    this._setHostIcon(this.hostHidden);
     this.fill = this.ctl.querySelector('.sp-progress-fill');
     this.ticks = this.ctl.querySelector('.sp-ticks');
     this.progress = this.ctl.querySelector('.sp-progress');
@@ -550,6 +556,25 @@
   Player.prototype.toggleCapMode = function () {
     this.setCapMode(this.capMode === 'safe' ? 'overlay' : 'safe');
   };
+  // ── 호스트(로지) 표시/숨김 ────────────────────────────────
+  Player.prototype.setHostHidden = function (hidden, save) {
+    this.hostHidden = !!hidden;
+    if (this.host) this.host.classList.toggle('is-hidden', this.hostHidden);
+    this._setHostIcon(this.hostHidden);
+    if (save) { try { localStorage.setItem('sp-host-hidden', this.hostHidden ? '1' : '0'); } catch (e) {} }
+  };
+  Player.prototype.toggleHost = function () { this.setHostHidden(!this.hostHidden, true); };
+  Player.prototype._setHostIcon = function (hidden) {
+    var b = this.hostToggleBtn;
+    if (!b) return;
+    b.classList.toggle('is-off', !!hidden);
+    b.setAttribute('title', hidden ? '호스트 표시' : '호스트 숨기기');
+    b.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+    // 숨김 상태엔 사람 아이콘에 사선(/)을 얹어 'off'를 표시
+    b.innerHTML = hidden
+      ? '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7z"/><line x1="3" y1="21" x2="21" y2="3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>';
+  };
 
   // ── 아이콘 ────────────────────────────────────────────────
   Player.prototype._setPlayIcon = function (playing) {
@@ -658,6 +683,7 @@
         }
       },
       '.sp-cap': function () { self.toggleCapMode(); },
+      '.sp-host-toggle': function () { self.toggleHost(); },
       '.sp-fs': function () { self.toggleFullscreen(); },
     };
     Object.keys(map).forEach(function (sel) {
