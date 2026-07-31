@@ -2634,16 +2634,18 @@ body::after {
 }
 .pc-grid.is-list .vcard {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 14px;
+  /* 리스트에서도 썸네일이 '보이는' 크기여야 한다 — 260px 은 카드보다 작아 표지를 못 읽었다.
+     화면 폭에 따라 늘리되(40%) 520px 에서 멈춘다(그 이상이면 제목 칸이 빈다). */
+  grid-template-columns: clamp(260px, 40%, 520px) minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
 }
 .pc-grid.is-list .vcard-meta {
   padding-top: 2px;
 }
 .pc-grid.is-list .vcard-info h3 {
-  font-size: 0.98rem;
-  line-height: 1.36;
+  font-size: 1.06rem;
+  line-height: 1.38;
 }
 /* 리스트에선 세로 리듬이 촘촘해 hover 리프트가 튄다 — 그림자만 남긴다. */
 .pc-grid.is-list .vcard:hover .vcard-thumb {
@@ -2654,11 +2656,13 @@ body::after {
     gap: 12px;
   }
   .pc-grid.is-list .vcard {
-    grid-template-columns: 148px minmax(0, 1fr);
-    gap: 10px;
+    /* 모바일은 데스크톱처럼 2배로 못 키운다 — 358px 폭에서 썸네일을 300px 로 잡으면 제목이
+       50px 밖에 안 남아 못 읽는다. 제목 두 줄이 들어가는 선(약 150px)까지만 키운다. */
+    grid-template-columns: minmax(0, 55%) minmax(0, 1fr);
+    gap: 12px;
   }
   .pc-grid.is-list .vcard-info h3 {
-    font-size: 0.86rem;
+    font-size: 0.9rem;
   }
   .pc-grid.is-list .vcard-info .sub {
     font-size: 0.7rem;
