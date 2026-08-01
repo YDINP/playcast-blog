@@ -145,6 +145,10 @@
     this.pausedAt = 0;
     this.activeBg = 'a';
     this.audio = null; // 현재 씬 voice 오디오
+    /* 다음 씬 자산 선반입. 없으면 씬이 바뀔 때마다 그 자리에서 받게 되는데,
+       씬 배경이 최대 600KB대라 **빈 화면으로 크로스페이드된 뒤 늦게 뜨는** 끊김이 생긴다.
+       오디오도 마찬가지로 늦게 시작돼, 'playing' 시점의 재앵커가 자막을 0초로 되돌려 튄다. */
+    this._pre = { imgUrl: '', img: null, voiceUrl: '', voice: null };
     this.durations = []; // 무음 경로 예상 지속시간(진행바 계산용)
 
     this._precompute();
@@ -154,6 +158,7 @@
 
     // 초기: 첫 씬 배경/정지 표시 (재생 전에도 콘텐츠 노출)
     this._paintScene(0, true);
+    this._preloadNext(-1);   // 첫 씬 자산 선반입(재생 버튼을 누른 순간 바로 뜨도록)
     this._loop = this._loop.bind(this);
   }
 
@@ -314,6 +319,30 @@
     });
   };
 
+  /* 다음 씬 자산을 미리 받아 둔다(이미지 + 음성).
+     이미지는 브라우저 캐시에만 올려 두면 되고(그리는 건 _paintScene 이 한다),
+     음성은 만들어 둔 <audio> 를 그대로 재사용해 씬 진입 즉시 play() 가 붙게 한다. */
+  Player.prototype._preloadNext = function (idx) {
+    var nx = this.scenes[idx + 1];
+    if (!nx) return;
+    if (nx.image && this._pre.imgUrl !== nx.image) {
+      var im = new Image();
+      im.decoding = 'async';
+      im.src = nx.image;
+      this._pre.imgUrl = nx.image;
+      this._pre.img = im;
+    }
+    if (nx.voice && this._pre.voiceUrl !== nx.voice) {
+      var au = new Audio();
+      au.preload = 'auto';
+      au.muted = this.muted;
+      au.src = nx.voice;
+      try { au.load(); } catch (e) {}
+      this._pre.voiceUrl = nx.voice;
+      this._pre.voice = au;
+    }
+  };
+
   Player.prototype._enterScene = function (idx) {
     this.i = idx;
     this._paintScene(idx, false);
@@ -333,13 +362,25 @@
     this.sceneStart = performance.now(); // 벽시계 기준(오디오가 못 돌 때의 시간 소스)
     if (sc.voice) {
       var self = this;
-      var a = new Audio(sc.voice);
+      // 선반입해 둔 오디오가 있으면 그대로 쓴다(네트워크 왕복이 없어 즉시 재생된다).
+      var a;
+      if (this._pre.voice && this._pre.voiceUrl === sc.voice) {
+        a = this._pre.voice;
+        this._pre.voice = null; this._pre.voiceUrl = '';
+        try { a.currentTime = 0; } catch (e) {}
+      } else {
+        a = new Audio(sc.voice);
+      }
       this.audio = a;
       a.muted = this.muted;
       // 재생이 실제로 시작되면 오디오 시계로 자연 전환 — 두 시계가 어긋나지 않게 원점을 맞춘다.
       a.addEventListener('playing', function () {
         if (self.audio !== a) return;
-        self.sceneStart = performance.now() - a.currentTime * 1000;
+        /* ⚠️ 무조건 재앵커하면 **자막이 뒤로 튄다.** 오디오가 늦게(네트워크 대기) 시작되면
+           그동안 벽시계로 진행한 만큼을 currentTime≈0 으로 되돌려 버리기 때문이다.
+           앞으로 감는(=오디오가 이미 앞서 있는) 경우만 맞추고, 되감기는 하지 않는다. */
+        var anchored = performance.now() - a.currentTime * 1000;
+        if (anchored < self.sceneStart) self.sceneStart = anchored;
         self._syncSound();
       });
       var pr = a.play();
@@ -352,6 +393,7 @@
     }
     this._syncSound();
     this._updateActiveChapter(idx);
+    this._preloadNext(idx);   // 현재 씬이 재생되는 동안 다음 씬 자산을 받아 둔다
   };
 
   // ── 메인 루프 ─────────────────────────────────────────────
