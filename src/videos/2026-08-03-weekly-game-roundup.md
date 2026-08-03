@@ -8,7 +8,7 @@ tags: ["주간결산", "게임뉴스", "도깨비의세계", "붉은사막", "�
 thumbnail: "/games/2026-08-03-weekly-game-roundup-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 / 도깨비의세계 10월 출시 확정: © kakaogames.com · 붉은사막 스팀 매출 1위: © Pearl Abyss / Steam · 아이온2 중국 진출: © aion2.plaync.com · 쿠키런 크럼블 출시: © 쿠키런 크럼블 / Google Play · 도깨비의세계, 웹툰 흥행 업고: © kakaogames.com · TFT 팬페스트 사전예약: © www.riotgames.com · DK온라인 하드코어 시즌: © DK온라인 / Google Play · 넷마블 도쿄게임쇼 출격: © company.netmarble.com · SOOP e스포츠 협력 확대: © play.google.com · 마블 퓨처파이트 스파이더맨 업데이트: © marvelfuturefight.netmarble.com · 스팀 한국 판매순위: © TEAM HORAY / Steam · PC방 점유율 순위: © Tequila Works / Steam"
+  text: "© 각 게임사·기관 / 도깨비의세계 10월 출시 확정: © kakaogames.com · 붉은사막 스팀 매출 1위: © Pearl Abyss / Steam · 아이온2 중국 진출: © aion2.plaync.com · 쿠키런 크럼블 출시: © 쿠키런 크럼블 / Google Play · 도깨비의세계, 웹툰 흥행 업고: © kakaogames.com · TFT 팬페스트 사전예약: © www.riotgames.com · 미르의 전설2 승룡서버: © 위메이드 / ChuanQi IP · DK온라인 하드코어 시즌: © DK온라인 / Google Play · 넷마블 도쿄게임쇼 출격: © company.netmarble.com · SOOP e스포츠 협력 확대: © play.google.com · 마블 퓨처파이트 스파이더맨 업데이트: © marvelfuturefight.netmarble.com · 스팀 한국 판매순위: © TEAM HORAY / Steam · PC방 점유율 순위: © Tequila Works / Steam"
 host: "rosie"
 views: 0
 faq:
@@ -89,6 +89,7 @@ scenes:
       sub: "사전예약·기대작"
   - text: "위메이드 **'미르의 전설2'**가 기간 한정 성장 서버 **'승룡서버'** 사전예약을 열었어요. 극상급 영웅 확정 획득도 걸었네요."
     voice: "/voice/2026-08-03-weekly-game-roundup/06.mp3"
+    image: "/games/scenes/2026-08-03-weekly-game-roundup-7.jpg"
     emotion: "surprised"
     chapter: "미르의 전설2 승룡서버"
     subject: "미르의 전설2"
