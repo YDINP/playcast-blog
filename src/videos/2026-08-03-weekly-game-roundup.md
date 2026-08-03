@@ -8,7 +8,7 @@ tags: ["주간결산", "게임뉴스", "도깨비의세계", "붉은사막", "�
 thumbnail: "/games/2026-08-03-weekly-game-roundup-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 / 도깨비의세계 10월 출시 확정: © kakaogames.com · 붉은사막 스팀 매출 1위: © Pearl Abyss / Steam · 아이온2 중국 진출: © aion2.plaync.com · 쿠키런 크럼블 출시: © 쿠키런 크럼블 / Google Play · 도깨비의세계, 웹툰 흥행 업고: © kakaogames.com · TFT 팬페스트 사전예약: © www.riotgames.com · 미르의 전설2 승룡서버: © 위메이드 / ChuanQi IP · DK온라인 하드코어 시즌: © DK온라인 / Google Play · 넷마블 도쿄게임쇼 출격: © company.netmarble.com · SOOP e스포츠 협력 확대: © play.google.com · 마블 퓨처파이트 스파이더맨 업데이트: © marvelfuturefight.netmarble.com · 스팀 한국 판매순위: © TEAM HORAY / Steam · PC방 점유율 순위: © Tequila Works / Steam"
+  text: "© 각 게임사·기관 / 도깨비의세계 10월 출시 확정: © kakaogames.com · 붉은사막 스팀 매출 1위: © Pearl Abyss / Steam · 아이온2 중국 진출: © aion2.plaync.com · 쿠키런 크럼블 출시: © 쿠키런 크럼블 / Google Play · 도깨비의세계, 웹툰 흥행 업고: © kakaogames.com · TFT 팬페스트 사전예약: © www.riotgames.com · 미르의 전설2 승룡서버: © 위메이드 / ChuanQi IP · DK온라인 하드코어 시즌: © 마상소프트 / dk.masanggames.co.kr · 넷마블 도쿄게임쇼 출격: © company.netmarble.com · SOOP e스포츠 협력 확대: © play.google.com · 마블 퓨처파이트 스파이더맨 업데이트: © marvelfuturefight.netmarble.com · 스팀 한국 판매순위: © TEAM HORAY / Steam · PC방 점유율 순위: © Tequila Works / Steam"
 host: "rosie"
 views: 0
 faq:
@@ -52,6 +52,8 @@ scenes:
     subject: "도깨비의세계"
     card:
       kind: "stat"
+      pos: "tr"
+      size: "sm"
       big: "이번 주 출시"
       sub: "신작·서비스 소식"
   - text: "펄어비스 **'붉은사막'**이 올해 **스팀 신규 IP 매출 1위**를 달성했어요. 서브노티카2와 함께 질주 중이라고 해요."
@@ -85,6 +87,8 @@ scenes:
     subject: "카카오게임즈"
     card:
       kind: "stat"
+      pos: "tr"
+      size: "sm"
       big: "곧 나온다"
       sub: "사전예약·기대작"
   - text: "위메이드 **'미르의 전설2'**가 기간 한정 성장 서버 **'승룡서버'** 사전예약을 열었어요. 극상급 영웅 확정 획득도 걸었네요."
@@ -113,6 +117,8 @@ scenes:
     subject: "넷마블"
     card:
       kind: "stat"
+      pos: "tr"
+      size: "sm"
       big: "이번 주 화제"
       sub: "업계가 주목한 소식"
   - text: "SOOP이 글로벌 게임사와의 협력을 확대해요. **중계를 넘어 대회 운영까지** 역량을 넓힌다고 합니다."
@@ -132,6 +138,14 @@ scenes:
     emotion: "idle"
     chapter: "여름 성수기 경쟁 본격화"
     subject: "게임업계"
+    card:
+      kind: "points"
+      pos: "cl"
+      head: "여름 성수기 3대 전선"
+      items:
+        - "대형 업데이트 — 신규 콘텐츠 경쟁"
+        - "IP 협업 — 외부 IP로 이용자 확장"
+        - "e스포츠 — 대회·중계로 접점 확대"
   - text: "스팀 한국 판매순위는 **세피리아**가 1위를 차지했어요. 커세어 코브와 스파이더맨 2가 뒤를 이었습니다."
     voice: "/voice/2026-08-03-weekly-game-roundup/13.mp3"
     image: "/games/scenes/2026-08-03-weekly-game-roundup-14.jpg"
