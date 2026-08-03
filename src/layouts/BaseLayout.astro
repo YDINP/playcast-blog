@@ -253,6 +253,11 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
          async 라 실행 시점엔 서버 렌더된 모든 ins 가 이미 DOM 에 있다. -->
     <script is:inline async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
 
+    <!-- 애드핏 슬롯 충전률 계측(adfit_slot 이벤트, source=vip). 계측만 하고 재시도는 안 한다.
+         ba.min.js **뒤**에 둔다 — 애드핏이 초기화하기 전에 data-ad-onfail 을 붙여야 콜백이 걸린다.
+         defer 라 문서 파싱이 끝난 뒤 실행되므로 서버 렌더된 슬롯은 모두 DOM 에 있다. -->
+    <script src="/js/ad-observe.js" defer is:inline></script>
+
     <!-- 카드 "New" 태그 시효 보정 — 정적 사이트라 빌드 시점 판정이 굳어버리므로,
          실제 '접속 날짜'(KST 달력일) 기준으로 발행 2일 이내만 New 로 두고 그 뒤엔
          원래 코너 태그(data-cat-base)로 바꾼다. 테두리 글로우 색(data-cat)도 함께 맞춘다. -->
