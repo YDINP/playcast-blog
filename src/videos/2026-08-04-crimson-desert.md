@@ -62,7 +62,7 @@ scenes:
     chapter: "평가와 성적"
   - text: "오픈월드를 좋아하신다면 한 번쯤 확인해볼 만한 작품이에요. 오늘도 봐주셔서 고마워요, **다음 영상에서 만나요**!"
     voice: "/voice/2026-08-04-crimson-desert/05.mp3"
-    image: "/games/scenes/2026-08-04-crimson-desert-undefined.jpg"
+    image: "/games/2026-08-04-crimson-desert-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
 ---
