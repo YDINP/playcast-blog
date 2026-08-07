@@ -1767,14 +1767,19 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 .vw-sec {
   margin-top: 36px;
 }
-.vw-sec > h2 {
+/* ⚠️ 접이식 패널(.vw-panel)은 h2 가 summary 안으로 들어가 자식 선택자를 벗어난다.
+   빼먹으면 그 섹션만 액센트 바가 사라지고 글씨가 커져 옆 섹션과 어긋난다(실측 2026-08-07). */
+.vw-sec > h2,
+.vw-sec > .vw-panel > summary > h2 {
   display: flex;
   align-items: center;
   gap: 9px;
   margin: 0 0 14px;
   font-size: 1.05rem;
 }
-.vw-sec > h2::before {
+.vw-sec > .vw-panel > summary > h2 { margin: 0; }
+.vw-sec > h2::before,
+.vw-sec > .vw-panel > summary > h2::before {
   content: '';
   width: 3px;
   height: 17px;
