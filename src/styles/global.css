@@ -394,6 +394,28 @@ html.sp-fs-lock, html.sp-fs-lock body { overflow: hidden; overscroll-behavior: n
 
 /* ── 씬 타이포 카드(핵심 수치·문구 오버레이) ─────────────────────
    호스트(우측)·자막(하단)을 피해 좌측 상단 영역에 얹는다. */
+/* 지금 다루는 게임 이름(추천·가이드 편). 화면 좌상단, 자막(하단)과 안 겹친다.
+   gameTitle 이 있는 씬에서만 .is-on 이 붙는다 — 없는 편은 마크업만 있고 안 보인다. */
+.sp-gametitle {
+  position: absolute; left: 3.5%; top: 4.5%; z-index: 4;
+  max-width: 62%;
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+}
+.sp-gametitle.is-on { opacity: 1; transform: none; }
+.sp-gametitle > span {
+  display: inline-block;
+  font: 800 clamp(12px, 2.1cqw, 20px)/1.25 var(--font-sans, system-ui), sans-serif;
+  color: #fff; letter-spacing: -0.01em;
+  padding: 6px 12px; border-radius: 8px;
+  background: linear-gradient(135deg, rgba(12, 16, 24, 0.86), rgba(12, 16, 24, 0.68));
+  border-left: 3px solid var(--host, #4ade80);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  word-break: keep-all;
+}
+
 .sp-card {
   position: absolute;
   left: 0; top: 0; right: 29%; bottom: 22%;

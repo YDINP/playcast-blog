@@ -97,6 +97,7 @@
     // refs
     this.bgA = stage.querySelector('.sp-bg-a');
     this.bgB = stage.querySelector('.sp-bg-b');
+    this.gameTitleEl = stage.querySelector('.sp-gametitle');
     // booth 모드에서는 호스트가 스테이지 밖(.sp-shell > .sp-booth)에 있다
     var shell = stage.closest('.sp-shell');
     this.shell = shell;
@@ -237,6 +238,13 @@
     next.classList.add('is-on');
     cur.classList.remove('is-on');
     this.activeBg = this.activeBg === 'a' ? 'b' : 'a';
+
+    // 지금 다루는 게임 이름(추천·가이드 편). 없는 씬에서는 배지를 숨긴다.
+    if (this.gameTitleEl) {
+      var gt = sc.gameTitle || '';
+      this.gameTitleEl.firstElementChild.textContent = gt;
+      this.gameTitleEl.classList.toggle('is-on', !!gt);
+    }
 
     // 씬 타이포 카드(핵심 수치·문구를 이미지 위에 얹음)
     this._renderCard(sc.card);

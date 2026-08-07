@@ -54,6 +54,11 @@ const videos = defineCollection({
           emotion: z.enum(['idle', 'happy', 'surprised', 'think']).optional(),
           holdMs: z.number().optional(), // 자막 완료 후 정지 override
           chapter: z.string().optional(), // 챕터 라벨(트랜스크립트/스크럽 표시)
+          // 추천·가이드 편에서 이 씬이 다루는 게임 이름(한글 표시명). 화면 좌상단 배지 +
+          // 대본 타임라인에 함께 노출한다. 편마다 게임이 바뀌므로 씬 단위로 둔다.
+          gameTitle: z.string().optional(),
+          subject: z.string().optional(),  // 이미지 소스 검색용 원제(영문). 렌더에는 안 쓴다.
+          shotKind: z.string().optional(), // main=공식 키아트 / play=인게임 스샷
           // TTS-ready: 씬 음성 오디오 URL. 현재 미사용(무음). 채우면 타임라인이 오디오 길이에 동기화.
           voice: z.string().optional(),
           // 타이포 카드: 핵심 수치·문구를 이미지 위에 슬라이드로 얹는다.

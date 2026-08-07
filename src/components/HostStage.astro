@@ -12,6 +12,7 @@ interface Scene {
   emotion?: string;
   holdMs?: number;
   chapter?: string;
+  gameTitle?: string;
   voice?: string;
   card?: {
     kind?: 'stat' | 'title' | 'points';
@@ -66,6 +67,9 @@ const emotions = [...new Set(scenes.map((s) => s.emotion).filter(Boolean))] as s
         <div class="sp-bg sp-bg-b"></div>
         <div class="sp-card" aria-hidden="true"></div>
         <div class="sp-pointer" aria-hidden="true"></div>
+        {/* 추천·가이드 편에서 지금 다루는 게임 이름. scene.gameTitle 이 있는 씬에서만 켜진다.
+            자막(하단)과 겹치지 않게 화면 좌상단에 둔다. */}
+        <div class="sp-gametitle" aria-hidden="true"><span></span></div>
       </div>
 
       <!-- 우측 앵커 호스트 -->
