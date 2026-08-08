@@ -1,9 +1,9 @@
 ---
-title: "8월 1주차 주간결산"
+title: "7월 5주차 주간결산"
 description: "카카오게임즈 '도깨비의세계' 10월 출시 확정, 펄어비스 '붉은사막'의 스팀 신규 IP 매출 1위 소식이 지난 한 주를 채웠어요. 아이온2 중국 진출과 넷마블의 도쿄게임쇼 라인업까지, 분야별로 정리했습니다. 스팀 판매순위와 PC방 점유율도 함께 확인하세요."
 pubDate: 2026-08-03
 category: "News"
-hook: "8월 1주차 주간결산"
+hook: "7월 5주차 주간결산"
 tags: ["주간결산", "게임뉴스", "도깨비의세계", "붉은사막", "아이온2", "PC방순위"]
 thumbnail: "/games/2026-08-03-weekly-game-roundup-thumb.jpg"
 customThumb: true
