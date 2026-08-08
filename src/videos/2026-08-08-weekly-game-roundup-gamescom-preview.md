@@ -8,7 +8,7 @@ tags: ["주간결산", "게임뉴스", "게임스컴2026", "신작출시", "PC�
 thumbnail: "/games/2026-08-08-weekly-game-roundup-gamescom-preview-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 / 넷마블, 다작 대신 장수: © company.netmarble.com · 제우스 오만의 신 출시 확정: © 제우스: 오만의 신 / Google Play · NBA 덩크 시티 국내 출시: © NBA 덩크 시티 / Google Play · 히어로 랜드M 정식 출시: © 히어로 랜드M / Google Play · 블소 NEO 열혈강호 협업: © bns.plaync.com · 솔 인챈트 대규모 업데이트: © SOL: enchant / Google Play · 엔씨, 게임스컴서 신작 3종: © about.ncsoft.com"
+  text: "© 각 게임사·기관 / 넷마블, 다작 대신 장수: © company.netmarble.com · 제우스 오만의 신 출시 확정: © 제우스: 오만의 신 / Google Play · NBA 덩크 시티 국내 출시: © NBA 덩크 시티 / Google Play · 히어로 랜드M 정식 출시: © 히어로 랜드M / Google Play · 블소 NEO 열혈강호 협업: © bns.plaync.com · 솔 인챈트 대규모 업데이트: © SOL: enchant / Google Play · 엔씨, 게임스컴서 신작 3종: © about.ncsoft.com · 챔피언스 택틱스 서비스 종료: © Ubisoft · 크래프톤 게임스컴 5종 공개: © KRAFTON · QUIET 스팀 테스트 3만 돌파: © LINE Games / Steam · 스팀 한국 판매순위: © Pocketpair / Steam · PC방 점유율 순위: © Riot Games"
 host: "rosie"
 views: 0
 faq:
@@ -116,6 +116,7 @@ scenes:
       sub: "업계 안팎 소식"
   - text: "유비소프트의 웹3 NFT 게임 **'챔피언스 택틱스'**가 **오는 10월** 서비스를 종료해요. NFT 도전이 결국 무산된 셈이에요."
     voice: "/voice/2026-08-08-weekly-game-roundup-gamescom-preview/09.mp3"
+    image: "/games/scenes/2026-08-08-weekly-game-roundup-gamescom-preview-10.jpg"
     emotion: "surprised"
     chapter: "챔피언스 택틱스 서비스 종료"
     subject: "챔피언스 택틱스"
@@ -131,6 +132,7 @@ scenes:
       sub: "게임스컴·신작 공개"
   - text: "크래프톤도 게임스컴 2026에서 **5개 타이틀**을 공개해요. 미공개 **펍지 IP 신작**과 신규 IP를 전면에 내세웠어요."
     voice: "/voice/2026-08-08-weekly-game-roundup-gamescom-preview/11.mp3"
+    image: "/games/scenes/2026-08-08-weekly-game-roundup-gamescom-preview-12.jpg"
     emotion: "happy"
     chapter: "크래프톤 게임스컴 5종 공개"
     subject: "크래프톤"
@@ -141,6 +143,7 @@ scenes:
       sub: "신규 IP 전면 배치"
   - text: "라인게임즈의 협동 코미디 호러 신작 **'콰이어트'**가 스팀 플레이 테스트를 시작했고, 참가자가 **3만 명**을 넘었어요."
     voice: "/voice/2026-08-08-weekly-game-roundup-gamescom-preview/12.mp3"
+    image: "/games/scenes/2026-08-08-weekly-game-roundup-gamescom-preview-13.jpg"
     emotion: "surprised"
     chapter: "QUIET 스팀 테스트 3만 돌파"
     subject: "QUIET"
@@ -151,6 +154,7 @@ scenes:
       sub: "스팀 플레이 테스트"
   - text: "스팀 한국 판매순위는 **팰월드**가 1위예요. 빅 워크와 세피리아가 뒤를 이었어요."
     voice: "/voice/2026-08-08-weekly-game-roundup-gamescom-preview/13.mp3"
+    image: "/games/scenes/2026-08-08-weekly-game-roundup-gamescom-preview-14.jpg"
     emotion: "idle"
     chapter: "스팀 한국 판매순위"
     subject: "팰월드"
@@ -163,6 +167,7 @@ scenes:
         - "3 빅 워크"
   - text: "PC방 점유율은 **리그 오브 레전드**가 **33%대**로 1위예요. 발로란트와 FC온라인이 8%대로 뒤를 이었어요."
     voice: "/voice/2026-08-08-weekly-game-roundup-gamescom-preview/14.mp3"
+    image: "/games/scenes/2026-08-08-weekly-game-roundup-gamescom-preview-15.jpg"
     emotion: "idle"
     chapter: "PC방 점유율 순위"
     subject: "리그 오브 레전드"
