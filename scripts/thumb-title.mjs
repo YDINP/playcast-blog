@@ -81,7 +81,7 @@ const boxW = isLeft ? x + blockW + padX : W - boxLeft;
 
 const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <rect x="${Math.round(boxLeft)}" y="${Math.round(boxTop)}" width="${Math.round(boxW)}" height="${Math.round(boxH)}"
-        fill="#000" fill-opacity="0.72"/>
+        fill="#000" fill-opacity="0.86"/>
   <rect x="${isLeft ? x : x - Math.round(W * 0.045)}" y="${barY}" width="${Math.round(W * 0.045)}" height="5" fill="#57e6c3"/>
   <text x="${x}" y="${baseY}" text-anchor="${anchor}"
         font-family="Malgun Gothic, Segoe UI, sans-serif" font-size="${titleSize}" font-weight="700"
