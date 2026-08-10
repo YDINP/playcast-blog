@@ -96,7 +96,9 @@ if (align === 'auto') {
 }
 
 const isLeft = side === 'left';
-const pad = Math.round(W * 0.05);
+// 프레임 가장자리와 글자 사이. 5% 로는 짧은 제목("산나비")의 상자가 모서리에 낀 작은 탭처럼
+// 보였다 — 상자를 프레임 끝까지 붙이는 이상, 안쪽 여백이 곧 상자의 두께다.
+const pad = Math.round(W * 0.075);
 const x = isLeft ? pad : W - pad;
 const anchor = isLeft ? 'start' : 'end';
 
@@ -115,7 +117,7 @@ const subY = baseY + Math.round(titleSize * 0.72);
 const blockW = Math.max(emWidth(title) * titleSize, sub ? emWidth(sub) * subSize * 1.25 : 0);
 // 여백은 1280px 기준으로 잡히지만 표지 벽(/thumbs)에서는 타일이 305px 까지 줄어든다.
 // 넉넉한 여백이 축소되면 검은 바가 타일의 1/3 을 먹으므로 최소한만 준다.
-const padX = Math.round(titleSize * 0.5);
+const padX = Math.round(titleSize * 0.75);
 const padY = Math.round(titleSize * 0.32);
 const boxTop = barY - padY;
 const boxH = (sub ? subY + subSize * 0.35 : baseY + titleSize * 0.2) - boxTop + padY;
