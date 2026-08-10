@@ -178,10 +178,14 @@ const items = videos
     color: var(--muted);
     font-size: 0.86rem;
   }
-  /* 표지 벽 — 최소 200px 폭으로 자동 채움. 16:9 를 유지해 카드 높이가 들쭉날쭉하지 않게. */
+  /* 표지 벽 — 최소 200px 폭으로 자동 채움. 16:9 를 유지해 카드 높이가 들쭉날쭉하지 않게.
+     최대 4열. 1280px 컨테이너에서 200px 하한만 두면 6열까지 들어가 표지가 너무 작아져
+     "무슨 게임인지 알아보는" 이 페이지의 목적을 잃는다. 트랙 하한을 한 행의 1/4
+     (gap 3개 제외)로 잡아, 넓은 화면에서는 4열에서 멈추고 좁아지면 200px 하한이
+     넘겨받아 3→2열로 자연스럽게 줄어든다. */
   .tw-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(max(200px, calc((100% - 30px) / 4)), 1fr));
     gap: 10px;
   }
   .tw-item {
