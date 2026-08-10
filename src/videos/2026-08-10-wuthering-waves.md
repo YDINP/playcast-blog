@@ -1,19 +1,21 @@
 ---
-title: "명조: 워더링 웨이브 — 2024년의 오픈월드 액션"
-description: "쿠로 게임즈(KURO GAMES)가 개발해 2024년에 출시한 오픈월드 비디오 게임이에요. 캐릭터 수집형 가챠와 무료 플레이 기반의 이른바 '원신라이크' 계열에 속하고, PC와 모바일을 오가는 크로스 플랫폼을 지원해요."
+title: "명조: 워더링 웨이브 — 엑스박스까지 온 오픈월드 액션 RPG"
+description: "쿠로 게임즈가 만든 무료 오픈월드 액션 RPG예요. 2024년 출시 이후 계속 커져서, 2026년 7월 3.5 업데이트와 함께 엑스박스에도 올라왔어요. PC·모바일·플레이스테이션5·엑스박스까지 계정 하나로 이어집니다."
 pubDate: 2026-08-10
-category: "New"
-hook: "무료로 시작하는 2024 오픈월드"
+category: "Update"
+hook: "엑스박스로도 열린 오픈월드"
 tags: ["명조", "워더링웨이브", "오픈월드", "가챠", "쿠로게임즈", "크로스플랫폼"]
 enName: "Wuthering Waves"
 thumbnail: "/games/2026-08-10-wuthering-waves-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 (공식 이미지)"
+  text: "© 쿠로 게임즈 (공식 스크린샷)"
   url: "https://store.steampowered.com/app/3513350/"
 officialLinks:
   - label: "Steam 상점 페이지"
     url: "https://store.steampowered.com/app/3513350/"
+  - label: "명조 공식 홈페이지 (한국)"
+    url: "https://wutheringwaves.kurogames.com/kr/main"
 host: "rosie"
 views: 0
 faq:
@@ -24,7 +26,7 @@ faq:
   - q: "무료로 할 수 있나요?"
     a: "네, 무료 플레이(F2P) 기반에 캐릭터 수집형 가챠가 있는 구조로 알려져 있어요. 시작 자체는 부담 없이 하실 수 있어요."
   - q: "어떤 기기에서 할 수 있어요?"
-    a: "크로스 플랫폼을 지원해서 PC와 모바일 양쪽으로 즐길 수 있어요. 상황에 맞춰 골라서 하시면 돼요."
+    a: "PC와 모바일, 플레이스테이션5, 엑스박스까지 지원해요. 엑스박스판은 2026년 7월 3.5 업데이트와 함께 나왔고, 기기를 바꿔도 계정 하나로 이어집니다."
   - q: "'원신라이크'가 무슨 뜻인가요?"
     a: "오픈 월드에 캐릭터 수집형 가챠, 무료 플레이를 묶은 계열을 국내에서 부르는 말이에요. 명조도 여기에 속하는 대표작으로 이야기돼요."
 coupang:
@@ -45,7 +47,7 @@ scenes:
     image: "/games/scenes/2026-08-10-wuthering-waves-5.jpg"
     emotion: "think"
     chapter: "이름 정리"
-  - text: "개발사는 **쿠로 게임즈**예요. 이 작품의 뼈대는 **오픈 월드**예요. 넓은 무대를 직접 돌아다니는 게 핵심이죠."
+  - text: "개발사는 **쿠로 게임즈**예요. 이 작품은 **오픈월드 액션 알피지**예요. 넓은 무대를 직접 돌아다니는 게 핵심이죠."
     voice: "/voice/2026-08-10-wuthering-waves/02.mp3"
     image: "/games/scenes/2026-08-10-wuthering-waves-1.jpg"
     emotion: "idle"
@@ -55,12 +57,12 @@ scenes:
     image: "/games/scenes/2026-08-10-wuthering-waves-2.jpg"
     emotion: "idle"
     chapter: "장르"
-  - text: "재미있는 건요, 명조가 나오면서 **'원신라이크'가 아예 장르 이름처럼 굳었다**는 평가가 나왔어요. 뒤따라온 작품이 오히려 장르 이름을 확정지은 셈이에요."
+  - text: "전투는 **회피와 반격**이 핵심이에요. 적 공격에 맞춰 피하면 반격 기회가 열리고, 벽을 타고 오르는 **파쿠르 이동**으로 지형을 그대로 가로질러요."
     voice: "/voice/2026-08-10-wuthering-waves/04.mp3"
     image: "/games/scenes/2026-08-10-wuthering-waves-4.jpg"
     emotion: "surprised"
     chapter: "장르가 된 이름"
-  - text: "플레이 환경은 **크로스 플랫폼**이에요. **PC와 모바일**을 오가며 즐길 수 있어서, 밖에서는 폰으로 집에서는 큰 화면으로 이어가기 좋아요."
+  - text: "PC와 모바일은 물론 **플레이스테이션 파이브와 엑스박스**에서도 즐길 수 있어요. 엑스박스판은 2026년 7월에 열렸고, 기기를 옮겨도 계정 하나로 이어집니다."
     voice: "/voice/2026-08-10-wuthering-waves/05.mp3"
     image: "/games/scenes/2026-08-10-wuthering-waves-3.jpg"
     emotion: "happy"
