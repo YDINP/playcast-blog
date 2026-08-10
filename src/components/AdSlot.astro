@@ -19,19 +19,23 @@ const { position } = Astro.props;
 type Unit = { unit: string; w: number; h: number };
 
 // 발급 유닛(2026-07-30). 규격은 콘솔에서 고른 크기와 반드시 일치해야 서빙된다.
+// ⚠️ 2026-08-10: 320x100 두 유닛의 자리를 맞바꿨다(watch 모바일 ↔ 장르 페이지).
+//    유닛은 콘솔에서 정한 규격이 고정이라, 교환은 같은 규격끼리만 가능하다.
+//    PC 728x90(top)은 장르 쪽에 동일 규격 유닛이 없어 자리를 유지한다.
 const UNITS: Record<string, Unit> = {
   // watch 플레이어 아래 — PC/태블릿(≥768px)
   top: { unit: 'DAN-pwo3tYrXlLQvJa3g', w: 728, h: 90 },
   // watch 플레이어 아래 — 모바일(<768px). 728x90 은 모바일에서 잘리므로 별도 유닛.
-  topMobile: { unit: 'DAN-sdH3bZFqWCgZlTJ1', w: 320, h: 100 },
+  // (구 장르 페이지 유닛 — 2026-08-10 교환)
+  topMobile: { unit: 'DAN-1jVfOQopXk0gBu42', w: 320, h: 100 },
   // 전 페이지 하단 고정 — 모바일 전용
   anchor: { unit: 'DAN-Zr9h4NXLISsFH6ww', w: 320, h: 100 },
   // watch 본문 하단("이어서 볼 방송" 앞) — ≥783px
   bottom: { unit: 'DAN-C0L9Acg4VFJet5sC', w: 300, h: 250 },
   // 홈 "전체 영상" 타이틀 앞
   home: { unit: 'DAN-xiFmPLYjqxZyyYNd', w: 300, h: 250 },
-  // 장르 페이지 그리드 위
-  genre: { unit: 'DAN-1jVfOQopXk0gBu42', w: 320, h: 100 },
+  // 장르 페이지 그리드 위 (구 watch 모바일 유닛 — 2026-08-10 교환)
+  genre: { unit: 'DAN-sdH3bZFqWCgZlTJ1', w: 320, h: 100 },
 };
 
 const isAnchor = position === 'anchor';
