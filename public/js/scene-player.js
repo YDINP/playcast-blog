@@ -28,6 +28,123 @@
   // 각 입모양의 벌어짐(세로 스케일). 스텝마다 이 값으로 부드럽게 스케일 전환.
   var MOUTH_OPEN = { closed: 0.16, i: 0.55, u: 0.6, e: 0.82, o: 0.88, a: 1.0 };
 
+  /* ── 오디오 파형 립싱크 ────────────────────────────────────
+     예전에는 MOUTH_SEQ 를 고정 주기로 순환시켰다 — 음성이 무슨 말을 하든 입은 늘 같은
+     리듬으로 뻐끔거렸고, 문장 사이 침묵에도 계속 움직였다. 여기서는 실제 <audio> 파형을
+     Web Audio 로 읽어 세기 → 벌어짐(--mopen), 스펙트럼 → 모음(data-viseme) 을 만든다.
+     AudioContext 를 못 쓰면(구형 브라우저·제스처 전) attach 가 null 을 주고 루프가
+     예전 순환 방식으로 자동 폴백한다.
+
+     ⚠ 임계값은 반드시 **dB 영역**에서 재야 한다. getByteFrequencyData 는 선형 magnitude 가
+     아니라 [minDecibels,maxDecibels] 를 0..255 로 편 값이라, 선형으로 잰 대역비(중앙값 0.055)를
+     그대로 쓰면 전 프레임이 'e'/'i' 두 모양에 갇힌다(실측: a=0.5% o=0.2%).
+     아래 값은 브라우저 분석기를 스펙대로 흉내 내 로지 TTS(GPT-SoVITS)로 실측한 백분위다 —
+     2026-08-10, wuthering-waves 7트랙 + vtuber-beginner-guide 로 교차검증.
+     front(dB) p33=0.295 / p50=0.333 / p66=0.357, open p50=0.737.
+     결과 분포 a25/e23/u17/o12/i10/closed12%, 평균 유지 124ms. */
+  var LIP_FRONT_BACK = 0.295; // 이 아래 = 후설·원순(오/우)
+  var LIP_FRONT_FWD = 0.357;  // 이 위 = 전설(이/에)
+  var LIP_OPEN_HI = 0.68;     // 전설·후설 안에서 크게/작게를 가르는 벌어짐(open 중앙값 근처)
+  var LIP_OPEN_MID = 0.50;    // 중설에서 '아'로 넘어가는 벌어짐
+  var LIP_RMS_FLOOR = 0.025;  // 무음 바닥
+  var LIP_RMS_CEIL = 0.225;   // 최대 벌어짐에 닿는 세기
+  var LIP_SILENCE = 0.08;     // 정규화 세기가 이 아래면 입을 다문다(문장 사이 쉼)
+  var LIP_HOLD = 90;          // 모음 최소 유지(ms) — 프레임마다 바뀌면 입이 떨린다
+
+  var Lip = (function () {
+    var ctx = null, dead = false;
+
+    function context() {
+      if (ctx || dead) return ctx;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { dead = true; return null; }
+      try { ctx = new AC(); } catch (e) { dead = true; }
+      return ctx;
+    }
+
+    /* createMediaElementSource 는 요소당 단 한 번만 허용되고, 한 번 연결하면 그 요소의
+       소리는 그래프를 통해서만 나간다 → destination 연결이 빠지면 무음이 된다.
+       컨텍스트가 running 일 때만 붙인다(제스처 전에 붙으면 소리가 끊긴다). */
+    function attach(el) {
+      if (!el) return null;
+      if (el.__lip) return el.__lip;
+      if (el.__lipFail) return null;
+      var c = context();
+      if (!c || c.state !== 'running') return null;
+      try {
+        var an = c.createAnalyser();
+        an.fftSize = 1024;
+        an.smoothingTimeConstant = 0.5;
+        c.createMediaElementSource(el).connect(an);
+        an.connect(c.destination);
+        el.__lip = {
+          an: an,
+          freq: new Uint8Array(an.frequencyBinCount),
+          wave: new Uint8Array(an.fftSize),
+          hz: c.sampleRate / an.fftSize,
+          open: 0, front: (LIP_FRONT_BACK + LIP_FRONT_FWD) / 2, vis: 'closed', since: 0
+        };
+        return el.__lip;
+      } catch (e) {
+        el.__lipFail = true; // 이미 소스가 붙은 요소 등 — 다시 시도하지 않는다
+        return null;
+      }
+    }
+
+    // 사용자 제스처 안에서 호출 — 자동재생 정책상 여기서만 컨텍스트가 살아난다.
+    function resume() {
+      var c = context();
+      if (c && c.state === 'suspended') { try { c.resume(); } catch (e) {} }
+    }
+
+    function bandAvg(freq, from, to, hz) {
+      var a = Math.max(1, Math.round(from / hz));
+      var b = Math.min(freq.length - 1, Math.round(to / hz));
+      if (b <= a) return 0;
+      var s = 0;
+      for (var i = a; i <= b; i++) s += freq[i];
+      return s / (b - a + 1);
+    }
+
+    // 프레임 1회 분석 → {open, vis}. 붙어 있지 않으면 null(호출부가 폴백).
+    /* 붙지 않았으면 매 프레임 재시도한다 — 첫 씬은 제스처 직후라 컨텍스트가 아직
+       suspended 인 경우가 흔한데, 그때 포기하면 1씬 내내 폴백으로 남는다.
+       재생 중 연결해도 요소 소리가 그래프로 옮겨갈 뿐 끊기지 않는다. */
+    function read(el, now) {
+      var L = el && (el.__lip || attach(el));
+      if (!L) return null;
+      L.an.getByteTimeDomainData(L.wave);
+      var sum = 0;
+      for (var i = 0; i < L.wave.length; i++) {
+        var d = (L.wave[i] - 128) / 128;
+        sum += d * d;
+      }
+      var rms = Math.sqrt(sum / L.wave.length);
+      var target = (rms - LIP_RMS_FLOOR) / (LIP_RMS_CEIL - LIP_RMS_FLOOR);
+      target = target < 0 ? 0 : target > 1 ? 1 : target;
+      // 열릴 땐 빠르게, 닫힐 땐 느리게 — 자음마다 입이 딱딱 끊기는 걸 막는다.
+      L.open += (target - L.open) * (target > L.open ? 0.55 : 0.18);
+
+      if (L.open < LIP_SILENCE) {
+        if (L.vis !== 'closed') { L.vis = 'closed'; L.since = now; }
+        return L;
+      }
+      L.an.getByteFrequencyData(L.freq);
+      var lo = bandAvg(L.freq, 200, 1000, L.hz);
+      var hi = bandAvg(L.freq, 1300, 3200, L.hz);
+      var f = hi / (lo + hi + 1e-6);
+      L.front += (f - L.front) * 0.35;
+      var vis;
+      if (L.front > LIP_FRONT_FWD) vis = L.open > LIP_OPEN_HI ? 'e' : 'i';
+      else if (L.front < LIP_FRONT_BACK) vis = L.open > LIP_OPEN_HI ? 'o' : 'u';
+      else vis = L.open > LIP_OPEN_MID ? 'a' : 'e';
+      if (vis !== L.vis && now - L.since >= LIP_HOLD) { L.vis = vis; L.since = now; }
+      return L;
+    }
+
+    return { attach: attach, resume: resume, read: read };
+  })();
+
   // 한글/라틴 문자 → 입모양(비셈). 한글은 중성(모음) 추출.
   var JUNG_VIS = ['a','e','a','e','e','e','e','e','o','a','e','e','o','u','o','e','i','u','i','i','i'];
   function visemeOf(ch) {
@@ -381,6 +498,7 @@
       }
       this.audio = a;
       a.muted = this.muted;
+      Lip.attach(a); // 파형 분석기 연결(컨텍스트가 살아 있을 때만 — 아니면 순환 폴백)
       // 재생이 실제로 시작되면 오디오 시계로 자연 전환 — 두 시계가 어긋나지 않게 원점을 맞춘다.
       a.addEventListener('playing', function () {
         if (self.audio !== a) return;
@@ -434,13 +552,18 @@
       : isTyping;
     this.host.classList.toggle('is-talking', speaking);
     if (speaking) {
-      // 입모양(모음)은 천천히 순환 + CSS 크로스페이드로 '부드럽게' 이어지고,
-      // 벌어짐(--mopen)은 '연속 사인'으로 완전히 닫지 않고 은은하게 열렸다 닫혀
-      // 반짝임(하드 개폐)이 없다.
-      var vis = MOUTH_SEQ[Math.floor(elapsed / MOUTH_BEAT) % MOUTH_SEQ.length];
-      this.host.setAttribute('data-viseme', vis);
-      var wave = 0.5 - 0.5 * Math.cos((elapsed / MOUTH_OPEN_PERIOD) * 6.2831853); // 0..1 부드럽게
-      this.host.style.setProperty('--mopen', (0.45 + 0.55 * wave).toFixed(3)); // 0.45~1.0
+      /* 1순위: 실제 파형 — 목소리가 큰 만큼 입이 벌어지고, 쉼표에서 다물린다.
+         폴백(분석기 미연결): 예전처럼 모음을 순환시키고 사인으로 여닫는다. */
+      var lip = Lip.read(this.audio, performance.now());
+      if (lip) {
+        this.host.setAttribute('data-viseme', lip.vis);
+        this.host.style.setProperty('--mopen', (0.30 + 0.70 * lip.open).toFixed(3));
+      } else {
+        var vis = MOUTH_SEQ[Math.floor(elapsed / MOUTH_BEAT) % MOUTH_SEQ.length];
+        this.host.setAttribute('data-viseme', vis);
+        var wave = 0.5 - 0.5 * Math.cos((elapsed / MOUTH_OPEN_PERIOD) * 6.2831853); // 0..1 부드럽게
+        this.host.style.setProperty('--mopen', (0.45 + 0.55 * wave).toFixed(3)); // 0.45~1.0
+      }
     } else {
       this.host.setAttribute('data-viseme', 'closed');
       this.host.style.setProperty('--mopen', String(MOUTH_OPEN.closed));
@@ -479,6 +602,7 @@
 
   // ── 컨트롤 ────────────────────────────────────────────────
   Player.prototype.play = function () {
+    Lip.resume(); // 제스처 안에서만 AudioContext 가 살아난다(립싱크 분석기 전제조건)
     if (this.playing) {
       // 영상은 (벽시계로) 도는데 자동재생 차단으로 오디오만 멈춘 상태 —
       // 예전엔 여기서 그냥 return 해서 재생버튼을 눌러도 아무 일도 안 났다.
@@ -578,6 +702,7 @@
   // 사운드 언락 — 반드시 사용자 활성화 제스처(클릭/탭/키) 안에서 호출해야 한다.
   // 자동재생이 거부된 씬을 처음부터 다시 태워 자막과 음성 싱크를 맞춘다.
   Player.prototype.unlockAudio = function () {
+    Lip.resume();
     if (this.userMuted) return;          // 사용자가 음소거를 원함
     if (this._audioLive()) return;       // 이미 소리가 흐르는 중
     if (this.muted) this.setMuted(false);

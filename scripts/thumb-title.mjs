@@ -12,6 +12,8 @@
  *     --title "명조: 워더링 웨이브" --sub "WUTHERING WAVES" [--align left|right] [--y 0.52]
  *
  * --align 은 로지가 없는 쪽을 고른다(로지 우측 배치 → --align left).
+ * --sub(영문명)은 기본으로 쓰지 않는다 — 표지 벽 타일(305px)로 줄면 글자가 아니라 얼룩으로
+ * 남는데, 그 안 읽히는 줄 때문에 검은 바가 두꺼워져 그림을 더 가린다.
  * --y 는 텍스트 블록의 세로 위치(0~1). 로지의 팔·무기가 텍스트 높이까지 뻗어 오는 편은
  * 0.3(위) 이나 0.72(아래) 로 밀어 겹침을 피한다.
  *
@@ -67,8 +69,10 @@ const subY = baseY + Math.round(titleSize * 0.72);
 // 놓인 사각형에만 검정을 깐다. 흐린 가장자리는 농도를 퍼뜨려 대비를 잃으므로, 경계가
 // 딱 떨어지는 사각형으로 두고 정렬한 쪽은 프레임 끝까지 붙여 잘린 여백이 남지 않게 한다.
 const blockW = Math.max(emWidth(title) * titleSize, sub ? emWidth(sub) * subSize * 1.25 : 0);
-const padX = Math.round(titleSize * 0.7);
-const padY = Math.round(titleSize * 0.55);
+// 여백은 1280px 기준으로 잡히지만 표지 벽(/thumbs)에서는 타일이 305px 까지 줄어든다.
+// 넉넉한 여백이 축소되면 검은 바가 타일의 1/3 을 먹으므로 최소한만 준다.
+const padX = Math.round(titleSize * 0.5);
+const padY = Math.round(titleSize * 0.32);
 const boxTop = barY - padY;
 const boxH = (sub ? subY + subSize * 0.35 : baseY + titleSize * 0.2) - boxTop + padY;
 // 정렬한 쪽은 프레임 끝(0 또는 W)까지 채운다.
