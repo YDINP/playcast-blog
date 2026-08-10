@@ -64,30 +64,20 @@ const subY = baseY + Math.round(titleSize * 0.72);
 
 // ── 텍스트 뒤에만 어둠을 깐다 ──
 // 전면 그라디언트는 프레임의 절반을 눌러 그림(배경 플레이 씬)까지 죽였다. 글자가 실제로
-// 놓인 사각형에만 검정을 깔고 가장자리를 크게 흐려, 어두워진 자리가 "패널"로 보이지 않게 한다.
+// 놓인 사각형에만 검정을 깐다. 흐린 가장자리는 농도를 퍼뜨려 대비를 잃으므로, 경계가
+// 딱 떨어지는 사각형으로 두고 정렬한 쪽은 프레임 끝까지 붙여 잘린 여백이 남지 않게 한다.
 const blockW = Math.max(emWidth(title) * titleSize, sub ? emWidth(sub) * subSize * 1.25 : 0);
 const padX = Math.round(titleSize * 0.7);
 const padY = Math.round(titleSize * 0.55);
 const boxTop = barY - padY;
 const boxH = (sub ? subY + subSize * 0.35 : baseY + titleSize * 0.2) - boxTop + padY;
-const boxLeft = (isLeft ? x : x - blockW) - padX;
-const boxW = blockW + padX * 2;
-const feather = Math.round(titleSize * 0.42);
+// 정렬한 쪽은 프레임 끝(0 또는 W)까지 채운다.
+const boxLeft = isLeft ? 0 : x - blockW - padX;
+const boxW = isLeft ? x + blockW + padX : W - boxLeft;
 
 const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <filter id="feather" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="${feather}"/>
-    </filter>
-    <filter id="featherCore" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="${Math.round(feather * 0.45)}"/>
-    </filter>
-  </defs>
   <rect x="${Math.round(boxLeft)}" y="${Math.round(boxTop)}" width="${Math.round(boxW)}" height="${Math.round(boxH)}"
-        rx="${feather}" fill="#000" fill-opacity="0.58" filter="url(#feather)"/>
-  <rect x="${Math.round(boxLeft + padX * 0.45)}" y="${Math.round(boxTop + padY * 0.4)}"
-        width="${Math.round(boxW - padX * 0.9)}" height="${Math.round(boxH - padY * 0.8)}"
-        rx="${Math.round(feather * 0.6)}" fill="#000" fill-opacity="0.68" filter="url(#featherCore)"/>
+        fill="#000" fill-opacity="0.72"/>
   <rect x="${isLeft ? x : x - Math.round(W * 0.045)}" y="${barY}" width="${Math.round(W * 0.045)}" height="5" fill="#57e6c3"/>
   <text x="${x}" y="${baseY}" text-anchor="${anchor}"
         font-family="Malgun Gothic, Segoe UI, sans-serif" font-size="${titleSize}" font-weight="700"
