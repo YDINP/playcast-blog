@@ -38,6 +38,41 @@ if (!input || !out || !title) {
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/**
+ * --align auto — 로지가 어느 쪽에 서 있는지 민트 머리색의 좌우 질량으로 판정한다.
+ * 로지의 민트/아쿠아 머리는 프레임에서 가장 큰 단일 색면이라, 양쪽 40% 구간의 민트 화소 수를
+ * 세면 어느 쪽이 비어 있는지 알 수 있다. 텍스트는 비어 있는 쪽으로 보낸다.
+ * (배경 시안 이펙트에 오판할 수 있으므로 판정 결과를 항상 로그로 남긴다)
+ */
+async function detectEmptySide(buf) {
+  const { data, info } = await sharp(buf).resize({ width: 160 }).raw().toBuffer({ resolveWithObject: true });
+  let left = 0;
+  let right = 0;
+  for (let y = 0; y < info.height; y++) {
+    for (let px = 0; px < info.width; px++) {
+      const i = (y * info.width + px) * info.channels;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const mx = Math.max(r, g, b);
+      const mn = Math.min(r, g, b);
+      if (mx < 100 || mx - mn < 30) continue; // 어둡거나 무채색인 화소는 머리가 아니다
+      if (g < r || g < b * 0.9) continue; // 민트는 초록이 우세하다
+      const d = mx - mn;
+      let h;
+      if (mx === r) h = 60 * (((g - b) / d) % 6);
+      else if (mx === g) h = 60 * ((b - r) / d + 2);
+      else h = 60 * ((r - g) / d + 4);
+      if (h < 0) h += 360;
+      if (h < 135 || h > 195) continue;
+      const f = px / info.width;
+      if (f < 0.42) left++;
+      else if (f > 0.58) right++;
+    }
+  }
+  return { side: left > right ? 'right' : 'left', left, right };
+}
+
 // 한글은 글자당 폭이 거의 1em 이라 글자 수로 폭을 근사할 수 있다.
 const emWidth = (text) =>
   [...text].reduce((w, ch) => w + (/[ㄱ-힝]/.test(ch) ? 1 : /[A-Z]/.test(ch) ? 0.62 : 0.48), 0);
@@ -48,10 +83,19 @@ function fitSize(text, maxW, base) {
   return Math.min(base, Math.floor(maxW / emWidth(text)));
 }
 
-const src = sharp(readFileSync(input));
+const raw = readFileSync(input);
+const src = sharp(raw);
 const { width: W, height: H } = await src.metadata();
 
-const isLeft = align === 'left';
+let side = align;
+let detail = '';
+if (align === 'auto') {
+  const d = await detectEmptySide(raw);
+  side = d.side;
+  detail = ` (mint L=${d.left} R=${d.right})`;
+}
+
+const isLeft = side === 'left';
 const pad = Math.round(W * 0.05);
 const x = isLeft ? pad : W - pad;
 const anchor = isLeft ? 'start' : 'end';
@@ -101,4 +145,4 @@ await src
   .jpeg({ quality: 88 })
   .toFile(out);
 
-console.log(`OK ${W}x${H} title="${title}" size=${titleSize} align=${align} -> ${out}`);
+console.log(`OK ${W}x${H} title="${title}" size=${titleSize} align=${side}${detail} -> ${out}`);
