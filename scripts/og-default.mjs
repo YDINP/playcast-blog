@@ -27,7 +27,9 @@ const bg = await sharp(`${HOST}newsroom-bg.webp`)
 const ROSIE = 610;
 const rosie = await sharp(`${HOST}char2/base.webp`).resize(ROSIE, ROSIE).toBuffer();
 
-const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+// 베일은 **로지보다 먼저** 깐다. 한 장의 SVG 에 넣으면 인물 위에 얹혀 로지가 어두워진다
+// (배경을 눌러 글자를 띄우려던 것이지, 주인공을 어둡게 하려던 것이 아니다).
+const veil = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="veil" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#050a12" stop-opacity="0.92"/>
@@ -36,6 +38,9 @@ const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     </linearGradient>
   </defs>
   <rect width="${W}" height="${H}" fill="url(#veil)"/>
+</svg>`;
+
+const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <rect x="0" y="0" width="10" height="${H}" fill="${TEAL}"/>
 
   <circle cx="92" cy="176" r="7" fill="#ff4d5e"/>
@@ -58,6 +63,7 @@ const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
 
 await sharp(bg)
   .composite([
+    { input: Buffer.from(veil), left: 0, top: 0 },
     { input: rosie, left: W - ROSIE, top: H - ROSIE },
     { input: Buffer.from(svg), left: 0, top: 0 },
   ])
