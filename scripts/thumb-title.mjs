@@ -79,9 +79,15 @@ const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <filter id="feather" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="${feather}"/>
     </filter>
+    <filter id="featherCore" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="${Math.round(feather * 0.45)}"/>
+    </filter>
   </defs>
   <rect x="${Math.round(boxLeft)}" y="${Math.round(boxTop)}" width="${Math.round(boxW)}" height="${Math.round(boxH)}"
-        rx="${feather}" fill="#000" fill-opacity="0.62" filter="url(#feather)"/>
+        rx="${feather}" fill="#000" fill-opacity="0.58" filter="url(#feather)"/>
+  <rect x="${Math.round(boxLeft + padX * 0.45)}" y="${Math.round(boxTop + padY * 0.4)}"
+        width="${Math.round(boxW - padX * 0.9)}" height="${Math.round(boxH - padY * 0.8)}"
+        rx="${Math.round(feather * 0.6)}" fill="#000" fill-opacity="0.68" filter="url(#featherCore)"/>
   <rect x="${isLeft ? x : x - Math.round(W * 0.045)}" y="${barY}" width="${Math.round(W * 0.045)}" height="5" fill="#57e6c3"/>
   <text x="${x}" y="${baseY}" text-anchor="${anchor}"
         font-family="Malgun Gothic, Segoe UI, sans-serif" font-size="${titleSize}" font-weight="700"
