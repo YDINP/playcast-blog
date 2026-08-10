@@ -53,6 +53,11 @@ const jsonLd = {
     },
   ],
 };
+
+// 광고를 끼워 넣을 위치(앞에 놓일 카드 수). 그리드는 최대 3열(컨테이너 1100px)이라
+// 3 이면 PC 에서 정확히 첫 줄 뒤에 떨어진다. 2열·1열은 .genre-grid 의 dense 배치가
+// 남는 칸을 뒤 카드로 메워 구멍이 생기지 않는다.
+const AD_AFTER = 3;
 ---
 
 <BaseLayout title={title} description={meta.desc}>
@@ -70,11 +75,24 @@ const jsonLd = {
       <span class="genre-count">{videos.length}개 방송</span>
     </header>
 
-    <AdSlot position="genre" />
-
+    <!-- 광고는 헤더 아래가 아니라 그리드 '첫 줄 뒤'에 둔다.
+         헤더 아래는 목록을 훑으러 온 방문자가 스크롤 시작 전에 스쳐 지나가는 자리라
+         노출만 잡히고 시선이 머물지 않았다. 카드를 몇 개 보고 "더 볼까" 하며 멈추는
+         지점이 이 페이지에서 체류가 가장 긴 자리다. -->
     <div class="pc-grid genre-grid">
-      {videos.map((v) => <VideoCard video={v} />)}
+      {videos.map((v, i) => (
+        <>
+          <VideoCard video={v} />
+          {i === AD_AFTER - 1 && videos.length > AD_AFTER && (
+            <div class="genre-ad-row">
+              <AdSlot position="genre" />
+            </div>
+          )}
+        </>
+      ))}
     </div>
+
+    {videos.length <= AD_AFTER && <AdSlot position="genre" />}
   </div>
 </BaseLayout>
 
@@ -88,6 +106,10 @@ const jsonLd = {
   .genre-head p { color: var(--text-2, #9aa); line-height: 1.6; margin: 0 0 0.5rem; }
   .genre-count { font-size: 0.75rem; color: var(--host, #57e6c3); font-weight: 700; }
   .genre-grid { margin-top: 1.5rem; }
+  /* 광고 줄은 열 수와 무관하게 한 줄을 통째로 쓴다(카드처럼 보이면 오클릭 유발).
+     dense: 2열에서 광고 앞 카드가 홀수로 끝나 생기는 빈 칸을 뒤 카드가 메운다. */
+  .genre-grid { grid-auto-flow: row dense; }
+  .genre-ad-row { grid-column: 1 / -1; }
   /* pc-grid 가 전역에 없을 때의 폴백 */
   .genre-grid:not(.pc-grid-ok) { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
 </style>
