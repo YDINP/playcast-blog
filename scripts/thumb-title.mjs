@@ -119,18 +119,38 @@ const blockW = Math.max(emWidth(title) * titleSize, sub ? emWidth(sub) * subSize
 const padX = Math.round(titleSize * 0.75);
 const padY = Math.round(titleSize * 0.32);
 
-/** 정렬·세로위치로부터 실제 좌표를 만든다. 후보 평가와 렌더가 같은 식을 쓰게 한 곳에 모았다. */
+/**
+ * 정렬·세로위치로부터 실제 좌표를 만든다. 후보 평가와 렌더가 같은 식을 쓰게 한 곳에 모았다.
+ * left/right 는 상자를 프레임 끝까지 붙인 띠, center 는 좌우 어느 쪽에도 닿지 않는 독립 상자다
+ * (가운데가 비고 양쪽이 찬 그림에서 필요하다).
+ */
 function geom(sideName, yRatio) {
   const isL = sideName === 'left';
-  const x = isL ? pad : W - pad;
+  const isC = sideName === 'center';
+  const x = isC ? Math.round(W / 2) : isL ? pad : W - pad;
   const baseY = Math.round(H * yRatio);
   const barY = baseY - titleSize - Math.round(H * 0.022);
   const subY = baseY + Math.round(titleSize * 0.72);
   const boxTop = barY - padY;
   const boxH = (sub ? subY + subSize * 0.35 : baseY + titleSize * 0.2) - boxTop + padY;
-  const boxLeft = isL ? 0 : x - blockW - padX;
-  const boxW = isL ? x + blockW + padX : W - boxLeft;
-  return { isL, x, baseY, barY, subY, boxTop, boxH, boxLeft, boxW, anchor: isL ? 'start' : 'end' };
+  const boxLeft = isC ? Math.round((W - blockW) / 2) - padX : isL ? 0 : x - blockW - padX;
+  const boxW = isC ? blockW + padX * 2 : isL ? x + blockW + padX : W - boxLeft;
+  const barW = Math.round(W * 0.045);
+  const barX = isC ? Math.round((W - barW) / 2) : isL ? x : x - barW;
+  return {
+    isL,
+    x,
+    baseY,
+    barY,
+    barX,
+    barW,
+    subY,
+    boxTop,
+    boxH,
+    boxLeft,
+    boxW,
+    anchor: isC ? 'middle' : isL ? 'start' : 'end',
+  };
 }
 
 /**
@@ -138,7 +158,7 @@ function geom(sideName, yRatio) {
  * 세로는 0.20~0.80 (하단 15% 는 플레이어 UI 가 덮으므로 0.8 이 상한).
  */
 function pickPlacement(cost, sideFixed, yFixed) {
-  const sides = sideFixed && sideFixed !== 'auto' ? [sideFixed] : ['left', 'right'];
+  const sides = sideFixed && sideFixed !== 'auto' ? [sideFixed] : ['left', 'center', 'right'];
   const ys = yFixed !== undefined ? [Number(yFixed)] : [];
   if (!ys.length) for (let v = 0.2; v <= 0.801; v += 0.05) ys.push(Number(v.toFixed(2)));
   let best = null;
@@ -160,7 +180,7 @@ function pickPlacement(cost, sideFixed, yFixed) {
 
 const cost = await buildCost(raw);
 const picked = pickPlacement(cost, align, yArg);
-const { isL, x, baseY, barY, subY, boxTop, boxH, boxLeft, boxW, anchor } = geom(picked.side, picked.y);
+const { x, baseY, barY, barX, barW, subY, boxTop, boxH, boxLeft, boxW, anchor } = geom(picked.side, picked.y);
 
 // ── 텍스트 뒤에만 어둠을 깐다 ──
 // 전면 그라디언트는 프레임의 절반을 눌러 그림(배경 플레이 씬)까지 죽였다. 글자가 실제로
@@ -169,7 +189,7 @@ const { isL, x, baseY, barY, subY, boxTop, boxH, boxLeft, boxW, anchor } = geom(
 const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
   <rect x="${Math.round(boxLeft)}" y="${Math.round(boxTop)}" width="${Math.round(boxW)}" height="${Math.round(boxH)}"
         fill="#000" fill-opacity="0.86"/>
-  <rect x="${isL ? x : x - Math.round(W * 0.045)}" y="${barY}" width="${Math.round(W * 0.045)}" height="5" fill="#57e6c3"/>
+  <rect x="${barX}" y="${barY}" width="${barW}" height="5" fill="#57e6c3"/>
   <text x="${x}" y="${baseY}" text-anchor="${anchor}"
         font-family="Malgun Gothic, Segoe UI, sans-serif" font-size="${titleSize}" font-weight="700"
         fill="#fff" stroke="#04121a" stroke-width="${Math.max(3, Math.round(titleSize * 0.07))}"

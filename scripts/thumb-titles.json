@@ -1,31 +1,59 @@
 {
   "_comment": "썸네일에 얹을 표시명. frontmatter title 을 그대로 쓰면 문장형 제목(예: '드디어 롤 클래식 7월 29일 출시! ...')이 깨알 크기로 줄어들어 못 읽는다. 표지에서 필요한 것은 '무엇에 관한 편인가' 한 덩어리뿐이라 손으로 줄여 둔다. 여기에 없는 slug 는 일괄 적용에서 건너뛴다(주간결산 2편은 이미 그림에 큰 글씨가 박혀 있어 제외).",
-  "2026-07-08-find-your-game-taste": "게임 취향 찾기 5문답",
-  "2026-07-09-steam-indie-masterpieces": "스팀 인디 명작 6선",
-  "2026-07-10-free-pc-games-top5": "무료 PC 게임 TOP 5",
+  "2026-07-08-find-your-game-taste": {
+    "title": "게임 취향 찾기 5문답",
+    "align": "center",
+    "y": 0.8
+  },
+  "2026-07-09-steam-indie-masterpieces": {
+    "title": "스팀 인디 명작 6선",
+    "align": "center",
+    "y": 0.8
+  },
+  "2026-07-10-free-pc-games-top5": {
+    "title": "무료 PC 게임 TOP 5",
+    "align": "center",
+    "y": 0.8
+  },
   "2026-07-11-gta6-confirmed": "GTA 6",
-  "2026-07-11-how-to-pick-new-games": "신작 고르는 법",
+  "2026-07-11-how-to-pick-new-games": {
+    "title": "신작 고르는 법",
+    "align": "center",
+    "y": 0.8
+  },
   "2026-07-11-meccha-chameleon": "메챠 카멜레온",
   "2026-07-11-virtual-idol-beginner": "버추얼 아이돌 입문",
   "2026-07-11-vtuber-beginner-guide": "버튜버 입문 가이드",
   "2026-07-16-coop-games-recommend": "협동 게임 추천",
   "2026-07-16-digimon-up-announced": {
     "title": "디지몬 UP",
-    "align": "left",
+    "align": "center",
     "y": 0.8
   },
   "2026-07-16-free-games-epic-steam": "에픽·스팀 무료게임",
   "2026-07-16-lol-classic": "롤 클래식",
   "2026-07-16-low-spec-games": "저사양 명작 8선",
-  "2026-07-16-steam-refund-guide": "스팀 환불 가이드",
-  "2026-07-17-ea-fc26-world-cup-mode": "EA FC26 월드컵",
+  "2026-07-16-steam-refund-guide": {
+    "title": "스팀 환불 가이드",
+    "align": "left",
+    "y": 0.5
+  },
+  "2026-07-17-ea-fc26-world-cup-mode": {
+    "title": "EA FC26 월드컵",
+    "align": "right",
+    "y": 0.8
+  },
   "2026-07-18-pro-baseball-spirits-2026": "프로야구 스피리츠 2026",
   "2026-07-19-splatoon-raiders": {
     "title": "스플래툰 레이더스",
     "align": "right",
     "y": 0.8
   },
-  "2026-07-20-genshin-67-sandrone": "원신 6.7 산드로네",
+  "2026-07-20-genshin-67-sandrone": {
+    "title": "원신 6.7 산드로네",
+    "align": "center",
+    "y": 0.8
+  },
   "2026-07-20-nikke-summer-update": "니케 여름 업데이트",
   "2026-07-20-palworld-10": "팰월드 1.0",
   "2026-07-20-ragnarok-m-classic": "라그나로크M: 클래식",
@@ -33,7 +61,11 @@
   "2026-07-22-pathogenesis-cell-roguelike": "패서제닉",
   "2026-07-23-poe-allflame-curse": "패스 오브 엑자일",
   "2026-07-24-halo-campaign-evolved": "헤일로 캠페인 이볼브드",
-  "2026-07-25-assassins-creed-black-flag": "어쌔신 크리드4 블랙 플래그",
+  "2026-07-25-assassins-creed-black-flag": {
+    "title": "어쌔신 크리드4 블랙 플래그",
+    "align": "center",
+    "y": 0.8
+  },
   "2026-07-26-dragon-sword-awakening": "드래곤소드: 어웨이크닝",
   "2026-07-27-metal-gear-solid-delta-snake-eater": "메탈기어 솔리드 Δ",
   "2026-07-28-cyberpunk-2077": "사이버펑크 2077",
