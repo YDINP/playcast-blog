@@ -10,6 +10,7 @@ customThumb: true
 imageCredit:
   text: "© 각 게임사·기관 / P의 거짓 스위치2 출시: © www.wadiz.kr"
 host: "rosie"
+draft: true
 views: 0
 faq:
   - q: "오늘 가장 큰 소식은 뭐예요?"
@@ -47,10 +48,6 @@ scenes:
     image: "/games/scenes/2026-08-11-webtoon-ent-rigames-game-briefing-4.jpg"
     emotion: "happy"
     chapter: "P의 거짓 스위치2 출시"
-  - text: "**'스파이더맨: 브랜드 뉴 데이'**는 흥행 질주 중이라고 해요.
-**동시 접속자가 급증**했고, 업계는 신규 콘텐츠로 화답하고 있다고 알려졌어요."
-    emotion: "surprised"
-    chapter: "스파이더맨 브랜드 뉴 데이 흥행"
   - text: "**로블록스**는 계엄을 소재로 한 게임과 **확률형 아이템 논란**에 휩싸였어요.
 정부가 실태 파악에 착수한 것으로 알려졌고, 조치 내용은 이후 발표를 지켜봐야 해요."
     emotion: "think"
