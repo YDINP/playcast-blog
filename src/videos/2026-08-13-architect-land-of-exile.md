@@ -1,6 +1,6 @@
 ---
 title: "아키텍트: 랜드 오브 엑자일 — 심리스 대륙을 개척하다"
-description: "드림에이지가 서비스하고 아쿠아트리가 개발한 MMORPG로, 2025년 10월 22일 정식 출시됐어요. 심리스 월드 필드에서 보스와 몬스터를 사냥하고 특수 이동으로 대륙을 탐험할 수 있죠. 모바일로 나왔고 PC에서는 구글 플레이 게임즈를 통해 같은 계정으로 이어서 즐길 수 있어요."
+description: "드림에이지가 서비스하고 아쿠아트리가 개발한 MMORPG로, 2025년 10월 22일 정식 출시됐어요. 심리스 월드 필드에서 보스와 몬스터를 사냥하고 특수 이동으로 대륙을 탐험할 수 있죠. 모바일과 PC 클라이언트를 함께 지원해 같은 계정으로 이어서 즐길 수 있어요."
 pubDate: 2026-08-13
 category: "New"
 hook: "폰에서 하다 PC로 이어서"
@@ -26,7 +26,7 @@ faq:
   - q: "개발사와 서비스사는 어디인가요?"
     a: "아쿠아트리가 개발하고, 드림에이지가 서비스하고 있어요."
   - q: "PC에서도 할 수 있나요?"
-    a: "안드로이드·iOS 모바일 게임이고, PC에서는 별도 클라이언트 대신 구글 플레이 게임즈를 설치해서 실행하는 방식이에요. 같은 계정으로 이어서 할 수 있어요."
+    a: "네! 공식 사이트에서 PC 클라이언트를 받을 수 있고, 구글 플레이 게임즈로 실행하는 방법도 지원해요. 모바일은 안드로이드·iOS·원스토어로 나와 있어요."
   - q: "PC로 하려면 사양이 좋아야 하나요?"
     a: "PC 버전은 언리얼 엔진 5로 개발된 게임이라 전반적으로 요구 사양이 높은 편이라고 해요. 설치 전에 확인해 보시는 걸 추천드려요!"
 coupang:
@@ -37,7 +37,7 @@ coupang:
     desc: "모바일로 오래 플레이할 때 발열을 잡아줘요"
     url: "https://www.coupang.com/np/search?q=%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%8F%B0%20%EC%BF%A8%EB%A7%81%ED%8C%AC%20%EC%9E%90%EC%84%9D&src=1139000&spec=10799999&addtag=200&ctag=%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%8F%B0%20%EC%BF%A8%EB%A7%81%ED%8C%AC%20%EC%9E%90%EC%84%9D&lptag=AF7838146&pageType=SEARCH&pageValue=%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%8F%B0%20%EC%BF%A8%EB%A7%81%ED%8C%AC%20%EC%9E%90%EC%84%9D"
 scenes:
-  - text: "안녕하세요, **로지**예요! 오늘은 **2025년 10월 22일** 정식 출시된 신작 MMORPG, **아키텍트: 랜드 오브 엑자일**을 소개할게요."
+  - text: "안녕하세요, **로지**예요! 오늘은 **2025년 10월 22일** 정식 출시해서 지금도 업데이트가 이어지는 MMORPG, **아키텍트: 랜드 오브 엑자일**을 소개할게요."
     voice: "/voice/2026-08-13-architect-land-of-exile/00.mp3"
     image: "/games/scenes/2026-08-13-architect-land-of-exile-1.jpg"
     emotion: "happy"
@@ -57,7 +57,7 @@ scenes:
     image: "/games/scenes/2026-08-13-architect-land-of-exile-4.jpg"
     emotion: "happy"
     chapter: "사냥과 탐험"
-  - text: "**모바일 게임**이지만 PC에서도 즐길 수 있어요. 별도 PC 클라이언트 대신 **구글 플레이 게임즈**로 실행하는 방식이라, 밖에선 폰으로 집에선 PC로 **같은 계정**을 이어서 쓸 수 있죠."
+  - text: "**모바일과 PC**를 함께 지원해요. 공식 사이트에서 **PC 클라이언트**를 받을 수 있고 구글 플레이 게임즈로도 돌아가요. 밖에선 폰으로, 집에선 PC로 **같은 계정**을 이어서 쓸 수 있죠."
     voice: "/voice/2026-08-13-architect-land-of-exile/04.mp3"
     image: "/games/scenes/2026-08-13-architect-land-of-exile-5.jpg"
     emotion: "happy"
