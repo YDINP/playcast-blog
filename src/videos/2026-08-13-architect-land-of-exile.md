@@ -1,6 +1,6 @@
 ---
 title: "아키텍트: 랜드 오브 엑자일 — 심리스 대륙을 개척하다"
-description: "드림에이지가 서비스하고 아쿠아트리가 개발한 MMORPG로, 2025년 10월 22일 정식 출시됐어요. 심리스 월드 필드에서 보스와 몬스터를 사냥하고 특수 이동으로 대륙을 탐험할 수 있죠. 모바일과 PC로 동시 출시돼 크로스 플레이를 지원해요."
+description: "드림에이지가 서비스하고 아쿠아트리가 개발한 MMORPG로, 2025년 10월 22일 정식 출시됐어요. 심리스 월드 필드에서 보스와 몬스터를 사냥하고 특수 이동으로 대륙을 탐험할 수 있죠. 모바일로 나왔고 PC에서는 구글 플레이 게임즈를 통해 같은 계정으로 이어서 즐길 수 있어요."
 pubDate: 2026-08-13
 category: "New"
 hook: "폰에서 하다 PC로 이어서"
@@ -10,10 +10,12 @@ thumbnail: "/games/2026-08-13-architect-land-of-exile-thumb.jpg"
 customThumb: true
 imageCredit:
   text: "© 각 게임사·기관 (공식 이미지)"
-  url: "https://store.steampowered.com/app/3612060/"
+  url: "https://architect.drimage.com/main"
 officialLinks:
-  - label: "Steam 상점 페이지"
-    url: "https://store.steampowered.com/app/3612060/"
+  - label: "공식 사이트"
+    url: "https://architect.drimage.com/main"
+  - label: "Google Play"
+    url: "https://play.google.com/store/apps/details?id=com.hybeim.architect"
 host: "rosie"
 views: 0
 faq:
@@ -23,8 +25,8 @@ faq:
     a: "MMORPG예요. 필드가 심리스 월드로 구현돼서 이어진 대륙을 탐험할 수 있어요."
   - q: "개발사와 서비스사는 어디인가요?"
     a: "아쿠아트리가 개발하고, 드림에이지가 서비스하고 있어요."
-  - q: "모바일에서도 할 수 있나요?"
-    a: "네! 모바일과 PC로 동시 출시됐고, 크로스 플레이도 지원해요."
+  - q: "PC에서도 할 수 있나요?"
+    a: "안드로이드·iOS 모바일 게임이고, PC에서는 별도 클라이언트 대신 구글 플레이 게임즈를 설치해서 실행하는 방식이에요. 같은 계정으로 이어서 할 수 있어요."
   - q: "PC로 하려면 사양이 좋아야 하나요?"
     a: "PC 버전은 언리얼 엔진 5로 개발된 게임이라 전반적으로 요구 사양이 높은 편이라고 해요. 설치 전에 확인해 보시는 걸 추천드려요!"
 coupang:
@@ -55,7 +57,7 @@ scenes:
     image: "/games/scenes/2026-08-13-architect-land-of-exile-4.jpg"
     emotion: "happy"
     chapter: "사냥과 탐험"
-  - text: "**모바일과 PC 동시 출시**에, **크로스 플레이**까지 지원해요. 밖에선 폰으로, 집에선 PC로 **같은 캐릭터**를 이어서 즐길 수 있는 구조죠."
+  - text: "**모바일 게임**이지만 PC에서도 즐길 수 있어요. 별도 PC 클라이언트 대신 **구글 플레이 게임즈**로 실행하는 방식이라, 밖에선 폰으로 집에선 PC로 **같은 계정**을 이어서 쓸 수 있죠."
     voice: "/voice/2026-08-13-architect-land-of-exile/04.mp3"
     image: "/games/scenes/2026-08-13-architect-land-of-exile-5.jpg"
     emotion: "happy"
