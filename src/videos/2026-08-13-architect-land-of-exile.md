@@ -9,8 +9,8 @@ enName: "Architect: Land of Exile"
 thumbnail: "/games/2026-08-13-architect-land-of-exile-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 (공식 이미지)"
-  url: "https://architect.drimage.com/main"
+  text: "공식 스크린샷 6장 © DRIMAGE Co., Ltd / Google Play"
+  url: "https://play.google.com/store/apps/details?id=com.hybeim.architect"
 officialLinks:
   - label: "공식 사이트"
     url: "https://architect.drimage.com/main"
