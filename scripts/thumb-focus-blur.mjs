@@ -28,9 +28,9 @@ const args = Object.fromEntries(
   }, [])
 );
 
-const { in: input, out } = args;
+const { in: input, out, mask: maskPath } = args;
 if (!input || !out) {
-  console.error('usage: --in <img> --out <img> [--sigma 6] [--cx 0.72] [--cy 0.55] [--rx 0.34] [--ry 0.62] [--feather 0.72]');
+  console.error('usage: --in <img> --out <img> [--mask <silhouette.png>] [--sigma 6] [--cx 0.72] [--cy 0.55] [--rx 0.34] [--ry 0.62] [--feather 0.72]');
   process.exit(1);
 }
 
@@ -48,9 +48,24 @@ const meta = await sharp(srcBuf).metadata();
 const W = meta.width ?? 1280;
 const H = meta.height ?? 720;
 
-/* 깃털 마스크: 흰색(=원본 유지) 타원이 중심에서 feather 지점까지 꽉 차고,
-   거기서 바깥으로 알파가 0 까지 떨어진다. 경계가 딱 떨어지면 오려 붙인 티가 난다. */
-const mask = Buffer.from(`<svg width="${W}" height="${H}">
+/* 마스크 = "선명하게 남길 영역". 두 가지 방식이 있다.
+   ① --mask: 캐릭터 실루엣 알파(tools/thumb-subject-mask.py 가 rembg isnet-anime 로 뽑는다).
+      **이쪽이 기본이어야 한다** — 타원은 인물 주변 배경까지 선명하게 남겨 경계가 뜬다.
+      가장자리를 1px 흐려 계단을 없앤다(rembg 매트가 이미 반투명 경계를 주지만 리사이즈 때 각진다).
+   ② 타원 폴백: 마스크를 못 뽑는 그림(실사·다인물)에서 쓰는 근사. */
+let mask;
+if (maskPath) {
+  const m = sharp(readFileSync(maskPath)).resize(W, H, { fit: 'fill' }).blur(1.2);
+  // 그레이스케일 값을 알파로 옮긴다. 흰색(255)=원본 유지, 검정(0)=블러.
+  const gray = await m.greyscale().raw().toBuffer();
+  const rgba = Buffer.alloc(W * H * 4);
+  for (let i = 0; i < W * H; i++) {
+    rgba[i * 4] = 255; rgba[i * 4 + 1] = 255; rgba[i * 4 + 2] = 255;
+    rgba[i * 4 + 3] = gray[i];
+  }
+  mask = await sharp(rgba, { raw: { width: W, height: H, channels: 4 } }).png().toBuffer();
+} else {
+  mask = Buffer.from(`<svg width="${W}" height="${H}">
   <defs>
     <radialGradient id="g" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
@@ -61,6 +76,7 @@ const mask = Buffer.from(`<svg width="${W}" height="${H}">
   <ellipse cx="${Math.round(cx * W)}" cy="${Math.round(cy * H)}"
            rx="${Math.round(rx * W)}" ry="${Math.round(ry * H)}" fill="url(#g)"/>
 </svg>`);
+}
 
 // 원본을 마스크로 오려 낸다(dest-in = 알파만 남김).
 const focus = await sharp(srcBuf)
@@ -77,4 +93,8 @@ const result = await sharp(blurred)
   .toBuffer();
 
 await sharp(result).toFile(out);
-console.log(`✅ 배경 블러 sigma=${sigma} · 초점 타원 (${cx}, ${cy}) r=(${rx}, ${ry}) feather=${feather} → ${out}`);
+console.log(
+  maskPath
+    ? `✅ 배경 블러 sigma=${sigma} · 초점=캐릭터 실루엣(${maskPath}) → ${out}`
+    : `✅ 배경 블러 sigma=${sigma} · 초점 타원 (${cx}, ${cy}) r=(${rx}, ${ry}) feather=${feather} → ${out}`
+);
