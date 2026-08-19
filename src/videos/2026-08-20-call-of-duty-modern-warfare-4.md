@@ -74,4 +74,10 @@ scenes:
 
 인피니티 워드가 개발하고 액티비전이 배급하는 일인칭 슈팅 게임 「콜 오브 듀티: 모던 워페어 4」가 2026년 10월 23일 출시됩니다. 닌텐도 스위치 2, 플레이스테이션 5, 윈도우, 엑스박스 시리즈 X/S로 동시에 나와요. 알려진 정보를 로지가 차분히 정리해 드립니다.
 
+
+**참고 자료**
+
+- [콜 오브 듀티: 모던 워페어 4 발표 — Call of Duty 공식 블로그](https://www.callofduty.com/ko/blog/2026/05/call-of-duty-modern-warfare-4-announcement)
+- [모든 게임 에디션 및 예약 구매 혜택 — Call of Duty 공식 블로그](https://www.callofduty.com/ko/blog/2026/05/call-of-duty-modern-warfare-4-preorder-benefits-game-editions-details)
+
 *(이미지는 각 게임사·기관의 공식 스크린샷·홍보 이미지만 사용했습니다.)*
