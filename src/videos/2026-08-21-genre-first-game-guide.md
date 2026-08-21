@@ -4,9 +4,11 @@ description: "무슨 게임부터 할지 막막하다면 장르부터 고르세�
 pubDate: 2026-08-21
 category: "Guide"
 tags: ["게임입문", "장르별게임", "게임추천", "입문게임", "첫게임"]
-thumbnail: "/games/scenes/genre-guide-open.jpg"
-customThumb: false
+thumbnail: "/games/genre-guide-thumb.jpg"
+customThumb: true
 host: "rosie"
+imageCredit:
+  text: "각 게임 씬은 공식 스크린샷(© 각 게임사, Steam), 표지·오프닝·연출 이미지는 자체 제작"
 views: 0
 coupang:
   - title: "무선 게임패드(컨트롤러)"
@@ -72,9 +74,11 @@ scenes:
     chapter: "고르는 법"
   - text: "장르만 정하면 첫 게임은 어렵지 않아요. 무료로 맛보거나 스팀 데모와 환불로 부담 없이 시작해 보세요. 오늘 내 취향의 첫 게임, 꼭 찾으시길 바라요. 로지였습니다."
     voice: "/voice/genre-first-game-guide/07.mp3"
-    image: "/games/scenes/genre-guide-close.jpg"
+    image: "/games/genre-guide-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
 ---
 
 게임 입문이 막막하다면 게임이 아니라 장르부터 고르세요. 스토리(RPG·발더스 게이트 3), 자유로운 탐험(오픈월드 액션·엘든 링), 빠른 경쟁(FPS·오버워치 2), 느긋한 관리(인생시뮬·심즈 4), 직관적인 손맛(레이싱·포르자 호라이즌 5)까지 장르별 대표 입문작을 한 편씩 골랐습니다. 사양이 부담되면 저사양 명작 편을 먼저 참고하고, 구매 전 스팀 시스템 요구사항과 데모·환불을 활용하세요.
+
+*(각 게임 장면 이미지는 해당 게임의 공식 스크린샷을 사용했습니다. © 각 게임사·Steam. 표지·오프닝·연출 이미지는 자체 제작.)*
