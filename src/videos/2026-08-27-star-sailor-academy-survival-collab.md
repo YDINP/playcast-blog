@@ -8,7 +8,8 @@ tags: ["스타 세일러", "아카데미에서 살아남기", "컬래버레이�
 thumbnail: "/games/2026-08-27-star-sailor-academy-survival-collab-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "이미지 6장은 게임 화면이 아니라 분위기를 옮긴 AI 생성 컨셉아트"
+  text: "© Com2uS Holdings — 스타 세일러 공식 스크린샷(App Store 게재분)"
+  url: "https://apps.apple.com/kr/app/id6749404408"
 host: "rosie"
 views: 0
 faq:
@@ -69,6 +70,6 @@ scenes:
 
 컴투스홀딩스의 RPG '스타 세일러'에 네이버웹툰 인기작 '아카데미에서 살아남기' 컬래버레이션 업데이트가 진행됐어요. 인기 캐릭터 루시 메이릴이 3성 동료로 합류하고, 서사를 담은 전용 메모리피스와 '예니카' 스킨도 함께 나왔습니다.
 
-*(스타 세일러는 모바일 게임이라 공식 스크린샷을 받아 올 수 없어, 이 글의 이미지 6장은 게임 화면이 아니라 분위기를 옮긴 AI 생성 컨셉아트입니다. 실제 게임 화면은 공식 채널에서 확인해 주세요.)*
+*(씬 이미지는 컴투스홀딩스가 App Store에 게재한 스타 세일러 공식 스크린샷입니다. © Com2uS Holdings)*
 
 > 근거: [「스타 세일러」, 웹툰 「아카데미에서 살아남기」와 콜라보레이션 — 경향게임스](https://www.khgames.co.kr/news/articleView.html?idxno=307748)
