@@ -291,7 +291,13 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
     <!-- Pageview tracking (VIP → 공용 analytics, ai-revenue 대시보드 집계) -->
     <script is:inline>
       (function () {
-        var ANALYTICS_URL = 'https://xyprbsmagtlzebxyxsvj.supabase.co/functions/v1/analytics-ingest';
+        /* ⚠️ 2026-08-28: Edge Function(analytics-ingest) 우회.
+         *    그 함수가 HTTP 200 {"success":true} 를 주면서 INSERT 를 하지 않는 상태가 됐다.
+         *    VIP 는 GA4 속성이 없어 이 트래커가 유일한 집계 경로라, 08-25 이후 방문이 통째로
+         *    기록되지 않았다(뭉게는 GA4 폴백이라도 있었다). PostgREST 직접 INSERT 로 바꾼다 —
+         *    같은 파일 아래 조회수 표시가 이미 쓰는 경로이고 ANON 은 이 페이지의 공개키다. */
+        var ANALYTICS_URL = 'https://xyprbsmagtlzebxyxsvj.supabase.co/rest/v1/analytics';
+        var ANON_ING = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5cHJic21hZ3RsemVieHl4c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NjY4NTQsImV4cCI6MjA4NjA0Mjg1NH0.dajN0n0IWzOgYOSCglxVLzddg7jJFRHNCHwTWMG62uU';
         var NOTRACK_KEY = '__notrack';
         // 관리자 opt-out: ?admin=1 한 번 접속 시 이 브라우저는 이후 집계 제외 (?admin=0 해제)
         try {
@@ -313,7 +319,12 @@ const allSchemas = [websiteSchema, organizationSchema, ...schemas];
         var qs = new URLSearchParams(window.location.search);
         fetch(ANALYTICS_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: ANON_ING,
+            Authorization: 'Bearer ' + ANON_ING,
+            Prefer: 'return=minimal'
+          },
           body: JSON.stringify({
             event_type: 'pageview',
             source: 'vip',
