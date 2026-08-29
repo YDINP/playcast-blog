@@ -9,7 +9,7 @@ enName: "Overwatch"
 thumbnail: "/games/2026-08-29-overwatch-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "씬 이미지 4장은 넥슨·블리자드가 배포한 오버워치 시즌4·신규 영웅 D.Mon 공식 이미지, 2장은 2014년 개발 이야기를 옮긴 자체 제작 이미지입니다"
+  text: "씬 이미지는 넥슨·블리자드가 배포한 오버워치 공식 이미지입니다 © Blizzard Entertainment"
   url: "https://store.steampowered.com/app/1749290/"
 officialLinks:
   - label: "Steam 상점 페이지"
@@ -74,4 +74,4 @@ scenes:
 
 블리자드 엔터테인먼트가 만든 팀 기반 1인칭 슈팅 게임 오버워치를 소개해요. 두 팀으로 나뉘어 각자 고유한 능력을 가진 '영웅'을 골라 맵마다 주어진 목표를 놓고 겨루는 '영웅 슈터'예요. 취소된 프로젝트 타이탄에서 시작해 약 1년 만에 누적 매출 10억 달러를 넘긴 이야기까지 담았어요.
 
-*(씬 이미지 4장은 넥슨·블리자드가 시즌4 「부산의 영웅들」과 신규 영웅 D.Mon 공개 때 배포한 공식 이미지입니다. 2014년 개발 이야기를 다룬 2장은 해당 시점의 공식 이미지를 구할 수 없어 자체 제작했습니다.)*
+*(씬 이미지는 넥슨·블리자드가 배포한 오버워치 공식 이미지입니다. © Blizzard Entertainment)*
