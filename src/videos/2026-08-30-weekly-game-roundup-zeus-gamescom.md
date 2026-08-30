@@ -21,7 +21,7 @@ faq:
   - q: "게임스컴에는 어떤 국내 회사들이 나왔어요?"
     a: "크래프톤과 엔씨가 신작을 공개했고, 펄어비스는 붉은사막 확장 소식을 전했어요."
   - q: "PC방 1위는 여전히 롤인가요?"
-    a: "네, 리그 오브 레전드가 32.82%로 1위예요. 2위 발로란트가 10.14%니까 격차가 꽤 큰 편이에요."
+    a: "네, 게임트릭스 집계 기준 리그 오브 레전드가 32.82%로 1위예요. 2위 발로란트가 10.14%니까 격차가 꽤 큰 편이에요."
 coupang:
   - title: "게이밍 마우스"
     desc: "롤·발로란트처럼 PC방 상위 게임을 집에서 오래 하려면 손에 맞는 마우스가 제일 먼저예요."
@@ -166,7 +166,7 @@ scenes:
     emotion: "happy"
     chapter: "아시안게임 e스포츠 국가대표 출정"
     subject: "아시안게임 e스포츠 국가대표"
-  - text: "스팀 한국 판매순위는 **붉은사막 인핸스드가 1위**를 차지했어요. 인핸스드 버전 출시 효과가 그대로 나타났네요."
+  - text: "스팀 한국 인기 순위에서는 **붉은사막 인핸스드가 유료 게임 가운데 선두권**에 올랐어요. 인핸스드 버전 출시 효과가 그대로 나타났네요. 순위는 주중에도 계속 움직이니 참고만 해 주세요."
     voice: "/voice/2026-08-30-weekly-game-roundup-zeus-gamescom/13.mp3"
     image: "/games/scenes/2026-08-30-weekly-game-roundup-zeus-gamescom-14.jpg"
     emotion: "happy"
@@ -174,13 +174,13 @@ scenes:
     subject: "붉은사막 Enhanced"
     card:
       kind: "points"
-      head: "스팀 판매순위"
+      head: "스팀 인기순위(무료 게임 제외)"
       items:
         - "1 붉은사막 Enhanced"
         - "2 낚시 방법"
         - "3 팰월드"
         - "4 세피리아"
-  - text: "PC방은 **리그 오브 레전드가 32.82%**로 1위를 지켰어요. 서든어택은 21주년을 맞아 반등하며 6위에 올랐습니다."
+  - text: "게임트릭스 집계 기준 PC방은 **리그 오브 레전드가 32.82%**로 1위를 지켰어요. 서든어택은 21주년을 맞아 반등하며 6위에 올랐습니다."
     voice: "/voice/2026-08-30-weekly-game-roundup-zeus-gamescom/14.mp3"
     image: "/games/scenes/2026-08-30-weekly-game-roundup-zeus-gamescom-15.jpg"
     emotion: "idle"
@@ -188,7 +188,7 @@ scenes:
     subject: "리그 오브 레전드"
     card:
       kind: "points"
-      head: "PC방 점유율"
+      head: "PC방 점유율(게임트릭스)"
       items:
         - "1 리그 오브 레전드 32.82%"
         - "2 발로란트 10.14%"
