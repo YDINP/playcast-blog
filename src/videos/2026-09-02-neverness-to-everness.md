@@ -3,7 +3,7 @@ title: "이환 — 잠들지 않는 도시의 무면허 이상 헌터"
 description: "타워 오브 판타지를 만든 Hotta Studio의 신작, 서브컬처 초자연 어반 판타지 오픈월드 RPG 「이환」입니다. 플레이어는 잠들지 않는 도시 헤테로 시티에서 첫 번째 무면허 이상 헌터가 되어 도시를 누비게 돼요. 2026년 4월 29일 정식 출시됐고 스팀에는 7월 7일 합류해, 지금 무료로 받아 바로 플레이할 수 있습니다."
 pubDate: 2026-09-02
 category: "New"
-hook: "잠들지 않는 도시, 무면허 괴이 사냥꾼"
+hook: "잠들지 않는 도시, 무면허 이상 헌터"
 tags: ["이환", "Neverness to Everness", "오픈월드", "서브컬처", "어반 판타지", "Hotta Studio"]
 enName: "Neverness to Everness"
 thumbnail: "/games/2026-09-02-neverness-to-everness-thumb.jpg"
