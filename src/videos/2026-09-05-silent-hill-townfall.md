@@ -1,0 +1,76 @@
+---
+title: "사일런트 힐: 타운폴 — 안개 속 섬으로 돌아가는 서바이벌 호러"
+description: "스크린 번 인터랙티브가 개발하고 안나푸르나 인터랙티브와 코나미 디지털 엔터테인먼트가 배급하는 서바이벌 호러 신작이에요. 주인공 사이먼 오델이 세인트 아멜리아 섬으로 돌아와 안개에 삼켜진 거리와 해안선을 탐험하며 조각난 단서를 따라갑니다. 2026년 플레이스테이션 5와 윈도우로 출시 예정이에요."
+pubDate: 2026-09-05
+category: "New"
+hook: "안개 낀 섬, 돌아오라는 부탁 한 통"
+tags: ["사일런트힐", "서바이벌호러", "심리공포", "PS5", "PC", "신작"]
+enName: "SILENT HILL: Townfall"
+thumbnail: "/games/scenes/2026-09-05-silent-hill-townfall-1.jpg"
+imageCredit:
+  text: "공식 스크린샷 6장 © 게임사 / Steam"
+  url: "https://store.steampowered.com/app/1636440/"
+officialLinks:
+  - label: "Steam 상점 페이지"
+    url: "https://store.steampowered.com/app/1636440/"
+host: "rosie"
+views: 0
+faq:
+  - q: "어떤 장르의 게임인가요?"
+    a: "서바이벌 호러예요. 안개에 잠긴 섬을 탐험하면서 단서를 따라가는 방식이라고 소개되고 있어요."
+  - q: "어느 플랫폼에서 할 수 있나요?"
+    a: "플레이스테이션 5와 윈도우로 출시될 예정이에요. 다른 플랫폼은 아직 안내된 내용이 없어요."
+  - q: "언제 나오나요?"
+    a: "2026년 출시 예정이에요. 정확한 날짜는 공식 발표를 확인하시는 게 가장 정확해요."
+  - q: "누가 만들었나요?"
+    a: "스크린 번 인터랙티브가 개발했고, 배급은 안나푸르나 인터랙티브와 코나미 디지털 엔터테인먼트가 맡았어요."
+  - q: "주인공은 누구인가요?"
+    a: "사이먼 오델이에요. 함께 문제를 바로잡아 달라는 부탁을 받고 세인트 아멜리아 섬으로 돌아오는 인물이에요."
+coupang:
+  - title: "게이밍 헤드셋"
+    desc: "호러 게임은 소리가 절반이에요. 발소리와 환경음까지 잡아주면 몰입감이 확 달라져요."
+    url: "https://www.coupang.com/np/search?q=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&src=1139000&spec=10799999&addtag=200&ctag=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B&lptag=AF7838146&pageType=SEARCH&pageValue=%EA%B2%8C%EC%9D%B4%EB%B0%8D%20%ED%97%A4%EB%93%9C%EC%85%8B"
+  - title: "PS5 듀얼센스 무선 컨트롤러"
+    desc: "PS5로 즐기실 분께. 여분 컨트롤러 하나 있으면 배터리 걱정 없이 길게 플레이할 수 있어요."
+    url: "https://www.coupang.com/np/search?q=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&src=1139000&spec=10799999&addtag=200&ctag=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC&lptag=AF7838146&pageType=SEARCH&pageValue=PS5%20%EB%93%80%EC%96%BC%EC%84%BC%EC%8A%A4%20%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"
+scenes:
+  - text: "안녕하세요, **로지**예요! 오늘은 안개 자욱한 섬으로 우리를 데려갈 신작, **사일런트 힐: 타운폴**을 만나볼게요."
+    voice: "/voice/2026-09-05-silent-hill-townfall/00.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-3.jpg"
+    emotion: "happy"
+    chapter: "오프닝"
+  - text: "이 게임은 **서바이벌 호러**예요. **스크린 번 인터랙티브**가 개발하고, **안나푸르나 인터랙티브**와 **코나미 디지털 엔터테인먼트**가 배급을 맡았어요."
+    voice: "/voice/2026-09-05-silent-hill-townfall/01.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-6.jpg"
+    emotion: "idle"
+    chapter: "어떤 게임"
+  - text: "주인공은 **사이먼 오델**이에요. 함께 문제를 바로잡아 달라는 부탁을 받고 **세인트 아멜리아 섬**으로 돌아오게 되죠."
+    voice: "/voice/2026-09-05-silent-hill-townfall/02.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-1.jpg"
+    emotion: "think"
+    chapter: "주인공"
+  - text: "플레이어는 **안개에 삼켜진 거리와 해안선**을 탐험하게 돼요. 눈앞이 뿌옇게 가려진 길을 한 걸음씩 나아가는 그림이 그려지시죠?"
+    voice: "/voice/2026-09-05-silent-hill-townfall/03.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-2.jpg"
+    emotion: "surprised"
+    chapter: "안개의 섬"
+  - text: "**조각난 단서**를 따라가면서, 나와 마을과 예전 주민들을 얽어매는 불안의 정체를 하나씩 맞춰 나가는 구조예요."
+    voice: "/voice/2026-09-05-silent-hill-townfall/04.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-4.jpg"
+    emotion: "think"
+    chapter: "단서 추적"
+  - text: "출시는 **2026년**, 플랫폼은 **플레이스테이션 5**와 **윈도우** 두 가지예요. 호러 좋아하시는 분이라면 위시리스트에 담아두기 좋겠어요!"
+    voice: "/voice/2026-09-05-silent-hill-townfall/05.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-5.jpg"
+    emotion: "happy"
+    chapter: "출시 정보"
+  - text: "안개 너머에 뭐가 있을지, 저도 벌써 궁금해지네요. **로지**였습니다."
+    voice: "/voice/2026-09-05-silent-hill-townfall/06.mp3"
+    image: "/games/scenes/2026-09-05-silent-hill-townfall-1.jpg"
+    emotion: "happy"
+    chapter: "엔딩"
+---
+
+스크린 번 인터랙티브가 개발하고 안나푸르나 인터랙티브와 코나미 디지털 엔터테인먼트가 배급하는 서바이벌 호러 신작이에요. 주인공 사이먼 오델이 세인트 아멜리아 섬으로 돌아와 안개에 삼켜진 거리와 해안선을 탐험하며 조각난 단서를 따라갑니다. 2026년 플레이스테이션 5와 윈도우로 출시 예정이에요.
+
+*(이미지는 각 게임사·기관의 공식 스크린샷·홍보 이미지만 사용했습니다.)*
