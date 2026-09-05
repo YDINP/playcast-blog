@@ -6,7 +6,8 @@ category: "New"
 hook: "돌아오라는 부탁, 안개뿐인 섬"
 tags: ["사일런트힐", "서바이벌호러", "심리공포", "PS5", "PC신작", "2026신작"]
 enName: "SILENT HILL: Townfall"
-thumbnail: "/games/scenes/2026-09-05-silent-hill-townfall-1.jpg"
+thumbnail: "/games/2026-09-05-silent-hill-townfall-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "공식 스크린샷 6장 © 게임사 / Steam"
   url: "https://store.steampowered.com/app/1636440/"
