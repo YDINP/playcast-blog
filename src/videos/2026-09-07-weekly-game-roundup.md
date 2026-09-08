@@ -8,7 +8,7 @@ tags: ["주간결산", "게임뉴스", "신작출시", "도쿄게임쇼", "스�
 thumbnail: "/games/2026-09-07-weekly-game-roundup-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 / 우리은행 아시안게임 적금: © Woori Bank / Steam · 포토그레이 국가대표 프레임: © Apr Co., Ltd. / Steam · 넷마블 도쿄게임쇼 신작 3종: © Netmarble Corporation / Steam · 도깨비의세계 쇼케이스 예고: © Kakao Games Corp. / Steam · 스페셜포스 리마스터 사전예약: © DRAGONFLY GF CO., LTD. / Steam · 5민랩 WPCA 첫 공개: © job.incruit.com · 귀혼키우기 사전예약 80만: © MGAME Corp. / Steam · 트럼프 게임 논란: © www.koreancenter.or.kr · SOOP e스포츠 페이지 개편: © SOOP Co., Ltd. / Steam · NHN플레이아트 8년 만의 TGS: © www.nhn.com · 웹젠 신작 게임명 확정: © WEBZEN INC. / Steam · 구로구 청소년 e스포츠 슈퍼컵: © festival.seoul.go.kr · 스팀 한국 판매순위: © store.nintendo.co.kr · PC방 점유율 순위: © Riot Games / Steam"
+  text: "© 각 게임사·기관 / 달려라 헤베레케 EX: © CRT GAMES · GRAVITY / Steam · 우리은행 아시안게임 적금: © Woori Bank / Steam · 포토그레이 국가대표 프레임: © Apr Co., Ltd. / Steam · 넷마블 도쿄게임쇼 신작 3종: © Netmarble Corporation / Steam · 도깨비의세계 쇼케이스 예고: © Kakao Games Corp. / Steam · 스페셜포스 리마스터 사전예약: © DRAGONFLY GF CO., LTD. / Steam · 5민랩 WPCA 첫 공개: © job.incruit.com · 귀혼키우기 사전예약 80만: © MGAME Corp. / Steam · 트럼프 게임 논란: © www.koreancenter.or.kr · SOOP e스포츠 페이지 개편: © SOOP Co., Ltd. / Steam · NHN플레이아트 8년 만의 TGS: © www.nhn.com · 웹젠 신작 게임명 확정: © WEBZEN INC. / Steam · 구로구 청소년 e스포츠 슈퍼컵: © festival.seoul.go.kr · 스팀 한국 판매순위: © store.nintendo.co.kr · PC방 점유율 순위: © Riot Games / Steam"
 host: "rosie"
 views: 0
 faq:
@@ -56,6 +56,7 @@ scenes:
       sub: "신작·서비스 소식"
   - text: "그라비티가 레이싱 신작 **‘달려라 헤베레케: EX’**를 글로벌 출시했어요. PC·콘솔 라인업을 강화하는 카드예요."
     voice: "/voice/2026-09-07-weekly-game-roundup/02.mp3"
+    image: "/games/scenes/2026-09-07-weekly-game-roundup-3.jpg"
     emotion: "happy"
     chapter: "달려라 헤베레케: EX 출시"
     subject: "달려라 헤베레케: EX"
@@ -124,6 +125,11 @@ scenes:
     emotion: "think"
     chapter: "이민성 감독 출사표"
     subject: "이민성 감독"
+    card:
+      kind: "stat"
+      big: "금메달"
+      label: "아시안게임 목표"
+      sub: "탈락 논란에 답하다"
   - text: "SOOP이 **e스포츠 페이지를 전면 개편**했어요. 콘텐츠 탐색과 참여 기능을 강화했다고 해요."
     voice: "/voice/2026-09-07-weekly-game-roundup/11.mp3"
     image: "/games/scenes/2026-09-07-weekly-game-roundup-12.jpg"
