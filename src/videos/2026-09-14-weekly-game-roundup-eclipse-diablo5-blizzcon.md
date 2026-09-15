@@ -9,6 +9,15 @@ thumbnail: "/games/2026-09-14-weekly-game-roundup-eclipse-diablo5-blizzcon-thumb
 customThumb: true
 imageCredit:
   text: "© 각 게임사·기관 / 이클립스 정식 출시: © Smilegate, Inc. / Steam · 템빨 티저 공개: © temppal.nexon.com · 블리즈컨 신작 공개: © Blizzard Entertainment, Inc. / Steam · 픽셀 테이머즈 1위: © Return Pixel Co., Ltd. / Steam · 도깨비의세계 출시일: © Kakao Games Corp. / Steam · 이클립스 매출 10위: © Smilegate, Inc. / Steam · 메이플 키우기 사전등록: © NEXON Company / Steam · 도쿄게임쇼 2026 예고: © tgs.cesa.or.jp · 리니지 클래식 아덴: © Masangsoft, Inc. / Steam · GTA6 가상 외도 논란: © Akif Ulu / Steam · 전현무 아시안게임 중계: © www.mbn.co.kr · 넷마블 TGS 신작 3종: © Netmarble Corporation / Steam · 피망 X 타짜 협업: © NEOWIZ / Steam · 젠지 LCK 2연패: © OP.GG / Steam · 데이브 1000만 장: © Mintrocket / Steam · 스팀 판매순위: © BULKHEAD / Steam · PC방 점유율 순위: © Riot Games / Steam"
+officialLinks:
+  - label: "2연속 우승, 2026 LCK 주인공은 젠지 (게임메카)"
+    url: "https://www.gamemeca.com/view.php?gid=1780411"
+  - label: "돌아온 호랑이 젠지, 한화생명 꺾고 2년 연속 LCK 우승 (플레이포럼)"
+    url: "https://www.playforum.net/news/articleView.html?idxno=635340"
+  - label: "블리즈컨 2026 발표 총정리 — 디아블로5·스타크래프트 오픈월드 슈팅 (GamesRadar+)"
+    url: "https://www.gamesradar.com/news/live/blizzcon-2026-everything-announced/"
+  - label: "도쿄게임쇼 2026 공식 — 9월 17~21일 마쿠하리 멧세(아직 개최 전)"
+    url: "https://tgs.cesa.or.jp/"
 host: "rosie"
 views: 0
 faq:
@@ -19,7 +28,7 @@ faq:
   - q: "곧 나오는 기대작은 뭐가 있나요?"
     a: "카카오게임즈 '도깨비의세계'가 10월 8일에 정식 출시돼요. 넥슨 '메이플 키우기'도 글로벌 사전등록을 진행한다고 알려졌어요."
   - q: "도쿄게임쇼 2026에서는 뭘 볼 수 있나요?"
-    a: "넷마블이 신작 3종을 공개하고 시연과 무대 행사를 연대요. 17일에 신작 정보를 푼다고 해요. 국내 서브컬처 게임들의 각축전도 예고됐어요."
+    a: "도쿄게임쇼 2026은 9월 17일부터 21일까지 마쿠하리 멧세에서 열려요. 넷마블이 신작 3종을 공개하고 시연과 무대 행사를 연대요. 17일에 신작 정보를 푼다고 해요. 국내 서브컬처 게임들의 각축전도 예고됐어요."
   - q: "LCK 결승은 누가 우승했나요?"
     a: "9월 13일 KSPO 돔 결승에서 젠지가 한화생명을 3대1로 꺾고 LCK 2연패를 달성했어요. 통산 7번째 우승이고 파이널 MVP는 룰러였어요."
 coupang:
@@ -108,11 +117,11 @@ scenes:
     emotion: "idle"
     chapter: "메이플 키우기 사전등록"
     subject: "넥슨"
-  - text: "**도쿄게임쇼 2026** 비즈니스 데이 사전등록이 시작됐고 기조강연도 공개됐어요. 국내 서브컬처 각축전도 예고됐어요."
+  - text: "**9월 17일부터 21일까지** 열리는 **도쿄게임쇼 2026**, 비즈니스 데이 사전등록이 시작됐고 기조강연도 공개됐어요. 국내 서브컬처 각축전도 예고됐고요."
     voice: "/voice/2026-09-14-weekly-game-roundup-eclipse-diablo5-blizzcon/08.mp3"
     image: "/games/scenes/2026-09-14-weekly-game-roundup-eclipse-diablo5-blizzcon-9.jpg"
     emotion: "think"
-    chapter: "도쿄게임쇼 2026 예고"
+    chapter: "도쿄게임쇼 2026 (9/17~21)"
     subject: "도쿄게임쇼 2026"
   - text: "엔씨 **'리니지 클래식'**이 신규 에피소드 **'아덴'** 사전예약을 시작했어요. 업데이트는 **16일**이에요."
     voice: "/voice/2026-09-14-weekly-game-roundup-eclipse-diablo5-blizzcon/09.mp3"
