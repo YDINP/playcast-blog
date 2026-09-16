@@ -1,6 +1,6 @@
 ---
 title: "짱구는 못말려 — 끝나지 않는 7일간의 여름방학"
-description: "국민 애니 《짱구는 못말려》가 닌텐도 스위치 어드벤처로 찾아왔어요. 개발사는 네오스, 닌텐도가 제공하며 2021년 7월 15일 일본 출시, 한국어판은 2022년 5월 4일에 나왔습니다. 전체 이용가라 온 가족이 같이 즐길 수 있는 작품이에요."
+description: "국민 애니 《짱구는 못말려》가 닌텐도 스위치 어드벤처로 찾아왔어요. 네오스·밀레니엄 키친·스타 팩토리가 함께 만들었고 2021년 7월 15일 일본 출시, 한국어판은 2022년 5월 4일에 나왔습니다. 전체 이용가라 온 가족이 같이 즐길 수 있는 작품이에요."
 pubDate: 2026-09-16
 category: "Guide"
 hook: "끝나지 않는 여름, 7일을 다시 산다"
@@ -12,13 +12,15 @@ imageCredit:
   text: "공식 스크린샷 6장 © 게임사 / Steam"
   url: "https://store.steampowered.com/app/2061250/"
 officialLinks:
+  - label: "Shin-chan: Me and the Professor on Summer Vacation — Wikipedia (공동 개발·아야베 카즈)"
+    url: "https://en.wikipedia.org/wiki/Shin-chan:_Me_and_the_Professor_on_Summer_Vacation"
   - label: "Steam 상점 페이지"
     url: "https://store.steampowered.com/app/2061250/"
 host: "rosie"
 views: 0
 faq:
   - q: "《나와 박사의 여름방학 ~끝나지 않는 7일간의 여행~》은 어떤 장르예요?"
-    a: "어드벤처 게임이에요. 제작사는 네오스, 제공은 닌텐도랍니다."
+    a: "어드벤처 게임이에요. 네오스·밀레니엄 키친·스타 팩토리가 함께 만들었고, 기획과 각본은 「나의 여름방학」 시리즈를 만든 아야베 카즈가 맡았어요. 그래서 그 시리즈의 정신적 후속작으로도 불린답니다."
   - q: "어떤 기기로 할 수 있어요?"
     a: "닌텐도 스위치로 즐기실 수 있어요. 2021년 7월 15일에 출시됐답니다."
   - q: "한국어로 플레이할 수 있나요?"
@@ -45,7 +47,7 @@ scenes:
     image: "/games/scenes/2026-09-16-shin-chan-me-and-the-professor-on-summer-vacation-3.jpg"
     emotion: "think"
     chapter: "30년 연대기"
-  - text: "오늘의 주인공은 **《짱구는 못말려 나와 박사의 여름방학 ~끝나지 않는 7일간의 여행~》**이에요. 장르는 **어드벤처**, 제작은 **네오스**, 제공은 **닌텐도**랍니다."
+  - text: "오늘의 주인공은 **《짱구는 못말려 나와 박사의 여름방학 ~끝나지 않는 7일간의 여행~》**이에요. 장르는 **어드벤처**, 제작은 **네오스·밀레니엄 키친·스타 팩토리**, 제공은 **닌텐도**랍니다."
     voice: "/voice/2026-09-16-shin-chan-me-and-the-professor-on-summer-vacation/02.mp3"
     image: "/games/scenes/2026-09-16-shin-chan-me-and-the-professor-on-summer-vacation-2.jpg"
     emotion: "happy"
@@ -72,6 +74,6 @@ scenes:
     chapter: "엔딩"
 ---
 
-국민 애니 《짱구는 못말려》가 닌텐도 스위치 어드벤처로 찾아왔어요. 개발사는 네오스, 닌텐도가 제공하며 2021년 7월 15일 일본 출시, 한국어판은 2022년 5월 4일에 나왔습니다. 전체 이용가라 온 가족이 같이 즐길 수 있는 작품이에요.
+국민 애니 《짱구는 못말려》가 닌텐도 스위치 어드벤처로 찾아왔어요. 네오스·밀레니엄 키친·스타 팩토리가 함께 만들었고 2021년 7월 15일 일본 출시, 한국어판은 2022년 5월 4일에 나왔습니다. 전체 이용가라 온 가족이 같이 즐길 수 있는 작품이에요.
 
 *(이미지는 각 게임사·기관의 공식 스크린샷·홍보 이미지만 사용했습니다.)*
