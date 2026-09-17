@@ -12,8 +12,12 @@ imageCredit:
   text: "공식 스크린샷 6장 © 게임사 / Steam"
   url: "https://store.steampowered.com/app/4810600/"
 officialLinks:
-  - label: "Steam 상점 페이지"
+  - label: "Steam 상점 페이지 (Crooky The Game · appid 4810600)"
     url: "https://store.steampowered.com/app/4810600/"
+  - label: "Steam 공식 데이터 — 개발사 Ramski Games · 장르 어드벤처/인디/RPG · 출시 예정 · 무료 데모"
+    url: "https://store.steampowered.com/api/appdetails?appids=4810600&l=korean"
+  - label: "무료 데모 (appid 5058300)"
+    url: "https://store.steampowered.com/app/5058300/"
 host: "rosie"
 views: 0
 faq:
