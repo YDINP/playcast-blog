@@ -12,8 +12,10 @@ imageCredit:
   text: "공식 스크린샷 6장 © 게임사 / Steam"
   url: "https://store.steampowered.com/app/1374490/"
 officialLinks:
-  - label: "Steam 상점 페이지"
+  - label: "Steam 상점 페이지 (appid 1374490)"
     url: "https://store.steampowered.com/app/1374490/"
+  - label: "Steam 공식 데이터 — 정가 32,000원(할인 0%) · 출시 2026년 9월 15일"
+    url: "https://store.steampowered.com/api/appdetails?appids=1374490&l=korean&cc=kr"
 host: "rosie"
 views: 0
 faq:
