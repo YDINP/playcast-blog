@@ -1,6 +1,6 @@
 ---
-title: "에픽세븐 — 손으로 그린 애니메이션이 싸우는 턴제 RPG"
-description: "모바일에서 시작해 2018년부터 이어져 온 수집형 턴제 RPG '에픽세븐'이 2026년 스팀으로 옵니다. 풀 프레임 2D 애니메이션 컷신과 속성 상성·스킬 조합을 짜는 턴제 전투, 그리고 밴픽으로 시작하는 실시간 PvP까지. PC판은 무료로 공개될 예정이에요."
+title: "에픽세븐 — 2D 애니메이션으로 싸우는 턴제 RPG"
+description: "모바일에서 시작해 2018년부터 이어져 온 수집형 턴제 RPG '에픽세븐'이 2026년 스팀으로 옵니다. 2D 애니메이션 컷신과 속성 상성·스킬 조합을 짜는 턴제 전투, 그리고 밴픽으로 시작하는 실시간 PvP까지. PC판은 무료로 공개될 예정이에요."
 pubDate: 2026-09-18
 category: "New"
 hook: "PC로 넘어오는 수채화 애니 RPG"
@@ -12,8 +12,10 @@ imageCredit:
   text: "공식 스크린샷 6장 © Smilegate, Inc. / Google Play"
   url: "https://store.steampowered.com/app/5019180/"
 officialLinks:
-  - label: "Steam 상점 페이지"
+  - label: "Steam 상점 페이지 (에픽세븐 · appid 5019180)"
     url: "https://store.steampowered.com/app/5019180/"
+  - label: "Steam 공식 데이터 — 무료 플레이(is_free) · 2026년 출시 예정"
+    url: "https://store.steampowered.com/api/appdetails?appids=5019180&l=korean&cc=kr"
 host: "rosie"
 views: 0
 faq:
@@ -45,7 +47,7 @@ scenes:
     image: "/games/scenes/2026-09-18-epic-seven-2.jpg"
     emotion: "idle"
     chapter: "어떤 게임"
-  - text: "이 게임의 간판은 **풀 프레임 2D 애니메이션**이에요. 궁극기를 쓰는 순간 **한 프레임씩 그려낸 컷신**이 그대로 재생돼요."
+  - text: "이 게임의 간판은 **2D 애니메이션 컷신**이에요. 궁극기를 쓰는 순간 애니메이션이 그대로 재생돼요."
     voice: "/voice/2026-09-18-epic-seven/02.mp3"
     image: "/games/scenes/2026-09-18-epic-seven-6.jpg"
     emotion: "surprised"
@@ -72,6 +74,6 @@ scenes:
     chapter: "엔딩"
 ---
 
-모바일에서 시작해 2018년부터 이어져 온 수집형 턴제 RPG '에픽세븐'이 2026년 스팀으로 옵니다. 풀 프레임 2D 애니메이션 컷신과 속성 상성·스킬 조합을 짜는 턴제 전투, 그리고 밴픽으로 시작하는 실시간 PvP까지. PC판은 무료로 공개될 예정이에요.
+모바일에서 시작해 2018년부터 이어져 온 수집형 턴제 RPG '에픽세븐'이 2026년 스팀으로 옵니다. 2D 애니메이션 컷신과 속성 상성·스킬 조합을 짜는 턴제 전투, 그리고 밴픽으로 시작하는 실시간 PvP까지. PC판은 무료로 공개될 예정이에요.
 
 *(이미지는 각 게임사·기관의 공식 스크린샷·홍보 이미지만 사용했습니다.)*
