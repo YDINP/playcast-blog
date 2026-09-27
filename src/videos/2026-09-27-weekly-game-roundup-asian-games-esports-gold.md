@@ -1,6 +1,6 @@
 ---
 title: "9월 4주차 주간결산"
-description: "지난주 게임계는 아시안게임 e스포츠에서 한국이 대전 격투 첫 금메달을 따며 가장 뜨거웠어요. 스마일게이트 '네온 어비스 2'와 카카오게임즈 '도깨비의세계'가 10월 8일 출시를 알렸고, '슴미니즈' 서비스 종료와 크래프톤 '배그' 대회 논란도 이어졌어요. 스팀 판매순위와 PC방 점유율까지 한 번에 정리했어요."
+description: "지난주 게임계는 아시안게임 e스포츠에서 한국이 대전 격투 팀전에서 금메달을 따며 가장 뜨거웠어요. 스마일게이트 '네온 어비스 2'와 카카오게임즈 '도깨비의세계'가 10월 8일 출시를 알렸고, '슴미니즈' 서비스 종료와 크래프톤 '배그' 대회 논란도 이어졌어요. 스팀 판매순위와 PC방 점유율까지 한 번에 정리했어요."
 pubDate: 2026-09-27T22:40:00+09:00
 category: "News"
 hook: "9월 4주차 주간결산"
@@ -8,11 +8,11 @@ tags: ["주간게임결산", "아시안게임", "e스포츠", "도깨비의세�
 thumbnail: "/games/2026-09-27-weekly-game-roundup-asian-games-esports-gold-thumb.jpg"
 customThumb: true
 imageCredit:
-  text: "© 각 게임사·기관 / 크래프톤 KIGI 4기 모집: © SQIsoft Inc. / Steam · 네온 어비스 2 출시일 확정: © www.moidang.com · 도깨비의세계 10월 출시: © Kakao Games Corp. / Steam · 막다보니 천하통일 사전예약: © Neptune Company / Steam · 뱅드림 아워 노트 출시: © BILIBILI HK LIMITED / Steam · 코드 엑시트 스팀 테스트: © LINE Games / Steam · 씰M2 사전예약 70만: © PLAYWITH Inc / Steam · 슴미니즈 서비스 종료: © Kakao Games Corp. / Steam · AG 도요토미 포토존 논란: © Garibong Labs / Steam · 에스파도 못 살린 슴미니즈: © Dalcomsoft, Inc. / Steam · 배그 아시아 스타즈 논란: © KRAFTON Inc / Steam · AG e스포츠 첫 금메달: © Rob Howland / Steam · 코드엑시트 관심 집중: © 디엑시트 / Steam · 뿌요뿌요 은메달과 논란: © Sesisoft / Steam · 디겜폭 지스타 첫선: © WEBZEN INC. / Steam · 스팀 판매순위: © Metaforge Gaming Ltd / Steam · PC방 점유율 순위: © Riot Games / Steam"
+  text: "© 각 게임사·기관 / 크래프톤 KIGI 4기 모집: © SQIsoft Inc. / Steam · 네온 어비스 2 출시일 확정: © www.moidang.com · 도깨비의세계 10월 출시: © Kakao Games Corp. / Steam · 막다보니 천하통일 사전예약: © Neptune Company / Steam · 뱅드림 아워 노트 출시: © BILIBILI HK LIMITED / Steam · 코드 엑시트 스팀 테스트: © LINE Games / Steam · 씰M2 사전예약 70만: © PLAYWITH Inc / Steam · 슴미니즈 서비스 종료: © Kakao Games Corp. / Steam · AG 도요토미 포토존 논란: © Garibong Labs / Steam · 에스파도 못 살린 슴미니즈: © Dalcomsoft, Inc. / Steam · 배그 아시아 스타즈 논란: © KRAFTON Inc / Steam · AG 대전격투 팀전 금메달: © Rob Howland / Steam · 코드엑시트 관심 집중: © 디엑시트 / Steam · 뿌요뿌요 은메달과 논란: © Sesisoft / Steam · 디겜폭 지스타 첫선: © WEBZEN INC. / Steam · 스팀 판매순위: © Metaforge Gaming Ltd / Steam · PC방 점유율 순위: © Riot Games / Steam · 페이딩 에코 콘솔 출시: © New Tales · Com2uS Holdings / Steam"
 officialLinks:
   - label: "크래프톤 — 크래프톤, 인도 게임 인큐베이터 4기 모집… 지원 대상 확대"
     url: "https://www.ceoscoredaily.com/page/view/2026092213401978454"
-  - label: "한국 — 한국, 대전 격투서 아시안게임 e스포츠 첫 금메달"
+  - label: "한국 — 한국, 아시안게임 e스포츠 대전 격투 팀전 금메달"
     url: "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8671878"
   - label: "막다보니 천하통일 — 넵튠, 로그라이크 디펜스 '막다보니 천하통일' 글로벌 사전 예약 시작"
     url: "https://www.inews24.com/view/2008131"
@@ -26,7 +26,7 @@ host: "rosie"
 views: 0
 faq:
   - q: "지난주 게임계에서 가장 큰 뉴스는 뭐였어요?"
-    a: "한국이 대전 격투에서 아시안게임 e스포츠 첫 금메달을 딴 소식이에요. 13개 매체가 보도해서 가장 많이 다뤄졌어요."
+    a: "한국이 아시안게임 e스포츠 대전 격투 팀전에서 금메달을 딴 소식이에요. 13개 매체가 보도해서 가장 많이 다뤄졌어요."
   - q: "10월에 나오는 신작은 뭐가 있어요?"
     a: "스마일게이트 '네온 어비스 2'와 카카오게임즈 '도깨비의세계'가 둘 다 10월 8일 출시 예정이에요."
   - q: "'슴미니즈'는 왜 서비스를 종료해요?"
@@ -55,7 +55,7 @@ scenes:
         - "출시 — 10월 8일 신작 두 편"
         - "곧 나온다 — 사전예약 열기"
         - "짚고 갈 일 — 슴미니즈 종료"
-        - "화제 — AG e스포츠 첫 금메달"
+        - "화제 — AG 대전격투 팀전 금메달"
         - "순위 — 스팀·PC방 한눈에"
   - text: "크래프톤이 인도 게임 인큐베이터 **KIGI 4기** 참가사를 모집해요. 이번엔 **지원 대상도 넓혔다**고 알려졌어요."
     voice: "/voice/2026-09-27-weekly-game-roundup-asian-games-esports-gold/01.mp3"
@@ -86,6 +86,7 @@ scenes:
       sub: "출시 전 관심 확인"
   - text: "컴투스홀딩스의 액션어드벤처 **'페이딩 에코'**가 **PS5·엑스박스** 버전으로 출시됐어요."
     voice: "/voice/2026-09-27-weekly-game-roundup-asian-games-esports-gold/04.mp3"
+    image: "/games/scenes/2026-09-27-weekly-game-roundup-asian-games-esports-gold-5.jpg"
     emotion: "idle"
     chapter: "페이딩 에코 콘솔 출시"
     subject: "페이딩 에코"
@@ -155,11 +156,11 @@ scenes:
     emotion: "surprised"
     chapter: "배그 아시아 스타즈 논란"
     subject: "배그"
-  - text: "한국이 **대전 격투**에서 **아시안게임 e스포츠 첫 금메달**을 땄어요! 무려 **13개 매체**가 보도했어요."
+  - text: "한국이 아시안게임 **대전 격투 팀전**에서 일본을 **5대 2**로 꺾고 **금메달**을 땄어요! 무려 **13개 매체**가 보도했어요."
     voice: "/voice/2026-09-27-weekly-game-roundup-asian-games-esports-gold/13.mp3"
     image: "/games/scenes/2026-09-27-weekly-game-roundup-asian-games-esports-gold-14.jpg"
     emotion: "happy"
-    chapter: "AG e스포츠 첫 금메달"
+    chapter: "AG 대전격투 팀전 금메달"
     subject: "한국"
     card:
       kind: "stat"
@@ -218,13 +219,13 @@ scenes:
         - "4 배틀그라운드 6.76%"
         - "5 서든어택 4.36%"
         - "6 리니지 클래식 3.7%"
-  - text: "지난주는 **e스포츠 첫 금메달**과 10월 신작 소식이 겹친 한 주였어요. 이번 주도 좋은 게임과 함께 힘내 봐요!"
+  - text: "지난주는 **e스포츠 금메달**과 10월 신작 소식이 겹친 한 주였어요. 이번 주도 좋은 게임과 함께 힘내 봐요!"
     voice: "/voice/2026-09-27-weekly-game-roundup-asian-games-esports-gold/19.mp3"
     image: "/games/2026-09-27-weekly-game-roundup-asian-games-esports-gold-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
 ---
 
-지난주 게임계는 아시안게임 e스포츠에서 한국이 대전 격투 첫 금메달을 따며 가장 뜨거웠어요. 스마일게이트 '네온 어비스 2'와 카카오게임즈 '도깨비의세계'가 10월 8일 출시를 알렸고, '슴미니즈' 서비스 종료와 크래프톤 '배그' 대회 논란도 이어졌어요. 스팀 판매순위와 PC방 점유율까지 한 번에 정리했어요.
+지난주 게임계는 아시안게임 e스포츠에서 한국이 대전 격투 팀전에서 금메달을 따며 가장 뜨거웠어요. 스마일게이트 '네온 어비스 2'와 카카오게임즈 '도깨비의세계'가 10월 8일 출시를 알렸고, '슴미니즈' 서비스 종료와 크래프톤 '배그' 대회 논란도 이어졌어요. 스팀 판매순위와 PC방 점유율까지 한 번에 정리했어요.
 
 *(이미지는 각 게임사·기관의 공식 스크린샷·홍보 이미지만 사용했습니다. 출처는 각 장면에 표기했습니다.)*
