@@ -5,7 +5,8 @@ pubDate: 2026-10-18T22:40:00+09:00
 category: "News"
 hook: "10월 3주차 주간결산"
 tags: ["주간결산", "게임뉴스", "럽플레이스", "도깨비의세계", "패스 오브 엑자일 2", "playcast"]
-thumbnail: "/games/scenes/2026-10-18-weekly-game-roundup-2.jpg"
+thumbnail: "/games/2026-10-18-weekly-game-roundup-thumb.jpg"
+customThumb: true
 imageCredit:
   text: "© 각 게임사·기관 / 럽플레이스 정식 출시: © KATKIT inc / App Store · 왈츠앤잼 출시일 확정: © steamcommunity.com · 도원암귀 일본 사전예약: © tougenanki.com2us.com · 아이온 드라칸 사전예약: © aion.plaync.com · 야생소녀: 리버스 사전예약: © Sesisoft / Google Play · 건담 블리츠 오더 공개: © gundam-blitzorder.ggame.jp · 도깨비의세계 매출 2위: © dokkaebi.kakaogames.com · 넥슨 아크레이더스·메이플M: © www.nexon.com · 동양대 e스포츠 인력 양성: © www.e-sports.or.kr"
 officialLinks:
@@ -192,7 +193,7 @@ scenes:
         - "6 서든어택 4.81%"
   - text: "지난주는 연말 신작 출시일이 줄줄이 발표된 한 주였어요. 이번 주도 좋은 게임과 함께 힘내 봐요!"
     voice: "/voice/2026-10-18-weekly-game-roundup/16.mp3"
-    image: "/games/scenes/2026-10-18-weekly-game-roundup-2.jpg"
+    image: "/games/2026-10-18-weekly-game-roundup-thumb.jpg"
     emotion: "happy"
     chapter: "마무리"
 ---
